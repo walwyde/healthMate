@@ -1,0 +1,18 @@
+A diabetic patient's profile card should contain the following fields:
+
+Name: The patient's full name.
+Age: The patient's age.
+Gender: The patient's gender.
+Contact Information: The patient's phone number and email address.
+Diagnosis Date: The date when the patient was first diagnosed with diabetes.
+Type of Diabetes: Whether the patient has Type 1 or Type 2 diabetes.
+Medications: A list of medications the patient is taking for their diabetes.
+Allergies: Any allergies the patient has, including drug allergies.
+Blood Glucose Levels: The patient's blood glucose levels, including their target range and the time of day when they measure their levels.
+HbA1c Level: The patient's most recent HbA1c level, which is a measure of their average blood glucose level over the past 2-3 months.
+Insulin Pump or Injection: Whether the patient uses an insulin pump or insulin injections.
+Diabetic Complications: Any complications the patient has experienced due to their diabetes, such as neuropathy, retinopathy, or nephropathy.
+Other Health Conditions: Any other health conditions the patient has that may affect their diabetes, such as high blood pressure or heart disease.
+Emergency Contact: The name and phone number of an emergency contact person.
+Doctor's Name and Contact Information: The name and contact information of the patient's primary care physician or endocrinologist.
+These fields are important for healthcare providers to understand a patient's diabetes history, current treatment plan, and any potential risks or complications.

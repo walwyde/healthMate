@@ -1,0 +1,47 @@
+<form action="/profile" method="post">
+  <label for="name">Name:</label>
+  <input type="text" name="name" required>
+
+  <label for="age">Age:</label>
+  <input type="number" name="age" required>
+
+  <label for="gender">Gender:</label>
+  <select name="gender" required>
+    <option value="">Select Gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Non-binary">Non-binary</option>
+  </select>
+
+  <label for="phone">Phone:</label>
+  <input type="tel" name="phone" required>
+
+  <label for="email">Email:</label>
+  <input type="email" name="email" required>
+
+  <label for="systolic">Systolic Blood Pressure:</label>
+  <input type="number" name="systolic" required>
+
+  <label for="diastolic">Diastolic Blood Pressure:</label>
+  <input type="number" name="diastolic" required>
+
+  <label for="medications">Medications:</label>
+  <input type="text" name="medications" required>
+
+  <label for="lifestyleModifications">Lifestyle Modifications:</label>
+  <textarea name="lifestyleModifications" rows="4" cols="50"></textarea>
+
+  <label for="otherHealthConditions">Other Health Conditions:</label>
+  <textarea name="otherHealthConditions" rows="4" cols="50"></textarea>
+
+  <label for="familyHistory">Family History:</label>
+  <textarea name="familyHistory" rows="4" cols="50"></textarea>
+
+  <label for="allergies">Allergies:</label>
+  <textarea name="allergies" rows="4" cols="50"></textarea>
+
+  <label for="emergencyContact">Emergency Contact:</label>
+  <input type="text" name="emergencyContact" required>
+
+  <input type="submit" value="Submit">
+</form>

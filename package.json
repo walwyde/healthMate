@@ -1,0 +1,36 @@
+{
+  "name": "healthmate",
+  "version": "1.0.0",
+  "description": "A Web App That Provides Healthcare Support For Patients Of High Blood Pressure And Diabetes.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [
+    "Health",
+    "BP",
+    "Diabetes",
+    "Blood-Sugar",
+    "Blood-Pressure"
+  ],
+  "author": "Godfrey Latmoa Christian",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "concurrently": "^7.4.0",
+    "config": "^3.3.8",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.2",
+    "gravatar": "^1.8.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.6.5",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20"
+  }
+}
