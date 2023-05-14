@@ -2,19 +2,25 @@ const { validationResult } = require("express-validator");
 const config = require("config");
 const request = require("request");
 const InsulinProfile = require("../models/InsulinProfile");
-const BpProfileCard = require('../models/BpProfile'); // Import the ProfileCard model
+const BpProfileCard = require("../models/BpProfile"); // Import the ProfileCard model
 const User = require("../models/User");
 
 exports.getProfile = async (req, res) => {
   try {
-    console.log(req.user);
-    
-    const { diabetic, hypertensive } = req.user.conditon;
+    const { diabetic, hypertensive } = req.user.condition;
 
-    const profile = await InsulinProfile.findOne({ user: req.user.id }).populate(
-      "user",
-      ["name", "avatar"]
-    );
+    let profile;
+
+    if (diabetic)
+      profile = await InsulinProfile.findOne({
+        user: req.user.id,
+      }).populate("user", ["name", "avatar"]);
+
+    if (hypertensive)
+      profile = await BpProfileCard.findOne({
+        user: req.user.id,
+      }).populate("user", ["name", "avatar"]);
+
     if (!profile) {
       return res
         .status(400)
@@ -26,20 +32,7 @@ exports.getProfile = async (req, res) => {
     console.log(err);
   }
 };
-// exports.getAllProfiles = async (req, res) => {
-//   try {
-//     const profiles = await Profile.find().populate("user", [
-//       "name",
-//       "avatar",
-//     ]);
-    
-//     if (!profiles) return res.status(404).json("profiles not found");
-//     res.json(profiles);
-//   } catch (err) {
-//     console.log(err.message);
-//     res.status(500).json({ msg: err.message });
-//   }
-// };
+
 exports.getProfileById = async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.params.id }).populate(
@@ -48,33 +41,33 @@ exports.getProfileById = async (req, res) => {
     );
     if (!profile) return res.json("user not found");
     res.status(200).json(profile);
-  } catch (error) {   
+  } catch (error) {
     if (error.kind == "ObjectId") {
       res.json({ msg: "user not found" });
     }
     console.log(error.message);
   }
 };
-exports.newInsulinCard = async (req, res) => {
+
+
+exports.newProfileCard = async (req, res) => {
+
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+
+  const {diabetic, hypertensive} = req.user.condition
   try {
-    const existingProfile = await Profile.findOne({ user: req.user.id });
+    let existingProfile;
+     if (diabetic)  existingProfile = await InsulinProfile.findOne({ user: req.user.id });
+      if (hypertensive) existingProfile = await BpProfileCard.findOne({ user: req.user.id });
+
     if (existingProfile)
       return res.status(400).json("user profile already created");
     const {
-      company,
-      website,
-      location,
-      status,
-      skills,
-      bio,
-      githubusername,
-      experience,
-      education,
+     
     } = req.body;
 
     const profileFields = {};
@@ -92,18 +85,11 @@ exports.newInsulinCard = async (req, res) => {
     if (experience) profileFields.experience = experience;
     if (education) profileFields.education = education;
 
-    const { youtube, twitter, facebook, linkedin, instagram } = req.body;
-    profileFields.social = {};
+   let profile;
+if (diabetic) profile = await new InsulinProfile(profileFields);
+ if(hypertensive)  profile = await new Profile(profileFields);
 
-    if (youtube) profileFields.social.youtube = youtube;
-    if (twitter) profileFields.social.twitter = twitter;
-    if (facebook) profileFields.social.facebook = facebook;
-    if (linkedin) profileFields.social.linkedin = linkedin;
-    if (instagram) profileFields.social.instagram = instagram;
-
-    const profile = await new Profile(profileFields);
-
-    profile.save();
+    // profile.save();
 
     res.status(201).json(profile);
   } catch (err) {
@@ -153,7 +139,7 @@ exports.editProfile = async (req, res) => {
     if (profile) {
       profile = await Profile.findOneAndUpdate(
         { user: req.user.id },
-        { $set: profileFields } 
+        { $set: profileFields }
       );
     }
     res.status(201).json(profile);
@@ -177,7 +163,7 @@ exports.deleteUserProfile = async (req, res) => {
 };
 
 // Create a new profileCard
-exports.newBPCard =  async (req, res) => {
+exports.newBPCard = async (req, res) => {
   const {
     name,
     age,
@@ -191,7 +177,7 @@ exports.newBPCard =  async (req, res) => {
     otherHealthConditions,
     familyHistory,
     allergies,
-    emergencyContact
+    emergencyContact,
   } = req.body; // Get the form data from the request body
 
   try {
@@ -209,20 +195,16 @@ exports.newBPCard =  async (req, res) => {
       otherHealthConditions,
       familyHistory,
       allergies,
-      emergencyContact
+      emergencyContact,
     });
 
     // Save the ProfileCard document to the database
     await profileCard.save();
 
-    res.status(201).json({ message: 'Profile created successfully', profileCard });
+    res
+      .status(201)
+      .json({ message: "Profile created successfully", profileCard });
   } catch (error) {
-    res.status(500).json({ message: 'Could not create profile', error });
+    res.status(500).json({ message: "Could not create profile", error });
   }
 };
-
-
-
-
-
-

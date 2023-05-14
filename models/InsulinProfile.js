@@ -72,4 +72,6 @@ const InsulinProfileSchema = new mongoose.Schema({
   },
 });
 
-module.exports = InsulinProfile = mongoose.model("Profile", InsulinProfileSchema);
+const InsulinProfile = mongoose.model("Profile", InsulinProfileSchema);
+
+module.exports = InsulinProfile;

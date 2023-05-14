@@ -1,0 +1,48 @@
+### get profile
+
+GET http://localhost:5005/api/profile/me HTTP/1.1
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJhdXdhbCIsImlkIjoiNjQ1ZmU2YTViZjYwMThmZjIyYzAxMDU0IiwiY29uZGl0aW9uIjp7ImRpYWJldGljIjpmYWxzZSwiaHlwZXJ0ZW5zaXZlIjp0cnVlfX0sImlhdCI6MTY4NDA2MDkwNywiZXhwIjoxNjg0MDY4MTA3fQ.1-3sEDXhW8sLORRINYc5b7GxdHOYiyD60e5xeu0zQS4
+
+post http://localhost:5005/api/profile/me HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": {
+  },
+  "age": {
+  },
+  "gender": {
+  },
+  "phone": {
+  },
+  "email": {
+  },
+  "bloodPressureReadings": [
+    {
+      "systolic": {
+      },
+      "diastolic": {
+      },
+    }
+  ],
+  "medications": [
+    {
+      "name": {
+      },
+      "dose": {
+      },
+      "frequency": {
+      }
+    }
+  ],
+  "lifestyleModifications": {
+  },
+  "otherHealthConditions": {
+  },
+  "familyHistory": {
+  },
+  "allergies": {
+  },
+  "emergencyContact": {
+  }
+}
