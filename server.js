@@ -11,8 +11,9 @@ const app = express()
 
 app.use(morgan('dev'))
 app.use(express.json({extended: false}))
+app.use(express.urlencoded({extended: false}))
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5005
 
 app.use("/api/auth", authRoutes)
 app.use("/api/profile", profileRoutes)

@@ -75,6 +75,6 @@ const BpProfileCardSchema = new mongoose.Schema({
   }
 });
 
-const BpProfileCard = mongoose.model('ProfileCard', ProfileCardSchema);
+const BpProfileCard = mongoose.model('ProfileCard', BpProfileCardSchema);
 
 module.exports = BpProfileCard;

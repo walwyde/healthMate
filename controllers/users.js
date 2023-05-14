@@ -27,13 +27,14 @@ exports.getUser = async (req, res) => {
   }
 }
 exports.newUser = async (req, res) => {
+  console.log(req.body);
   // input validations
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password } = req.body;
+  const { name, email, password, condition } = req.body;
   const avatar = gravatar.url(email, {
     s: "200",
     r: "pg",
@@ -53,16 +54,25 @@ exports.newUser = async (req, res) => {
       avatar,
       password,
     });
+
+    const { diabetic, hypertensive } = condition;
+
+    user.condition = { 
+      diabetic : diabetic,
+      hypertensive : hypertensive
+     };
     //  generating salt and hashing password with bcryptjs
     const salt = await bcrypt.genSalt(10);
 
     user.password = await bcrypt.hash(password, salt);
+
 
     user.save();
 
     // generating jwt token
     const payLoad = {user: {
       id: user.id,
+      condition: user.condition.diabetic || user.condition.hypertensive
     }};
     jwt.sign(payLoad, config.get("jwtSecret"), {
       expiresIn: "2h",
@@ -72,6 +82,7 @@ exports.newUser = async (req, res) => {
       }
       res.status(200).json(token)
     });
+    console.log(user);
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ errors: [err.message] });

@@ -1,13 +1,17 @@
 const { validationResult } = require("express-validator");
 const config = require("config");
 const request = require("request");
-const Profile = require("../models/insulinProfile");
+const InsulinProfile = require("../models/InsulinProfile");
+const BpProfileCard = require('../models/BpProfile'); // Import the ProfileCard model
 const User = require("../models/User");
 
 exports.getProfile = async (req, res) => {
   try {
     console.log(req.user);
-    const profile = await Profile.findOne({ user: req.user.id }).populate(
+    
+    const { diabetic, hypertensive } = req.user.conditon;
+
+    const profile = await InsulinProfile.findOne({ user: req.user.id }).populate(
       "user",
       ["name", "avatar"]
     );
@@ -22,20 +26,20 @@ exports.getProfile = async (req, res) => {
     console.log(err);
   }
 };
-exports.getAllProfiles = async (req, res) => {
-  try {
-    const profiles = await Profile.find().populate("user", [
-      "name",
-      "avatar",
-    ]);
+// exports.getAllProfiles = async (req, res) => {
+//   try {
+//     const profiles = await Profile.find().populate("user", [
+//       "name",
+//       "avatar",
+//     ]);
     
-    if (!profiles) return res.status(404).json("profiles not found");
-    res.json(profiles);
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).json({ msg: err.message });
-  }
-};
+//     if (!profiles) return res.status(404).json("profiles not found");
+//     res.json(profiles);
+//   } catch (err) {
+//     console.log(err.message);
+//     res.status(500).json({ msg: err.message });
+//   }
+// };
 exports.getProfileById = async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.params.id }).populate(
@@ -51,7 +55,7 @@ exports.getProfileById = async (req, res) => {
     console.log(error.message);
   }
 };
-exports.newProfile = async (req, res) => {
+exports.newInsulinCard = async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -171,4 +175,54 @@ exports.deleteUserProfile = async (req, res) => {
     res.status(500).json({ msg: err.message });
   }
 };
+
+// Create a new profileCard
+exports.newBPCard =  async (req, res) => {
+  const {
+    name,
+    age,
+    gender,
+    phone,
+    email,
+    systolic,
+    diastolic,
+    medications,
+    lifestyleModifications,
+    otherHealthConditions,
+    familyHistory,
+    allergies,
+    emergencyContact
+  } = req.body; // Get the form data from the request body
+
+  try {
+    // Create a new ProfileCard document using the form data
+    const profileCard = new BpProfileCard({
+      name,
+      age,
+      gender,
+      phone,
+      email,
+      systolic,
+      diastolic,
+      medications,
+      lifestyleModifications,
+      otherHealthConditions,
+      familyHistory,
+      allergies,
+      emergencyContact
+    });
+
+    // Save the ProfileCard document to the database
+    await profileCard.save();
+
+    res.status(201).json({ message: 'Profile created successfully', profileCard });
+  } catch (error) {
+    res.status(500).json({ message: 'Could not create profile', error });
+  }
+};
+
+
+
+
+
 

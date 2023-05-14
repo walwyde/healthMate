@@ -1,38 +1,24 @@
-const express = require("express")
-const mdlwre = require('../../middleware/index')
-const { check } = require('express-validator')
-const router = express.Router()
-const controller = require("../../controllers/posts")
+const express = require("express");
+const { check, validationResults } = require("express-validator");
+const router = express.Router();
+const control = require("../../controllers/users");
 
+router.post(
+  "/",
+  [
+    check("name", "Please Input Your Name(s)").not().isEmpty(),
+    check("email", "Please Input a Valid Email").isEmail(),
+    check(
+      "password",
+      "Please Create a Password Not Less Than 6 Chars In Length"
+    ).isLength({ min: 6 }),
+    check("condition", "Please Select Your Condition").not().isEmpty(),
+  ],
+  control.newUser
+);
 
-router.get("/", controller.getPosts)
+router.get("/", control.getUsers);
 
-router.get("/:postId", controller.getPost)
+router.get("/:id", control.getUser);
 
-router.post('/',
-[mdlwre.auth, 
-  check("text", "post text content cannot be empty").not().isEmpty()
-], 
-controller.newPost)
-
-router.put('/:postId',
-[mdlwre.auth, 
-  check("text", "post text content cannot be empty").not().isEmpty()
-], 
-controller.editPost)
-
-router.delete('/:post_id', mdlwre.auth, controller.deletePost)
-
-router.put('/likes/:post_id', mdlwre.auth, controller.addLike)
-
-router.put('/unlike/:post_id', mdlwre.auth, controller.unLike)
-
-router.post('/comments/:post_id',
-[mdlwre.auth, 
-  check("text", "post text content cannot be empty").not().isEmpty()
-], 
-controller.newComment)
-
-router.delete('/:id/comments/:comment_id', mdlwre.auth, controller.deleteComment)
-
-module.exports = router 
+module.exports = router;

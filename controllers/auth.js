@@ -17,6 +17,7 @@ exports.getIndex = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+  console.log(req.body)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -35,10 +36,13 @@ exports.login = async (req, res) => {
       return res.status(401).send("password incorrect");
     }
 
+    console.log(user.condition);
+
     const payload = {
       user: {
         name: user.name,
         id: user.id,
+       condition: user.condition,
       },
     };
 
