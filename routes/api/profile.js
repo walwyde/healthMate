@@ -13,13 +13,13 @@ router.get("/me", mdlwre.auth, controller.getProfile)
 
 router.post('/me',mdlwre.auth, 
 [
-  check("status", "what is your employment status?").not().isEmpty(),
-  check("skills", "please provide your skills information").not().isEmpty()
+  check("medications", "what is your current medication?").not().isEmpty(),
+  check("age", "You Must Belong To An Age Bracket For Better Diagnosis").not().isEmpty(),
+  check('email', 'Please include a valid email').isEmail(),
 ], 
-controller.newBPCard)
+controller.newProfileCard)
 
-router.put('/me', mdlwre.auth, controller.editProfile)
-
+router.put('/me', mdlwre.auth, controller.updateProfileCard)
 
 router.delete('/me', mdlwre.auth, controller.deleteUserProfile)
 

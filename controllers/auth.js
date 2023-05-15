@@ -5,11 +5,16 @@ const bcrypt = require("bcryptjs");
 const config = require("config");
 
 exports.getIndex = async (req, res) => {
-  console.log(req.user)
   try {
     const user = await User.findById(req.user.id).select("-password");
 
+    if (!user) {
+      return res.status(404).json({ errors: [{msg: "user not found"}] });
+    }
+
     res.status(200).json(user);
+
+
   } catch (err) {
     if (err) res.status('500').send([{errors: 'server error'}])
     console.log(err.message);

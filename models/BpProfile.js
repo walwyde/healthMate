@@ -1,80 +1,84 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const BpProfileCardSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   age: {
     type: Number,
-    required: true
+    required: true,
   },
   gender: {
     type: String,
-    required: true
+    required: true,
   },
   phone: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
-    required: true
+    required: true,
   },
   bloodPressureReadings: [
     {
       systolic: {
         type: Number,
-        required: true
+        required: true,
       },
       diastolic: {
         type: Number,
-        required: true
+        required: true,
       },
       date: {
         type: Date,
-        default: Date.now
-      }
-    }
+        default: Date.now,
+      },
+    },
   ],
   medications: [
     {
       name: {
         type: String,
-        required: true
+        required: true,
       },
       dose: {
         type: String,
-        required: true
+        required: true,
       },
       frequency: {
         type: String,
-        required: true
-      }
-    }
+        required: true,
+      },
+    },
   ],
   lifestyleModifications: {
     type: String,
-    required: false
+    required: false,
   },
   otherHealthConditions: {
     type: String,
-    required: false
+    required: false,
   },
   familyHistory: {
     type: String,
-    required: false
+    required: false,
   },
   allergies: {
     type: String,
-    required: false
+    required: false,
   },
   emergencyContact: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
-const BpProfileCard = mongoose.model('ProfileCard', BpProfileCardSchema);
+const BpProfileCard = mongoose.model("ProfileCard", BpProfileCardSchema);
 
 module.exports = BpProfileCard;

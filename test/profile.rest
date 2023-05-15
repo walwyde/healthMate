@@ -1,48 +1,41 @@
 ### get profile
 
 GET http://localhost:5005/api/profile/me HTTP/1.1
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJhdXdhbCIsImlkIjoiNjQ1ZmU2YTViZjYwMThmZjIyYzAxMDU0IiwiY29uZGl0aW9uIjp7ImRpYWJldGljIjpmYWxzZSwiaHlwZXJ0ZW5zaXZlIjp0cnVlfX0sImlhdCI6MTY4NDA2MDkwNywiZXhwIjoxNjg0MDY4MTA3fQ.1-3sEDXhW8sLORRINYc5b7GxdHOYiyD60e5xeu0zQS4
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJhdXdhbCIsImlkIjoiNjQ1ZmU2YTViZjYwMThmZjIyYzAxMDU0IiwiY29uZGl0aW9uIjp7ImRpYWJldGljIjpmYWxzZSwiaHlwZXJ0ZW5zaXZlIjp0cnVlfX0sImlhdCI6MTY4NDE4MzYzMSwiZXhwIjoxNjg0MTkwODMxfQ.htxdGO2IiDYWcZB4x44GcS9HN22BebDo7BSl9sK-Az8
+
+### crete new profile
 
 post http://localhost:5005/api/profile/me HTTP/1.1
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJhdXdhbCIsImlkIjoiNjQ1ZmU2YTViZjYwMThmZjIyYzAxMDU0IiwiY29uZGl0aW9uIjp7ImRpYWJldGljIjpmYWxzZSwiaHlwZXJ0ZW5zaXZlIjp0cnVlfX0sImlhdCI6MTY4NDE4MzYzMSwiZXhwIjoxNjg0MTkwODMxfQ.htxdGO2IiDYWcZB4x44GcS9HN22BebDo7BSl9sK-Az8
 Content-Type: application/json
 
 {
-  "name": {
-  },
-  "age": {
-  },
-  "gender": {
-  },
-  "phone": {
-  },
-  "email": {
-  },
+  "name": "Yobe Auwal Mohammed",
+  "age": "33",
+  "gender": "male",
+  "phone": "07067858251",
+  "email": "walwyde@gmail.com",
   "bloodPressureReadings": [
     {
-      "systolic": {
-      },
-      "diastolic": {
-      },
+      "systolic": "low systolic",
+      "diastolic": "low diastolic"
     }
   ],
   "medications": [
     {
-      "name": {
-      },
-      "dose": {
-      },
-      "frequency": {
-      }
+      "name": "paracetamol",
+      "dose": "55 mg",
+      "frequency": "daily"
     }
   ],
-  "lifestyleModifications": {
-  },
-  "otherHealthConditions": {
-  },
-  "familyHistory": {
-  },
-  "allergies": {
-  },
-  "emergencyContact": {
-  }
+  "lifestyleModifications": "none",
+  "otherHealthConditions": "none",
+  "familyHistory": "non hypertensive",
+  "allergies": "peanut allergy",
+  "emergencyContact": "08030751771"
 }
+
+### delete profile
+
+DELETE http://localhost:5005/api/profile/me HTTP/1.1
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJhdXdhbCIsImlkIjoiNjQ1ZmU2YTViZjYwMThmZjIyYzAxMDU0IiwiY29uZGl0aW9uIjp7ImRpYWJldGljIjpmYWxzZSwiaHlwZXJ0ZW5zaXZlIjp0cnVlfX0sImlhdCI6MTY4NDE4MzYzMSwiZXhwIjoxNjg0MTkwODMxfQ.htxdGO2IiDYWcZB4x44GcS9HN22BebDo7BSl9sK-Az8

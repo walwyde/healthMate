@@ -25,46 +25,44 @@ const InsulinProfileSchema = new mongoose.Schema({
   },
   medicatons: [
     {
-      name: {type: String, required: false},
-      dosage: {type: String, required: false},
-      frequency: {type: String, required: false},
-      startDate: {type: Date, required: false},
-      endDate: {type: Date, required: false},
+      name: { type: String, required: false },
+      dose: { type: String, required: false },
+      frequency: { type: String, required: false },
     },
   ],
   allergies: [
     {
-      name: {type: String, required: false},
-      severity: {type: String, required: false},
+      name: { type: String, required: false },
+      severity: { type: String, required: false },
     },
   ],
   emergencyContact: {
-    name: {type: String, required: false},
-    phone: {type: String, required: false},
-    email: {type: String, required: false},
+    name: { type: String, required: false },
+    phone: { type: String, required: false },
+    email: { type: String, required: false },
   },
   glucoseReadings: [
     {
-      date: {type: String, required: false},
-      time: {type: String, required: false},
-      glucoseLevel: {type: String, required: false},
+      date: { type: String, required: false },
+      time: { type: String, required: false },
+      glucoseLevel: { type: String, required: false },
     },
   ],
   insulinDose: [
     {
-      insulinType: {type: String, required: false},
+      insulinType: { type: String, required: false },
     },
   ],
   complications: [
     {
-      name: {type: String, required: false},
-      severity: {type: String, required: false},
+      name: { type: String, required: false },
+      severity: { type: String, required: false },
     },
   ],
   doctor: {
-    name: {type: String, required: false},
-    phone: {type: String, required: false},
-    email: {type: String, required: false},
+    name: { type: String, required: false },
+    phone: { type: String, required: false },
+    email: { type: String, required: false },
   },
   date: {
     type: Date,
