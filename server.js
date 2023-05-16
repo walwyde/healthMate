@@ -6,7 +6,6 @@ const profileRoutes = require("./routes/api/profile")
 const postsRoutes = require("./routes/api/posts")
 const userRoutes = require("./routes/api/users")
 
-
 const app = express()
 
 app.use(morgan('dev'))

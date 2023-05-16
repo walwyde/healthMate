@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Health Worker Profile</title>
+  <style>
+    .profile-container {
+      width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+    }
+
+    .profile-heading {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .profile-field {
+      margin-bottom: 10px;
+    }
+
+    .profile-field label {
+      font-weight: bold;
+    }
+
+    .profile-field-value {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <h2 class="profile-heading">Health Worker Profile</h2>
+    
+    <div class="profile-field">
+      <label>Full Name:</label>
+      <span class="profile-field-value">{{fullName}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>Date of Birth:</label>
+      <span class="profile-field-value">{{dateOfBirth}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>Gender:</label>
+      <span class="profile-field-value">{{gender}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>Address:</label>
+      <span class="profile-field-value">{{contactDetails.address}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>Phone:</label>
+      <span class="profile-field-value">{{contactDetails.phone}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>Email:</label>
+      <span class="profile-field-value">{{contactDetails.email}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>Identification Number:</label>
+      <span class="profile-field-value">{{identificationNumber}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>Professional Designation:</label>
+      <span class="profile-field-value">{{professionalDesignation}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>License Number:</label>
+      <span class="profile-field-value">{{licenseDetails.number}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>License Expiry Date:</label>
+      <span class="profile-field-value">{{licenseDetails.expiryDate}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>Organization:</label>
+      <span class="profile-field-value">{{employmentDetails.organization}}</span>
+    </div>
+
+    <div class="profile-field">
+      <label>Organization Contact:</label>
+      <span class="profile-field-value">{{employmentDetails.contact}}</span>
+    </div>
+
+    <!-- Display additional fields as needed -->
+
+  </div>
+</body>
+</html>

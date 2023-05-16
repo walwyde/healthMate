@@ -1,0 +1,84 @@
+/* CSS styling */
+.navbar {
+  background-color: #007bff;
+  overflow: hidden;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #fff;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.menu-icon {
+  display: none;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: transparent;
+  border: none;
+  z-index: 2;
+}
+
+.menu-icon:before,
+.menu-icon:after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.menu-icon:before {
+  top: 0;
+}
+
+.menu-icon:after {
+  bottom: 0;
+}
+
+#navbar-toggle:checked ~ .navbar-menu {
+  display: block;
+}
+
+#navbar-toggle:checked ~ .menu-icon:before {
+  transform: translateY(8px) rotate(45deg);
+}
+
+#navbar-toggle:checked ~ .menu-icon:after {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+@media screen and (max-width: 600px) {
+  .navbar a:not(:first-child) {
+    display: none;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+
+  .navbar-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #007bff;
+  }
+
+  .navbar-menu a {
+    display: block;
+    padding: 14px 16px;
+    color: #fff;
+    text-decoration: none;
+  }
+}
