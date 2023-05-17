@@ -1,47 +1,13 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #ccc;
-  margin: 0;
-  padding: 0;
-}
 
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.landing {
+  max-width: 1100px;
+  background: url("/public/landing.jpg") no-repeat center center/cover;
+  height: 100vh;
 }
-
-h1 {
+.buttom-fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   text-align: center;
-  color: #333;
-}
-
-p {
-  margin-bottom: 20px;
-  line-height: 1.5;
-  color: #555;
-}
-
-.button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.button:hover {
-  background-color: #0056b3;
-}
-.home-image {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
