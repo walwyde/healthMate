@@ -1,13 +1,44 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types'
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+import Row from "react-bootstrap/Row";
 
-const Register = props => {
+const Register = (props) => {
   const [validated, setValidated] = useState(false);
+
+  const [formData, setFormData] = useState({
+    fullName: '',
+    dateOfBirth: '',
+    gender: '',
+    nin: '',
+    professionalDesignation: '',
+    address: '',
+    phone: '',
+    number: '',
+    expiryDate: '',
+    type: '',
+    email: '',
+    password: '',
+    confirmPass: ''
+  });
+  const {
+    fullName,
+    dateOfBirth,
+    gender,
+    nin,
+    professionalDesignation,
+    address,
+    phone,
+    number,
+    expiryDate,
+    type,
+    email,
+    password,
+    confirmPass
+  } = formData;
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -16,151 +47,207 @@ const Register = props => {
       event.stopPropagation();
     }
 
+    console.log(formData);
+    event.preventDefault();
     setValidated(true);
-  }
+  };
+  const onChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   return (
-    <div>
-    {/* <form method="POST">
-  <label for="fullName">Full Name:</label>
-  <input type="text" id="fullName" name="fullName" required />
-
-  <label for="dateOfBirth">Date of Birth:</label>
-  <input type="date" id="dateOfBirth" name="dateOfBirth" required />
-
-  <label for="gender">Gender:</label>
-  <select id="gender" name="gender" required>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-    <option value="Non-binary">Non-binary</option>
-    <option value="Other">Other</option>
-  </select>
-
-  <label for="address">Address:</label>
-  <input type="text" id="address" name="address" required />
-
-  <label for="phone">Phone:</label>
-  <input type="tel" id="phone" name="phone" required />
-
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email" required />
-
-  <label for="identificationNumber">Identification Number:</label>
-  <input type="text" id="identificationNumber" name="identificationNumber" required />
-
-  <label for="institution">Institution:</label>
-  <input type="text" id="institution" name="institution" required />
-
-  <label for="degree">Degree:</label>
-  <input type="text" id="degree" name="degree" required />
-
-  <label for="year">Year:</label>
-  <input type="number" id="year" name="year" required />
-
-  <label for="specialization">Specialization:</label>
-  <input type="text" id="specialization" name="specialization" />
-
-  <label for="professionalDesignation">Professional Designation:</label>
-  <input type="text" id="professionalDesignation" name="professionalDesignation" required />
-
-  <label for="licenseNumber">License Number:</label>
-  <input type="text" id="licenseNumber" name="licenseNumber" required />
-
-  <label for="expiryDate">License Expiry Date:</label>
-  <input type="date" id="expiryDate" name="expiryDate" required />
-
-  <label for="organization">Organization:</label>
-  <input type="text" id="organization" name="organization" required />
-
-  <label for="organizationContact">Organization Contact:</label>
-  <input type="text" id="organizationContact" name="organizationContact" required />
-
-  <label for="employer">Employer:</label>
-  <input type="text" id="employer" name="employer" required />
-
-  <label for="position">Position:</label>
-  <input type="text" id="position" name="position" required />
-
-  <label for="startDate">Start Date:</label>
-  <input type="date" id="startDate" name="startDate" required />
-
-  <label for="endDate">End Date:</label>
-  <input type="date" id="endDate" name="endDate" required />
-
-  <label for="languages">Languages:</label>
-  <input type="text" id="languages" name="languages" />
-
-  <label for="skills">Skills:</label>
-  <input type="text" id="skills" name="skills" />
-
-  <label for="areasOfExpertise">Areas of Expertise:</label>
-  <input type="text" id="areasOfExpertise" name="areasOfExpertise" />
-
-  <input type="submit" value="Submit" />
-
-  </form> */}
-
-    <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <Row className="mb-3">
-        <Form.Group as={Col} md="4" controlId="validationCustom01">
-          <Form.Label>First name</Form.Label>
+    <Form noValidate validated={validated} onSubmit={(e) => handleSubmit(e)}>
+      <Row className="mb-6">
+        <Form.Group as={Col} md="6" controlId="validationCustom01">
+          <Form.Label>Full Name</Form.Label>
           <Form.Control
             required
+            value={fullName}
+            name="fullName"
+            onChange={(e) => onChange(e)}
             type="text"
-            placeholder="First name"
-            defaultValue="Mark"
+            placeholder="Enter Full Name"
           />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustom02">
-          <Form.Label>Last name</Form.Label>
+        <Form.Group as={Col} md="6" controlId="validationCustom02">
+          <Form.Label>dateOfBirth</Form.Label>
           <Form.Control
             required
-            type="text"
-            placeholder="Last name"
-            defaultValue="Otto"
+            value={dateOfBirth}
+            name="dateOfBirth"
+            onChange={(e) => onChange(e)}
+            type="date"
           />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustomUsername">
-          <Form.Label>Username</Form.Label>
-          <InputGroup hasValidation>
-            <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-            <Form.Control
-              type="text"
-              placeholder="Username"
-              aria-describedby="inputGroupPrepend"
-              required
-            />
-            <Form.Control.Feedback type="invalid">
-              Please choose a username.
-            </Form.Control.Feedback>
-          </InputGroup>
         </Form.Group>
       </Row>
-      <Row className="mb-3">
+      <Row className="mb-6">
+        <Form.Group as={Col} md="6" controlId="validationCustom01">
+          <Form.Label>Gender</Form.Label>
+          <Form.Control
+            required
+            value={gender}
+            name="gender"
+            onChange={(e) => onChange(e)}
+            type="text"
+            placeholder="Enter Your Gender"
+          />
+          <Form.Control.Feedback>
+            Options: Male, Female, Others!
+          </Form.Control.Feedback>
+        </Form.Group>
         <Form.Group as={Col} md="6" controlId="validationCustom03">
-          <Form.Label>City</Form.Label>
-          <Form.Control type="text" placeholder="City" required />
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            onChange={(e) => onChange(e)}
+            value={address}
+            name="address"
+            type="text"
+            placeholder="Enter Work Address"
+            required
+          />
           <Form.Control.Feedback type="invalid">
-            Please provide a valid city.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="3" controlId="validationCustom04">
-          <Form.Label>State</Form.Label>
-          <Form.Control type="text" placeholder="State" required />
-          <Form.Control.Feedback type="invalid">
-            Please provide a valid state.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="3" controlId="validationCustom05">
-          <Form.Label>Zip</Form.Label>
-          <Form.Control type="text" placeholder="Zip" required />
-          <Form.Control.Feedback type="invalid">
-            Please provide a valid zip.
+            Please provide a valid Address.
           </Form.Control.Feedback>
         </Form.Group>
       </Row>
-      <Form.Group className="mb-3">
+      <Row className="mb-6">
+        <Form.Group as={Col} md="6" controlId="validationCustom04">
+          <Form.Label>Phone</Form.Label>
+          <Form.Control
+            onChange={(e) => onChange(e)}
+            value={phone}
+            type="text"
+            name="phone"
+            placeholder="Enter Contact Phone"
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide a valid Phone Number.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="6" controlId="validationCustom05">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            onChange={(e) => onChange(e)}
+            value={email}
+            name="email"
+            type="email"
+            placeholder="Enter a Valid Email"
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide a valid Email.
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+      <Row className="mb-6">
+        <Form.Group as={Col} md="6" controlId="validationCustom01">
+          <Form.Label>NIN</Form.Label>
+          <Form.Control
+            type="text"
+            onChange={(e) => onChange(e)}
+            value={nin}
+            name="nin"
+            placeholder="Enter your NIN"
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide a valid NIN.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="6" controlId="validationCustom01">
+          <Form.Label>Professional Designation</Form.Label>
+          <Form.Control
+            onChange={(e) => onChange(e)}
+            value={professionalDesignation}
+            name="professionalDesignation"
+            type="text"
+            placeholder="Professional Designation"
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide this Info.
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+      <Row className="mb-6">
+        <Form.Group as={Col} md="6" controlId="validationCustom01">
+          <Form.Label>License Type</Form.Label>
+          <Form.Control
+            onChange={(e) => onChange(e)}
+            value={type}
+            name="type"
+            type="text"
+            placeholder="Enter Licence Type"
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide this Info.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="6" controlId="validationCustom01">
+          <Form.Label>License Number</Form.Label>
+          <Form.Control
+            onChange={(e) => onChange(e)}
+            value={number}
+            name="number"
+            type="text"
+            placeholder="Enter Licence Number"
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide this Info.
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+      <Row className="mb-6">
+        <Form.Group as={Col} md="6" controlId="validationCustom01">
+          <Form.Label>License Expiry Date</Form.Label>
+          <Form.Control
+            type="text"
+            onChange={(e) => onChange(e)}
+            value={expiryDate}
+            name="expiryDate"
+            placeholder="Enter Licence Expiry Date"
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            Please provide this Info.
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+      <Row className="mb-6">
+        <Form.Group as={Col} md="6" controlId="validationCustom01">
+          <Form.Label>Create Password</Form.Label>
+          <Form.Control
+            type="password"
+            onChange={(e) => onChange(e)}
+            value={password}
+            name="password"
+            placeholder="********"
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            You Must Have A Login Pass.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group as={Col} md="6" controlId="validationCustom01">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            type="password"
+            onChange={(e) => onChange(e)}
+            value={confirmPass}
+            name="confirmPass"
+            placeholder="********"
+            required
+          />
+          <Form.Control.Feedback type="invalid">
+            You Must Have A Login Pass.
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+      <Form.Group>
         <Form.Check
           required
           label="Agree to terms and conditions"
@@ -168,12 +255,13 @@ const Register = props => {
           feedbackType="invalid"
         />
       </Form.Group>
-      <Button type="submit">Submit form</Button>
+      <Button type="submit" >
+        Submit form
+      </Button>
     </Form>
-  </div>
-  )
-}
+  );
+};
 
-Register.propTypes = {}
+Register.propTypes = {};
 
-export default Register
+export default Register;
