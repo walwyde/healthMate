@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Row from "react-bootstrap/Row";
+import { createProfile } from "../../Actions/profile";
+import {connect} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 
-const Register = (props) => {
+const CreateProfile = ({createProfile, history}) => {
   const [validated, setValidated] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -43,13 +46,14 @@ const Register = (props) => {
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
+      return event.preventDefault();
       event.stopPropagation();
     }
 
     console.log(formData);
     event.preventDefault();
     setValidated(true);
+    createProfile(formData, history, "staff")
   };
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -82,7 +86,7 @@ const Register = (props) => {
         </Form.Group>
       </Row>
       <Row className="mb-6">
-        <Form.Group as={Col} md="6" controlId="validationCustom01">
+        <Form.Group as={Col} md="6" controlId="validationCustom03">
           <Form.Label>Gender</Form.Label>
           <Form.Control
             required
@@ -96,7 +100,7 @@ const Register = (props) => {
             Options: Male, Female, Others!
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group as={Col} md="6" controlId="validationCustom03">
+        <Form.Group as={Col} md="6" controlId="validationCustom04">
           <Form.Label>Address</Form.Label>
           <Form.Control
             onChange={(e) => onChange(e)}
@@ -112,7 +116,7 @@ const Register = (props) => {
         </Form.Group>
       </Row>
       <Row className="mb-6">
-        <Form.Group as={Col} md="6" controlId="validationCustom04">
+        <Form.Group as={Col} md="6" controlId="validationCustom05">
           <Form.Label>Phone</Form.Label>
           <Form.Control
             onChange={(e) => onChange(e)}
@@ -126,7 +130,7 @@ const Register = (props) => {
             Please provide a valid Phone Number.
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group as={Col} md="6" controlId="validationCustom05">
+        <Form.Group as={Col} md="6" controlId="validationCustom06">
           <Form.Label>Email</Form.Label>
           <Form.Control
             onChange={(e) => onChange(e)}
@@ -142,7 +146,7 @@ const Register = (props) => {
         </Form.Group>
       </Row>
       <Row className="mb-6">
-        <Form.Group as={Col} md="6" controlId="validationCustom01">
+        <Form.Group as={Col} md="6" controlId="validationCustom07">
           <Form.Label>NIN</Form.Label>
           <Form.Control
             type="text"
@@ -156,7 +160,7 @@ const Register = (props) => {
             Please provide a valid NIN.
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group as={Col} md="6" controlId="validationCustom01">
+        <Form.Group as={Col} md="6" controlId="validationCustom08">
           <Form.Label>Professional Designation</Form.Label>
           <Form.Control
             onChange={(e) => onChange(e)}
@@ -172,7 +176,7 @@ const Register = (props) => {
         </Form.Group>
       </Row>
       <Row className="mb-6">
-        <Form.Group as={Col} md="6" controlId="validationCustom01">
+        <Form.Group as={Col} md="6" controlId="validationCustom09">
           <Form.Label>License Type</Form.Label>
           <Form.Control
             onChange={(e) => onChange(e)}
@@ -186,7 +190,7 @@ const Register = (props) => {
             Please provide this Info.
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group as={Col} md="6" controlId="validationCustom01">
+        <Form.Group as={Col} md="6" controlId="validationCustom10">
           <Form.Label>License Number</Form.Label>
           <Form.Control
             onChange={(e) => onChange(e)}
@@ -202,7 +206,7 @@ const Register = (props) => {
         </Form.Group>
       </Row>
       <Row className="mb-6">
-        <Form.Group as={Col} md="6" controlId="validationCustom01">
+        <Form.Group as={Col} md="6" controlId="validationCustom11">
           <Form.Label>License Expiry Date</Form.Label>
           <Form.Control
             type="text"
@@ -218,7 +222,7 @@ const Register = (props) => {
         </Form.Group>
       </Row>
       <Row className="mb-6">
-        <Form.Group as={Col} md="6" controlId="validationCustom01">
+        <Form.Group as={Col} md="6" controlId="validationCustom12">
           <Form.Label>Create Password</Form.Label>
           <Form.Control
             type="password"
@@ -232,7 +236,7 @@ const Register = (props) => {
             You Must Have A Login Pass.
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group as={Col} md="6" controlId="validationCustom01">
+        <Form.Group as={Col} md="6" controlId="validationCustom13">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             type="password"
@@ -262,6 +266,8 @@ const Register = (props) => {
   );
 };
 
-Register.propTypes = {};
+CreateProfile.propTypes = {
+  createProfile: PropTypes.func.isRequired
+};
 
-export default Register;
+export default connect(null, {createProfile})(withRouter(CreateProfile));

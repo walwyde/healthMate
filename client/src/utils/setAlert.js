@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { set_alert, remove_alert } from './types'
+import { set_alert, remove_alert } from '../Actions/types'
 
 export const setAlert = (msg, alertType) => dispatch => {
   const id = uuidv4()

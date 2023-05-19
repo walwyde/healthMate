@@ -4,7 +4,9 @@ const dbURI = config.get("mongooseURI")
 
 const connectDB = async () => {
   try{
-    const connection = (await mongoose.connect(dbURI)).set("strictQuery", true)
+    mongoose.set("strictQuery", true)
+    const connection = await mongoose.connect(dbURI)
+
 
     console.log(`connected to database ----> ${connection.connection.host}`)
   } catch(err) {

@@ -3,8 +3,11 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
-function Navigation() {
+
+function Navigation({isAuthenticated}) {
   const authLinks = (
     <Fragment>
       <Nav className="me-auto">
@@ -39,11 +42,19 @@ function Navigation() {
         <Navbar.Brand href="/">HealthMate</Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          {guestLinks}
+          { isAuthenticated ? authLinks : guestLinks }
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
 }
 
-export default Navigation;
+Navigation.propTypes = {
+  isAuthenticated: PropTypes.bool
+}
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps)(Navigation);

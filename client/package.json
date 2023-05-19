@@ -3,12 +3,6 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "start": "vite",
-    "build": "vite build",
-    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
   "dependencies": {
     "bootstrap": "^5.2.3",
     "react": "^18.2.0",
@@ -31,5 +25,11 @@
     "eslint-plugin-react-refresh": "^0.3.4",
     "vite": "^4.3.2"
   },
-  "proxy": "http://localhost:5005"
+  "proxy": "http://localhost:5005",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  }
 }

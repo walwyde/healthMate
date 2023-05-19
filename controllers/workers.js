@@ -80,6 +80,10 @@ exports.newWorker = async (req, res) => {
 
   try {
 
+    const existingProfile = await Worker.findOne({email})
+
+    if (existingProfile) return res.status(400).json("profile Already Created")
+
     const profileFields = {};
     profileFields.user = req.user.id;
     if (fullName) profileFields.fullName = fullName;

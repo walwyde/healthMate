@@ -9,10 +9,9 @@ router.get('/:id', controller.getWorkerById)
 
 router.post('/',
 [
-  check('name', 'name is required').not().isEmpty(),
+  check('fullName', 'Name is required').not().isEmpty(),
   check('email', 'email is required').isEmail(),
   check('password', 'password is required').not().isEmpty(),
-  check('role', 'role is required').not().isEmpty(),
   check('phone', 'phone is required').not().isEmpty(),
 
 ], controller.newWorker)

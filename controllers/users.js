@@ -36,7 +36,7 @@ exports.newUser = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, condition } = req.body;
+  const { name, email, password, password2, condition } = req.body;
   const avatar = gravatar.url(email, {
     s: "200",
     r: "pg",
@@ -50,6 +50,7 @@ exports.newUser = async (req, res) => {
       return res.status(400).json({ errors: [{msg:"email already exists"}] });
     }
 
+    if (password !== password2) return res.status(400).json("passwords dont match")
     const user = new User({
       name,
       email,
