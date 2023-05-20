@@ -9,20 +9,18 @@ exports.getIndex = async (req, res) => {
     const user = await User.findById(req.user.id).select("-password");
 
     if (!user) {
-      return res.status(404).json({ errors: [{msg: "user not found"}] });
+      return res.status(404).json({ errors: [{ msg: "user not found" }] });
     }
 
     res.status(200).json(user);
-
-
   } catch (err) {
-    if (err) res.status('500').send([{errors: 'server error'}])
+    if (err) res.status("500").send([{ errors: "server error" }]);
     console.log(err.message);
   }
 };
 
 exports.login = async (req, res) => {
-  console.log(req.body)
+  console.log("login" + ' ' + req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -32,7 +30,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ errors: {msg: "user not found" }});
+      return res.status(404).json({ errors: { msg: "user not found" } });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -47,17 +45,23 @@ exports.login = async (req, res) => {
       user: {
         name: user.name,
         id: user.id,
-       condition: user.condition,
+        condition: user.condition,
       },
     };
 
-    jwt.sign(payload,
-       config.get("jwtSecret"),
-        { expiresIn: "2h"}, (err, token) => {
-          if(err) {console.log(err)}
-          res.status(200).json(token)
-        });
+    jwt.sign(
+      payload,
+      config.get("jwtSecret"),
+      { expiresIn: "2h" },
+      (err, token) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log(token);
 
+        res.status(200).json(token);
+      }
+    );
   } catch (err) {
     console.log(err);
   }

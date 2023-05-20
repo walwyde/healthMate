@@ -12,10 +12,16 @@ const Register = ({ register, history }) => {
     email: "",
     password: "",
     password2: "",
-    condition: false,
+    condition: "",
   });
 
-  const { email, password, name, password2, condition } = formData;
+  const {
+    email,
+    password,
+    name,
+    password2,
+    condition,
+  } = formData;
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,8 +31,7 @@ const Register = ({ register, history }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
-    // register(formData, history);
+    register(formData, history);
   };
 
   return (
@@ -67,18 +72,8 @@ const Register = ({ register, history }) => {
           required
         >
           <option>Select Your Medical Condition</option>
-          <option
-            name="diabetic"
-            value={true}
-          >
-            Diabetic
-          </option>
-          <option
-            name="hypertensive"
-            value={true}
-          >
-            Hypertensive
-          </option>
+          <option value="diabetic">Diabetic</option>
+          <option value="hypertensive">Hypertensive</option>
         </Form.Select>
       </Form.Group>
 

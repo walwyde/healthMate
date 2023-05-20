@@ -50,7 +50,7 @@ exports.newUser = async (req, res) => {
       return res.status(400).json({ errors: [{msg:"email already exists"}] });
     }
 
-    if (password !== password2) return res.status(400).json("passwords dont match")
+    if (password !== password2) return res.status(400).json({errors: [{msg: "passwords dont match"}]})
     const user = new User({
       name,
       email,
@@ -85,7 +85,6 @@ exports.newUser = async (req, res) => {
       }
       res.status(200).json(token)
     });
-    console.log(user);
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ errors: [err.message] });

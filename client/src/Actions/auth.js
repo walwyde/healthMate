@@ -1,74 +1,105 @@
-import {login_fail, login_success} from './types'
-import { setAlert } from '../utils/setAlert'
-import {loadUser} from '../Actions/register'
-import axios from 'axios'
+import {
+  login_fail,
+  login_success,
+  register_success,
+  register_fail,
+  log_out,
+  clear_profile
+} from "./types";
+import { setAlert } from "../utils/setAlert";
+import { loadUser } from "../Actions/register";
+import axios from "axios";
 
-export const login = ( formData, history) => async dispatch => {
-  console.log(formData)
+export const login = (formData, history) => async (dispatch) => {
+
   const options = {
     headers: {
-    'Content-Type': 'application/json;charset=UTF-8'
+      "Content-Type": "application/json;charset=UTF-8",
     },
-  }
+  };
 
+  
   try {
-    // const res = await axios.post('http://localhost:5005/api/auth', formData, options)
-    // console.log(res)
 
-    const res = await axios.post('http://localhost:5005/api/auth', formData, options)
+    const res = await axios.post(
+      "http://localhost:5005/api/auth",
+      formData,
+      options
+    );
 
-    console.log(res)
+    history.push("/profile");
+
     
-     history.push('/profile')
-
     dispatch({
       type: login_success,
       payload: {
-        token: res
-      }
-    })
-    dispatch(loadUser())
-    dispatch(setAlert('You Have Been Logged In', 'success'))
+        token: res.data,
+      },
+    });
+    dispatch(loadUser());
+    dispatch(setAlert("You Have Been Logged In", "success"));
   } catch (err) {
-    console.log(err)
-    if(err){
-    dispatch(setAlert(err.message, 'danger'))
+    console.log(err);
+    if (err) {
+      dispatch(setAlert(err.message, "danger"));
     }
 
     dispatch({
       type: login_fail,
-    })
+    });
   }
-}
+};
 export const register = (formData, history) => async (dispatch) => {
+  const { condition } = formData;
+
+  const reFormed = { ...formData };
+
+  if (condition === "hypertensive")
+    reFormed.condition = { "hypertensive": true, "diabetic": false };
+  if (condition === "diabetic")
+    reFormed.condition = { "hypertensive": false, "diabetic": true };
+
+  console.log(reFormed.condition);
+
   const config = {
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
   };
   try {
-    const res = await axios.post("/api/users", formData, config);
+    const res = await axios.post(
+      "http://localhost:5005/api/users",
+      formData,
+      config
+    );
 
-    console.log(res);
-
-    if (res.errors)
-      return res.errors.forEach((error) =>
-        dispatch(setAlert(error.msg, "danger"))
-      );
+    console.log(res.response);
 
     dispatch({
       type: register_success,
-      payload: { token: res },
+      payload: { token: res.data },
     });
 
-    dispatch(loadUser())
+    dispatch(loadUser());
 
     dispatch(setAlert("Registration Successful", "success"));
   } catch (err) {
-    console.log(err);
+    console.log(err.response.data);
+    const errors = err.response.data.errors;
+    if (errors)
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
 
     dispatch({
       type: register_fail,
     });
   }
+};
+
+export const logout = () => (dispatch) => {
+  dispatch({
+    type: clear_profile,
+  });
+  dispatch({
+    type: log_out,
+  });
 };

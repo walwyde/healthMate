@@ -4,10 +4,11 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import {connect} from 'react-redux'
+import { logout } from "../../Actions/auth";
 import PropTypes from 'prop-types'
 
 
-function Navigation({isAuthenticated}) {
+const Navigation = ({isAuthenticated, logout}) => {
   const authLinks = (
     <Fragment>
       <Nav className="me-auto">
@@ -21,7 +22,7 @@ function Navigation({isAuthenticated}) {
         </NavDropdown>
       </Nav>
       <Nav>
-        <Nav.Link href="/login">Logout</Nav.Link>
+        <Nav.Link href="#" onClick={logout}>Logout</Nav.Link>
       </Nav>
     </Fragment>
   );
@@ -50,11 +51,12 @@ function Navigation({isAuthenticated}) {
 }
 
 Navigation.propTypes = {
-  isAuthenticated: PropTypes.bool
+  isAuthenticated: PropTypes.bool,
+  logout: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps)(Navigation);
+export default connect(mapStateToProps, {logout})(Navigation);

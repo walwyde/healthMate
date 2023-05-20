@@ -1,6 +1,5 @@
 import {
-  register_success,
-  register_fail,
+  
   user_loaded,
   load_error,
   log_out,
@@ -16,8 +15,7 @@ export const loadUser = () => async (dispatch) => {
 
   try {
     const res = await axios.get("http://localhost:5005/api/auth");
-
-    if (data) {
+    if (!res) {
       dispatch({
         type: load_error,
       });
@@ -25,7 +23,7 @@ export const loadUser = () => async (dispatch) => {
 
     dispatch({
       type: user_loaded,
-      payload: res,
+      payload: res.data,
     });
   } catch (err) {
     console.log(err.response);

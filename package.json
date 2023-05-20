@@ -27,6 +27,7 @@
     "express-validator": "^6.14.2",
     "gravatar": "^1.8.2",
     "jsonwebtoken": "^8.5.1",
+    "mdb-react-ui-kit": "^6.0.0",
     "mongoose": "^6.6.5",
     "request": "^2.88.2",
     "uuid": "^9.0.0"
