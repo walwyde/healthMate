@@ -20,7 +20,7 @@ import {
 const Profile = ({ profile: { profile, loading }, loadCurrentProfile }) => {
   useEffect(() => {
     loadCurrentProfile();
-  }, [loading]);
+  }, []);
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: "#9de2ff" }}>
       <MDBContainer className="py-5 h-100">
@@ -33,7 +33,7 @@ const Profile = ({ profile: { profile, loading }, loadCurrentProfile }) => {
                   <MDBCardText>
                     Please Use This Link To Update Your Profile Card For Better Experience.
                   </MDBCardText>
-                  <MDBBtn href='/user/edit-profile'>Edit Card Profile</MDBBtn>
+                  <MDBBtn href='/edit-user-profile/123334'>Edit Card Profile</MDBBtn>
                 </MDBCardBody>
               </MDBCard>
         ) : (

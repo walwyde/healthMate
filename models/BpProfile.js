@@ -21,10 +21,7 @@ const BpProfileCardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  email: {
-    type: String,
-    required: true,
-  },
+  
   bloodPressureReadings: [
     {
       systolic: {
@@ -57,10 +54,6 @@ const BpProfileCardSchema = new mongoose.Schema({
       },
     },
   ],
-  lifestyleModifications: {
-    type: String,
-    required: false,
-  },
   otherHealthConditions: {
     type: String,
     required: false,

@@ -3,6 +3,8 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import Navbar from "./components/layouts/Navbar";
 import Landing from "./components/Landing";
 import CreateProfile from "./components/workers/CreateProfile";
+import EditStaffProfile from "./components/workers/EditStaffProfile";
+import EditUserProfile from "./components/profile/EditUserProfile";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Alert from "./components/layouts/Alerts";
@@ -19,7 +21,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/esm/Container";
 import { loadUser } from "./Actions/register";
 import store from "./store";
-import { BrowserRouter } from "react-router-dom/cjs/react-router-dom.min";
 
 if (localStorage.token) {
   setHeader(localStorage.getItem("token"));
@@ -40,10 +41,29 @@ function App() {
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              <PrivateRoute exact path="/create-profile" component={CreateProfile} />
+              <PrivateRoute
+                exact
+                path="/create-profile"
+                component={CreateProfile}
+              />
               <PrivateRoute exact path="/messages" component={Messages} />
               <PrivateRoute exact path="/chat" component={Chat} />
               <PrivateRoute exact path="/profile" component={Profile} />
+              <PrivateRoute
+                exact
+                path="/appointments"
+                component={Appointments}
+              />
+              <PrivateRoute
+                exact
+                path="/edit-staff-profile/:_id"
+                component={EditStaffProfile}
+              />
+              <PrivateRoute
+                exact
+                path="/edit-user-profile/:_id"
+                component={EditUserProfile}
+              />
             </Switch>
           </Container>
         </Fragment>

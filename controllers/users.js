@@ -29,7 +29,6 @@ exports.getUser = async (req, res) => {
   }
 }
 exports.newUser = async (req, res) => {
-  console.log(req.body);
   // input validations
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -90,3 +89,65 @@ exports.newUser = async (req, res) => {
     res.status(500).json({ errors: [err.message] });
   }
 };
+
+
+// Add message to user's messages array
+exports.addMessage = async (req, res) => {
+  try {
+    const { userId, message } = req.body;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Add the message to the user's messages array
+    user.messages.push(message);
+
+    // Save the user with the updated messages array
+    await user.save();
+
+    return res.status(200).json({ message: 'Message added successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
+
+// Delete message from user's messages array
+exports.deleteMessage = async (req, res) => {
+  try {
+    const { userId, messageId } = req.body;
+
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Find the index of the message in the messages array
+    const messageIndex = user.messages.findIndex(
+      (message) => message.id === messageId
+    );
+
+    if (messageIndex === -1) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    // Remove the message from the user's messages array
+    user.messages.splice(messageIndex, 1);
+
+    // Save the user with the updated messages array
+    await user.save();
+
+    return res.status(200).json({ message: 'Message deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Server error' });
+  }
+};
+
+

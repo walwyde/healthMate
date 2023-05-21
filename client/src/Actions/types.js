@@ -31,3 +31,15 @@ export const comment_error = "comment_error";
 export const delete_comment = "delete_comment";
 export const update_post = "update_post";
 export const delete_profile_error = "delete_profile_error";
+export const add_message = "add_message";
+export const delete_message = "delete_message";
+export const message_error = "message_error";
+export const get_messages = "get_messages";
+export const get_message = "get_message";
+export const no_messages = "no_messages";
+export const no_message = "no_message";
+export const new_message = "new_message";
+export const message_deleted = "message_deleted";
+export const update_message = "update_message";
+export const delete_message_error = "delete_message_error";
+
