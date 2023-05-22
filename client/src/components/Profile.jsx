@@ -28,7 +28,7 @@ const Profile = ({
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: "#9de2ff" }}>
       <MDBContainer className="py-5 h-100">
-        {profile === null && !loading ? (
+        {profile === null && !loading ? user && (
           <MDBCard>
             <MDBCardImage
               src="https://mdbootstrap.com/img/new/standard/nature/184.webp"
@@ -36,7 +36,7 @@ const Profile = ({
               alt="..."
             />
             <MDBCardBody>
-              <MDBCardTitle>Hello User</MDBCardTitle>
+              <MDBCardTitle>Hello {user.name.split(' ')[0]}</MDBCardTitle>
               <MDBCardText>
                 Please Use This Link To Update Your Profile Card For Better
                 Experience.
@@ -48,7 +48,7 @@ const Profile = ({
           </MDBCard>
         ) : loading ? (
           <Spinner />
-        ) : (
+        ) : !loading && user && profile && (
           <MDBRow className="justify-content-center align-items-center h-100">
             <MDBCol lg="9" xl="7">
               <MDBCard>

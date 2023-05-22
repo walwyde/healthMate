@@ -19,7 +19,7 @@ router.post('/me',mdlwre.auth,
 ], 
 controller.newProfileCard)
 
-router.put('/me', mdlwre.auth, controller.updateProfileCard)
+router.put('/me', mdlwre.auth, controller.updateProfileCard) 
 
 router.delete('/me', mdlwre.auth, controller.deleteUserProfile)
 

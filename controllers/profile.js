@@ -217,7 +217,7 @@ exports.updateProfileCard = async (req, res) => {
       { new: true }
     );
 
-    profile.save();
+    // profile.save();
 
     return res.status(201).json(profile);
 
@@ -268,7 +268,7 @@ exports.updateProfileCard = async (req, res) => {
       { new: true}
     );
 
-    profile.save();
+    // profile.save();
 
     res.status(201).json(profile);
   }

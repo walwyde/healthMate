@@ -44,7 +44,7 @@ export const login = (formData, history) => async (dispatch) => {
   } catch (err) {
     console.log(err);
     if (err) {
-      dispatch(setAlert(err.message, "danger"));
+      dispatch(setAlert(err.response.data.errors.msg, "danger"));
     }
 
     dispatch({

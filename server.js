@@ -6,17 +6,11 @@ const profileRoutes = require("./routes/api/profile");
 const postsRoutes = require("./routes/api/posts");
 const userRoutes = require("./routes/api/users");
 const workerRoutes = require("./routes/api/workers");
+const cors = require("cors");
 
 const app = express();
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, x-auth-token, Accept"
-  );
-  next();
-});
+app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { api } from "../utils/setHeader";
 
 import {
   load_profile,
@@ -34,49 +35,44 @@ export const loadCurrentProfile = () => async (dispatch) => {
   }
 };
 
-export const createProfile =
-  (formData, history, userType = "user") =>
-  async (dispatch) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    };
-    try {
-      const res =
-        userType === "staff"
-          ? await axios.post("/api/workers", formData, config)
-          : await axios.post(
-              "http://localhost:5005/api/users",
-              formData,
-              config
-            );
-
-      if (res.errors)
-        return res.errors.forEach((error) =>
-          dispatch(setAlert(error.msg, "danger"))
-        );
-
-      if (res) history.push("/profile");
-
-      dispatch({
-        type: load_success,
-        payload: { token: res },
-      });
-
-      dispatch(loadUser());
-
-      dispatch(setAlert("Registration Successful", "success"));
-    } catch (err) {
-      console.log(err);
-
-      dispatch({
-        type: profile_error,
-      });
-    }
+export const createProfile = (formData, history) => async (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
   };
+  try {
+    const res = await api.put(
+      "http://localhost:5005/api/profile/me",
+      formData,
+      config
+    );
 
-  /**
+    if (res.errors)
+      return res.errors.forEach((error) =>
+        dispatch(setAlert(error.msg, "danger"))
+      );
+
+    if (res) history.push("/profile");
+
+    dispatch({
+      type: load_success,
+      payload: { token: res },
+    });
+
+    dispatch(loadUser());
+
+    dispatch(setAlert("Registration Successful", "success"));
+  } catch (err) {
+    console.log(err);
+
+    dispatch({
+      type: profile_error,
+    });
+  }
+};
+
+/**
  * Edit user profile
  * @param formData - The form data to be edited
  * @param history - The history object for navigation
@@ -84,31 +80,17 @@ export const createProfile =
  * @param userType - Optional user type, defaults to "user"
  * @returns Promise<void>
  */
-export const editProfile = (
-  formData,
-  history,
-  id,
-  userType = "user"
-) => async (
-  dispatch
-) => {
+export const editProfile = (formData, history) => async (dispatch) => {
   const config = {
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
   };
   try {
-    const res =
-      userType === "staff"
-        ? await axios.put(`/api/workers/${id}`, formData, config)
-        : await axios.put(
-            `http://localhost:5005/api/users/${id}`,
-            formData,
-            config
-          );
+    const res = await api.put(`/api/profile/me`, formData, config);
 
     if (res.data.errors)
-      return res.data.errors.forEach(error =>
+      return res.data.errors.forEach((error) =>
         dispatch(setAlert(error.msg, "danger"))
       );
 
@@ -121,7 +103,7 @@ export const editProfile = (
 
     dispatch(setAlert("Profile Edit Successful", "success"));
   } catch (err) {
-    console.log(err.response.data);
+    console.log(err.response);
     dispatch(setAlert("Profile Edit Error", "danger"));
 
     dispatch({
@@ -130,20 +112,19 @@ export const editProfile = (
   }
 };
 
+export const getProfileById = (userId) => async (dispatch) => {
+  try {
+    const response = await axios.get(`/api/profile/user/${userId}`);
 
-  export const getProfileById = (userId) => async (dispatch) => {
-    try {
-      const response = await axios.get(`/api/profile/user/${userId}`);
-  
-      dispatch({
-        type: load_profile,
-        payload: response.data,
-      });
-    } catch (err) {
-      console.log(err)
-      dispatch({
-        type: profile_error,
-        payload: err.response,
-      });
-    }
-  };
+    dispatch({
+      type: load_profile,
+      payload: response.data,
+    });
+  } catch (err) {
+    console.log(err);
+    dispatch({
+      type: profile_error,
+      payload: err.response,
+    });
+  }
+};
