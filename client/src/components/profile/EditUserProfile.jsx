@@ -17,27 +17,27 @@ const EditUserProfile = ({
   }, [loading]);
 
   const [formData, setFormData] = useState({
-    name: !profile.loading && profile.name ? profile.name : "",
-    age: !profile.loading && profile.age ? profile.age : "",
-    gender: !profile.loading && profile.gender ? profile.gender : "",
-    address: !profile.loading && profile.address ? profile.address : "",
-    phone: !profile.loading && profile.phone ? profile.phone : "",
-    systolic: !profile.loading && profile.systolic ? profile.systolic : "",
-    diastolic: !profile.loading && profile.diastolic ? profile.diastolic : "",
-    medName: !profile.loading && profile.medName ? profile.medName : "",
-    medDose: !profile.loading && profile.medDose ? profile.medDose : "",
-    frequency: !profile.loading && profile.frequency ? profile.frequency : "",
+    name: !loading && profile.name ? profile.name : "",
+    age: !loading && profile.age ? profile.age : "",
+    gender: !loading && profile.gender ? profile.gender : "",
+    address: !loading && profile.address ? profile.address : "",
+    phone: !loading && profile.phone ? profile.phone : "",
+    systolic: !loading && profile.systolic ? profile.systolic : "",
+    diastolic: !loading && profile.diastolic ? profile.diastolic : "",
+    medName: !loading && profile.medName ? profile.medName : "",
+    medDose: !loading && profile.medDose ? profile.medDose : "",
+    frequency: !loading && profile.frequency ? profile.frequency : "",
     otherHealthConditions:
-      !profile.loading && profile.otherHealthConditions
+      !loading && profile.otherHealthConditions
         ? profile.otherHealthConditions
         : "",
-    allergies: !profile.loading && profile.allergies ? profile.allergies : "",
+    allergies: !loading && profile.allergies ? profile.allergies : "",
     emergencyContact:
-      !profile.loading && profile.emergencyContact
+      !loading && profile.emergencyContact
         ? profile.emergencyContact
         : "",
     familyHistory:
-      !profile.loading && profile.profileHistory ? profile.profileHistory : "",
+      !loading && profile.profileHistory ? profile.profileHistory : "",
   });
 
   const {
@@ -116,13 +116,13 @@ const EditUserProfile = ({
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="systolic">
-        <Form.Label>Systolic Reading</Form.Label>
+        <Form.Label>Address</Form.Label>
         <Form.Control
           type="text"
-          value={systolic}
-          name="systolic"
+          value={address}
+          name="address"
           onChange={(e) => onChange(e)}
-          placeholder="Enter systolic reading"
+          placeholder="Enter Address"
           required
         />
       </Form.Group>
@@ -132,57 +132,108 @@ const EditUserProfile = ({
         <Form.Control
           type="text"
           value={diastolic}
-          name="age"
+          name="diastolic"
           onChange={(e) => onChange(e)}
-          placeholder="Enter Diastolic"
+          placeholder="Enter Diastolic Reading"
+          required
+        />
+        <Form.Text>
+          Enter last three readings SEPERATED BY COMMAS(,)
+        </Form.Text>
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Systolic</Form.Label>
+        <Form.Control
+          type="text"
+          value={systolic}
+          name="systolic"
+          onChange={(e) => onChange(e)}
+          placeholder="Enter Systolic readings"
           required
         />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Age</Form.Label>
+        <Form.Label>Medication Name</Form.Label>
         <Form.Control
           type="text"
-          value={age}
-          name="age"
+          value={medName}
+          name="medName"
           onChange={(e) => onChange(e)}
-          placeholder="Enter age"
+          placeholder="Enter medication Name"
           required
         />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Age</Form.Label>
+        <Form.Label>Medication Dose</Form.Label>
         <Form.Control
           type="text"
-          value={age}
-          name="age"
+          value={medDose}
+          name="medDose"
           onChange={(e) => onChange(e)}
-          placeholder="Enter age"
+          placeholder="Enter enter medication dosage"
           required
         />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Age</Form.Label>
+        <Form.Label>Medication Frequency</Form.Label>
         <Form.Control
           type="text"
-          value={age}
-          name="age"
+          value={frequency}
+          name="frequency"
           onChange={(e) => onChange(e)}
-          placeholder="Enter age"
+          placeholder="Enter frequency"
           required
         />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Age</Form.Label>
+        <Form.Label>Other Health Conditions?</Form.Label>
         <Form.Control
           type="text"
-          value={age}
-          name="age"
+          value={otherHealthConditions}
+          name="otherHealthConditions"
           onChange={(e) => onChange(e)}
-          placeholder="Enter age"
+          placeholder="Enter other Health Conditions"
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Allergies</Form.Label>
+        <Form.Control
+          type="text"
+          value={allergies}
+          name="allergies"
+          onChange={(e) => onChange(e)}
+          placeholder="Enter allergies"
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Emergency Contact</Form.Label>
+        <Form.Control
+          type="text"
+          value={emergencyContact}
+          name="emergencyContact"
+          onChange={(e) => onChange(e)}
+          placeholder="Enter emergency Contact"
+          required
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Family History</Form.Label>
+        <Form.Control
+          type="text"
+          value={familyHistory}
+          name="familyHistory"
+          onChange={(e) => onChange(e)}
+          placeholder="Enter family History"
           required
         />
       </Form.Group>
