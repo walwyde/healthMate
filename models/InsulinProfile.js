@@ -5,15 +5,9 @@ const InsulinProfileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  contactInfo: {
-    phone: {
+  phone: {
       type: String,
       required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
   },
   diagnosisDate: {
     type: Date,
@@ -33,13 +27,11 @@ const InsulinProfileSchema = new mongoose.Schema({
   allergies: [
     {
       name: { type: String, required: false },
-      severity: { type: String, required: false },
     },
   ],
   emergencyContact: {
     name: { type: String, required: false },
     phone: { type: String, required: false },
-    email: { type: String, required: false },
   },
   glucoseReadings: [
     {
@@ -53,12 +45,7 @@ const InsulinProfileSchema = new mongoose.Schema({
       insulinType: { type: String, required: false },
     },
   ],
-  complications: [
-    {
-      name: { type: String, required: false },
-      severity: { type: String, required: false },
-    },
-  ],
+  
   doctor: {
     name: { type: String, required: false },
     phone: { type: String, required: false },

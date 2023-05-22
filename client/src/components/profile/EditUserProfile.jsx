@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
 import Form from "react-bootstrap/Form";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
-import { getProfileById } from "../../Actions/profile";
-import { editProfile } from "../../Actions/profile";
+import { getProfileById, editProfile } from "../../Actions/profile";
 import { connect } from "react-redux";
 
 const EditUserProfile = ({
   profile: { profile, loading },
+  editProfile,
+  history,
   getProfileById,
   match,
 }) => {
@@ -17,27 +19,32 @@ const EditUserProfile = ({
   }, [loading]);
 
   const [formData, setFormData] = useState({
-    name: !loading && profile.name ? profile.name : "",
-    age: !loading && profile.age ? profile.age : "",
-    gender: !loading && profile.gender ? profile.gender : "",
-    address: !loading && profile.address ? profile.address : "",
-    phone: !loading && profile.phone ? profile.phone : "",
-    systolic: !loading && profile.systolic ? profile.systolic : "",
-    diastolic: !loading && profile.diastolic ? profile.diastolic : "",
-    medName: !loading && profile.medName ? profile.medName : "",
-    medDose: !loading && profile.medDose ? profile.medDose : "",
-    frequency: !loading && profile.frequency ? profile.frequency : "",
+    name: profile && !loading && profile.name ? profile.name : "",
+    age: profile && !loading && profile.age ? profile.age : "",
+    gender: profile && !loading && profile.gender ? profile.gender : "",
+    address: profile && !loading && profile.address ? profile.address : "",
+    phone: profile && !loading && profile.phone ? profile.phone : "",
+    systolic: profile && !loading && profile.systolic ? profile.systolic : "",
+    diastolic:
+      profile && !loading && profile.diastolic ? profile.diastolic : "",
+    medName: profile && !loading && profile.medName ? profile.medName : "",
+    medDose: profile && !loading && profile.medDose ? profile.medDose : "",
+    frequency:
+      profile && !loading && profile.frequency ? profile.frequency : "",
     otherHealthConditions:
-      !loading && profile.otherHealthConditions
+      profile && !loading && profile.otherHealthConditions
         ? profile.otherHealthConditions
         : "",
-    allergies: !loading && profile.allergies ? profile.allergies : "",
+    allergies:
+      profile && !loading && profile.allergies ? profile.allergies : "",
     emergencyContact:
-      !loading && profile.emergencyContact
+      profile && !loading && profile.emergencyContact
         ? profile.emergencyContact
         : "",
     familyHistory:
-      !loading && profile.profileHistory ? profile.profileHistory : "",
+      profile && !loading && profile.profileHistory
+        ? profile.profileHistory
+        : "",
   });
 
   const {
@@ -62,9 +69,14 @@ const EditUserProfile = ({
   };
 
   const onSubmit = (e) => {
+    console.log(formData);
     e.preventDefault();
-    login(formData, history);
+    editProfile(formData, history, match.params._id);
+    editProfile(formData, history);
   };
+
+  const diabetic = user.condition.diabetic;
+  const hypertensive = user.condition.hypertensive;
   return (
     <Form onSubmit={(e) => onSubmit(e)}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -137,9 +149,7 @@ const EditUserProfile = ({
           placeholder="Enter Diastolic Reading"
           required
         />
-        <Form.Text>
-          Enter last three readings SEPERATED BY COMMAS(,)
-        </Form.Text>
+        <Form.Text>Enter last three readings SEPERATED BY COMMAS(,)</Form.Text>
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">

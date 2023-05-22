@@ -41,7 +41,7 @@ const Profile = ({
                 Please Use This Link To Update Your Profile Card For Better
                 Experience.
               </MDBCardText>
-              <MDBBtn href={isStaff ? `/edit-staff-profile/${_id}` : `/edit-user-profile/${user._id}`}>
+              <MDBBtn href={isStaff ? `/edit-staff-profile/${user._id}` : `/edit-user-profile/${user._id}`}>
                 Edit Card Profile
               </MDBBtn>
             </MDBCardBody>
