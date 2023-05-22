@@ -40,6 +40,8 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
+  isStaff: false,
+  isAdmin: false,
   date: {
     type: Date,
     default: Date.now,

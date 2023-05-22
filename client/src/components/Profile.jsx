@@ -17,7 +17,11 @@ import {
   MDBTypography,
 } from "mdb-react-ui-kit";
 
-const Profile = ({ profile: { profile, loading }, loadCurrentProfile }) => {
+const Profile = ({
+  auth: { user, isStaff },
+  profile: { profile, loading },
+  loadCurrentProfile,
+}) => {
   useEffect(() => {
     loadCurrentProfile();
   }, []);
@@ -25,17 +29,25 @@ const Profile = ({ profile: { profile, loading }, loadCurrentProfile }) => {
     <div className="gradient-custom-2" style={{ backgroundColor: "#9de2ff" }}>
       <MDBContainer className="py-5 h-100">
         {profile === null && !loading ? (
-          
-              <MDBCard>
-                <MDBCardImage src='https://mdbootstrap.com/img/new/standard/nature/184.webp' position='top' alt='...' />
-                <MDBCardBody>
-                  <MDBCardTitle>Hello User</MDBCardTitle>
-                  <MDBCardText>
-                    Please Use This Link To Update Your Profile Card For Better Experience.
-                  </MDBCardText>
-                  <MDBBtn href='/edit-user-profile/123334'>Edit Card Profile</MDBBtn>
-                </MDBCardBody>
-              </MDBCard>
+          <MDBCard>
+            <MDBCardImage
+              src="https://mdbootstrap.com/img/new/standard/nature/184.webp"
+              position="top"
+              alt="..."
+            />
+            <MDBCardBody>
+              <MDBCardTitle>Hello User</MDBCardTitle>
+              <MDBCardText>
+                Please Use This Link To Update Your Profile Card For Better
+                Experience.
+              </MDBCardText>
+              <MDBBtn href={isStaff ? `/edit-staff-profile/${_id}` : `/edit-user-profile/${user._id}`}>
+                Edit Card Profile
+              </MDBBtn>
+            </MDBCardBody>
+          </MDBCard>
+        ) : loading ? (
+          <Spinner />
         ) : (
           <MDBRow className="justify-content-center align-items-center h-100">
             <MDBCol lg="9" xl="7">
@@ -163,12 +175,14 @@ const Profile = ({ profile: { profile, loading }, loadCurrentProfile }) => {
 };
 
 Profile.propTypes = {
+  auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
-  loadCurrentProfile: PropTypes.func.isRequired
+  loadCurrentProfile: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   profile: state.profile,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { loadCurrentProfile })(Profile);

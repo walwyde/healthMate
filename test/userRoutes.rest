@@ -8,7 +8,8 @@ Content-Type: application/json
 	"email": "walwyde@gmail.com",
 	"password": "password",
 	"condition": {
-		"hypertensive": true
+		"hypertensive": true,
+		"diabetic": false
 	}
 }
 

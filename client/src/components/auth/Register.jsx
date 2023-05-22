@@ -27,8 +27,6 @@ const Register = ({ register, history }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const [selectedOption, setSelectedOption] = useState("");
-
   const onSubmit = (e) => {
     e.preventDefault();
     register(formData, history);

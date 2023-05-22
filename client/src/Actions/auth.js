@@ -6,6 +6,9 @@ import {
   log_out,
   clear_profile
 } from "./types";
+
+
+
 import { setAlert } from "../utils/setAlert";
 import { loadUser } from "../Actions/register";
 import axios from "axios";
@@ -69,9 +72,11 @@ export const register = (formData, history) => async (dispatch) => {
   try {
     const res = await axios.post(
       "http://localhost:5005/api/users",
-      formData,
+      reFormed,
       config
     );
+
+      history.push('/profile')
 
     console.log(res.response);
 
@@ -84,7 +89,7 @@ export const register = (formData, history) => async (dispatch) => {
 
     dispatch(setAlert("Registration Successful", "success"));
   } catch (err) {
-    console.log(err.response.data);
+    console.log(err.response);
     const errors = err.response.data.errors;
     if (errors)
       errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));

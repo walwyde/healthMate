@@ -7,31 +7,41 @@ import { getProfileById } from "../../Actions/profile";
 import { editProfile } from "../../Actions/profile";
 import { connect } from "react-redux";
 
-const EditUserProfile = ({ profile: { profie, loading,}, getProfileById, match }) => {
-
+const EditUserProfile = ({
+  profile: { profile, loading },
+  getProfileById,
+  match,
+}) => {
   useEffect(() => {
     getProfileById(match.params._id);
   }, [loading]);
 
-
   const [formData, setFormData] = useState({
-    name: "",
-    age: "",
-    gender: '',
-    address: '',
-    phone: '',
-    systolic: '',
-    diastolic: '',
-    medName: '',
-    medDose: '',
-    frequency: '',
-    otherHealthConditions: '',
-    allergies: '',
-    emergencyContact: '',
-    familyHistory: '',
+    name: !profile.loading && profile.name ? profile.name : "",
+    age: !profile.loading && profile.age ? profile.age : "",
+    gender: !profile.loading && profile.gender ? profile.gender : "",
+    address: !profile.loading && profile.address ? profile.address : "",
+    phone: !profile.loading && profile.phone ? profile.phone : "",
+    systolic: !profile.loading && profile.systolic ? profile.systolic : "",
+    diastolic: !profile.loading && profile.diastolic ? profile.diastolic : "",
+    medName: !profile.loading && profile.medName ? profile.medName : "",
+    medDose: !profile.loading && profile.medDose ? profile.medDose : "",
+    frequency: !profile.loading && profile.frequency ? profile.frequency : "",
+    otherHealthConditions:
+      !profile.loading && profile.otherHealthConditions
+        ? profile.otherHealthConditions
+        : "",
+    allergies: !profile.loading && profile.allergies ? profile.allergies : "",
+    emergencyContact:
+      !profile.loading && profile.emergencyContact
+        ? profile.emergencyContact
+        : "",
+    familyHistory:
+      !profile.loading && profile.profileHistory ? profile.profileHistory : "",
   });
 
-  const { name,
+  const {
+    name,
     age,
     gender,
     address,
@@ -45,9 +55,7 @@ const EditUserProfile = ({ profile: { profie, loading,}, getProfileById, match }
     allergies,
     emergencyContact,
     familyHistory,
-
   } = formData;
-
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -120,13 +128,13 @@ const EditUserProfile = ({ profile: { profie, loading,}, getProfileById, match }
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Age</Form.Label>
+        <Form.Label>Diastolic</Form.Label>
         <Form.Control
           type="text"
-          value={age}
+          value={diastolic}
           name="age"
           onChange={(e) => onChange(e)}
-          placeholder="Enter age"
+          placeholder="Enter Diastolic"
           required
         />
       </Form.Group>
@@ -195,6 +203,6 @@ const mapStateToProps = (state) => ({
   profile: state.profile,
 });
 
-export default connect(mapStateToProps, {editProfile, getProfileById})(
+export default connect(mapStateToProps, { editProfile, getProfileById })(
   withRouter(EditUserProfile)
 );
