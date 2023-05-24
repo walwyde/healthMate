@@ -11,7 +11,6 @@ exports.auth = async (req, res, next) => {
     if (!token) {
       return res.status(401).json("authorization denied, no signed token");
     }
-    console.log(config.get("jwtSecret"));
     const decoded = jwt.verify(token, config.get("jwtSecret"));
 
     req.user = decoded.user;

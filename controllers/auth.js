@@ -20,13 +20,14 @@ exports.getIndex = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  console.log("login" + ' ' + req.body);
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
     const { email, password } = await req.body;
+
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -38,8 +39,6 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).send("password incorrect");
     }
-
-    console.log(user.condition);
 
     const payload = {
       user: {

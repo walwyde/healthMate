@@ -6,16 +6,15 @@ const mdlwre = require("../../middleware/index")
 
 
 // router.get('/users', controller.getAllProfiles)
-
-router.get('/user/:id', controller.getProfileById)
-
 router.get("/me", mdlwre.auth, controller.getProfile)
+
+router.get('/:id', mdlwre.auth, controller.getProfileById)
+
 
 router.post('/me',mdlwre.auth, 
 [
   check("medications", "what is your current medication?").not().isEmpty(),
   check("age", "You Must Belong To An Age Bracket For Better Diagnosis").not().isEmpty(),
-  check('email', 'Please include a valid email').isEmail(),
 ], 
 controller.newProfileCard)
 

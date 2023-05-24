@@ -20,6 +20,8 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/esm/Container";
 import { loadUser } from "./Actions/register";
+// import { ToastContainer} from "react-toastify";
+// import 'react-toastify/dist/ReactToastify.css';
 import store from "./store";
 
 if (localStorage.token) {
@@ -65,6 +67,7 @@ function App() {
                 component={EditUserProfile}
               />
             </Switch>
+            {/* <ToastContainer /> */}
           </Container>
         </Fragment>
       </Router>

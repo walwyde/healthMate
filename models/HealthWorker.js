@@ -6,10 +6,10 @@ const healthWorkerSchema = new mongoose.Schema({
     type: String,
     emun: ["Doctor", "Professor", "Nurse"],
   },
-  fullName: {
-    type: String,
-    required: true,
-  },
+ user : {
+type: mongoose.Schema.Types.ObjectId,
+ ref: "User",
+ },
   dateOfBirth: {
     type: Date,
     required: true,

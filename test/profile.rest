@@ -3,10 +3,10 @@
 GET http://localhost:5005/api/profile/me HTTP/1.1
 x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJhdXdhbCIsImlkIjoiNjQ1ZmU2YTViZjYwMThmZjIyYzAxMDU0IiwiY29uZGl0aW9uIjp7ImRpYWJldGljIjpmYWxzZSwiaHlwZXJ0ZW5zaXZlIjp0cnVlfX0sImlhdCI6MTY4NDE4MzYzMSwiZXhwIjoxNjg0MTkwODMxfQ.htxdGO2IiDYWcZB4x44GcS9HN22BebDo7BSl9sK-Az8
 
-### crete new profile
+### crete new bPprofile
 
 post http://localhost:5005/api/profile/me HTTP/1.1
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJhdXdhbCIsImlkIjoiNjQ1ZmU2YTViZjYwMThmZjIyYzAxMDU0IiwiY29uZGl0aW9uIjp7ImRpYWJldGljIjpmYWxzZSwiaHlwZXJ0ZW5zaXZlIjp0cnVlfX0sImlhdCI6MTY4NDE4MzYzMSwiZXhwIjoxNjg0MTkwODMxfQ.htxdGO2IiDYWcZB4x44GcS9HN22BebDo7BSl9sK-Az8
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJZb2JlIEF1d2FsIiwiaWQiOiI2NDZiOWIxMTdjOTI3MzllYTIzMDYwNmMiLCJjb25kaXRpb24iOnsiaHlwZXJ0ZW5zaXZlIjp0cnVlLCJkaWFiZXRpYyI6ZmFsc2V9fSwiaWF0IjoxNjg0NzgwMDY4LCJleHAiOjE2ODQ3ODcyNjh9.eyX1nJ2atXciHXtdX7PAE9_rT6k8Qo8t9EakTDnGkpk
 Content-Type: application/json
 
 {
@@ -34,6 +34,89 @@ Content-Type: application/json
   "allergies": "peanut allergy",
   "emergencyContact": "08030751771"
 }
+
+### update bPprofile
+PUT  http://localhost:5005/api/profile/me HTTP/1.1
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJZb2JlIEF1d2FsIiwiaWQiOiI2NDZiOWIxMTdjOTI3MzllYTIzMDYwNmMiLCJjb25kaXRpb24iOnsiaHlwZXJ0ZW5zaXZlIjp0cnVlLCJkaWFiZXRpYyI6ZmFsc2V9fSwiaWF0IjoxNjg0NzgwMDY4LCJleHAiOjE2ODQ3ODcyNjh9.eyX1nJ2atXciHXtdX7PAE9_rT6k8Qo8t9EakTDnGkpk
+Content-Type: application/json
+
+{
+  "name": "Yobe Auwal Mohammed",
+  "age": "33",
+  "gender": "male",
+  "phone": "07067858251",
+  "email": "walwyde@gmail.com",
+  "bloodPressureReadings": [
+    {
+      "systolic": "low systolic",
+      "diastolic": "low diastolic"
+    }
+  ],
+  "medications": [
+    {
+      "name": "paracetamol",
+      "dose": "55 mg",
+      "frequency": "daily"
+    }
+  ],
+  "lifestyleModifications": "none",
+  "otherHealthConditions": "none",
+  "familyHistory": "non hypertensive",
+  "allergies": "yam allergy",
+  "emergencyContact": "08030751771"
+}
+
+### create insulinProfile
+
+POST http://localhost:5005/api/profile/me HTTP/1.1
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ2YmJmMDNmNDViOWNhMGQwM2QzNGM1IiwiY29uZGl0aW9uIjp0cnVlfSwiaWF0IjoxNjg0NzgyODUxLCJleHAiOjE2ODQ3OTAwNTF9.g8-jjj7M1mFv2G5GRF40d2PNf4h6BucmGQMOEw7e1HM
+Content-Type: application/json
+
+{
+  "age": "35",
+
+"contactInfo" : "john.doe@example.com",
+
+"diagnosisDate": "2022-06-15",
+
+"typeOfDiabetes": "Type 2",
+
+"medications": [
+{ "name": "Metformin", "dose": "500mg", "frequency": "Twice daily" },
+{ "name": "Insulin", "dose": "10 units", "frequency": "Before meals" }
+],
+
+"allergies": [
+{ "name": "Penicillin" },
+{ "name": "Peanuts" }
+],
+
+"emergencyContact": {
+"name": "Jane Doe",
+"phone": "+1 123-456-7890"
+},
+
+"glucoseReadings": [
+{ "date": "2022-06-15", "time": "08:00", "glucoseLevel": "120" },
+{ "date": "2022-06-15", "time": "12:00", "glucoseLevel": "110" },
+{ "date": "2022-06-15", "time": "16:00", "glucoseLevel": "130" }
+],
+
+"insulinDose": [
+{ "insulinType": "Rapid-acting" },
+{ "insulinType": "Long-acting" }
+],
+
+"complications": "Peripheral neuropathy",
+
+"doctor": {
+"name": "Dr. Sarah Smith",
+"phone": "+1 987-654-3210",
+"email": "sarah.smith@example.com"
+}
+}
+
+
 
 ### delete profile
 

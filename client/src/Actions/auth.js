@@ -8,7 +8,7 @@ import {
 } from "./types";
 
 
-
+import { toast } from 'react-toastify'
 import { setAlert } from "../utils/setAlert";
 import { loadUser } from "../Actions/register";
 import axios from "axios";
@@ -21,7 +21,6 @@ export const login = (formData, history) => async (dispatch) => {
     },
   };
 
-  
   try {
 
     const res = await axios.post(
@@ -30,21 +29,31 @@ export const login = (formData, history) => async (dispatch) => {
       options
     );
 
-    history.push("/profile");
+    if(res) history.push("/profile");
+
+    console.log(JSON.stringify(res.data))
 
     
     dispatch({
       type: login_success,
       payload: {
+
         token: res.data,
+
       },
     });
     dispatch(loadUser());
     dispatch(setAlert("You Have Been Logged In", "success"));
   } catch (err) {
     console.log(err);
+    const errors = err.response.data.errors;
+
+    if(errors) {
+      console.log(errors);
+      errors.forEach((error) => dispatch(toast(error.msg, { type: "error", theme: "colored", autoClose: 3000, closeOnClick: true, pauseOnHover: true, hideProgressBar: false })));
+    }
     if (err) {
-      dispatch(setAlert(err.response.data.errors.msg, "danger"));
+      dispatch(setAlert(err.response.data, "danger"));
     }
 
     dispatch({

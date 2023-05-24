@@ -21,7 +21,10 @@ const BpProfileCardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  
+  address: {
+    type: String,
+    required: true,
+  },
   bloodPressureReadings: [
     {
       systolic: {

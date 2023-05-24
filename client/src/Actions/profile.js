@@ -1,5 +1,4 @@
 import axios from "axios";
-import { api } from "../utils/setHeader";
 
 import {
   load_profile,
@@ -10,11 +9,8 @@ import {
   delete_account,
   clear_profile,
   delete_profile_error,
-  get_repos,
-  no_repos,
 } from "./types";
 import { setAlert } from "../utils/setAlert";
-import { set } from "mongoose";
 
 export const loadCurrentProfile = () => async (dispatch) => {
   dispatch({
@@ -22,6 +18,8 @@ export const loadCurrentProfile = () => async (dispatch) => {
   });
   try {
     const res = await axios.get("http://localhost:5005/api/profile/me");
+
+    console.log(res);
 
     dispatch({
       type: load_profile,
@@ -42,7 +40,7 @@ export const createProfile = (formData, history) => async (dispatch) => {
     },
   };
   try {
-    const res = await api.put(
+    const res = await axios.put(
       "http://localhost:5005/api/profile/me",
       formData,
       config
@@ -80,41 +78,76 @@ export const createProfile = (formData, history) => async (dispatch) => {
  * @param userType - Optional user type, defaults to "user"
  * @returns Promise<void>
  */
-export const editProfile = (formData, history) => async (dispatch) => {
-  const config = {
-    headers: {
-      "Content-Type": "application/json;charset=utf-8",
-    },
+export const editProfile =
+  (formData, history, condition) => async (dispatch) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      };
+      if (condition === "hypertensive") {
+        let medications = [];
+        let pressureReadings = [];
+
+        const { medName, medDose, frequency, systolic, diastolic } = formData;
+
+          medName.split(",")
+          .map((item, i) => {
+            let medication = {
+              name: item,
+              dose: medDose.split(',')[i],
+              frequency: frequency.split(',')[i],
+            };
+
+            medications.push(medication);
+          });
+
+        systolic.split(",").map((item, i) => {
+          let reading = {
+            systolic: item,
+            diastolic: diastolic.split(',')[i],
+          };
+          pressureReadings.push(reading);});
+
+        var reFormed = { ...formData, medications, pressureReadings };
+
+        reFormed.medications = medications;
+        reFormed.bloodPressureReadings = pressureReadings;
+
+      }
+      const res = await axios.put(`http://localhost:5005/api/profile/me`, reFormed, config);
+
+      if (res.data.errors)
+        return res.data.errors.forEach((error) =>
+          dispatch(setAlert(error.msg, "danger"))
+        );
+
+      if (res) history.push("/profile");
+
+      dispatch({
+        type: load_profile,
+        payload: res.data,
+      });
+
+      dispatch(setAlert("Profile Edit Successful", "success"));
+    } catch (err) {
+      console.log(err);
+      dispatch(setAlert("Profile Edit Error", "danger"));
+
+      dispatch({
+        type: profile_error,
+      });
+    }
   };
-  try {
-    const res = await api.put(`/api/profile/me`, formData, config);
-
-    if (res.data.errors)
-      return res.data.errors.forEach((error) =>
-        dispatch(setAlert(error.msg, "danger"))
-      );
-
-    if (res) history.push("/profile");
-
-    dispatch({
-      type: load_profile,
-      payload: res.data,
-    });
-
-    dispatch(setAlert("Profile Edit Successful", "success"));
-  } catch (err) {
-    console.log(err.response);
-    dispatch(setAlert("Profile Edit Error", "danger"));
-
-    dispatch({
-      type: profile_error,
-    });
-  }
-};
 
 export const getProfileById = (userId) => async (dispatch) => {
   try {
-    const response = await axios.get(`/api/profile/user/${userId}`);
+    const response = await axios.get(
+      `http://localhost:5005/api/profile/${userId}`
+    );
+
+    console.log(response.data);
 
     dispatch({
       type: load_profile,
@@ -124,7 +157,7 @@ export const getProfileById = (userId) => async (dispatch) => {
     console.log(err);
     dispatch({
       type: profile_error,
-      payload: err.response,
+      payload: err.response.data,
     });
   }
 };

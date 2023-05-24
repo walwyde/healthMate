@@ -4,12 +4,13 @@ POST http://localhost:5005/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-	"name": "auwal",
-	"email": "walwyde@gmail.com",
+	"name": "auwal diabetic",
+	"email": "auwal@test.com",
 	"password": "password",
+	"password2": "password",
 	"condition": {
-		"hypertensive": true,
-		"diabetic": false
+		"hypertensive": false,
+		"diabetic": true
 	}
 }
 
@@ -22,8 +23,11 @@ post http://localhost:5005/api/auth HTTP/1.1
 Content-Type: application/json
 
 	{
-	"email": "walwyde@gmail.com",
+	"email": "auwal@test.com",
 	"password": "password"
 	}
 
 ###
+
+GET http://localhost:5005/api/auth HTTP/1.1
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJhdXdhbCBkaWFiZXRpYyIsImlkIjoiNjQ2YmJmMDNmNDViOWNhMGQwM2QzNGM1IiwiY29uZGl0aW9uIjp7Imh5cGVydGVuc2l2ZSI6ZmFsc2UsImRpYWJldGljIjp0cnVlfX0sImlhdCI6MTY4NDc4NDgzNywiZXhwIjoxNjg0NzkyMDM3fQ.SXU-VSn_hkPozCEsMlysGr4b2NS7sWlHIgKhv2JGfo0
