@@ -322,6 +322,44 @@ const EditUserProfile = ({
   if (diabetic)
     return (
       <Form onSubmit={e => onSubmit(e)}>
+
+<Form.Group controlId="phone">
+          <Form.Label>Full Name</Form.Label>
+          <Form.Control
+            type="text"
+            name="name"
+            value={name}
+            placeholder="Enter Contact Phone"
+            onChange={(e) => onChange(e)}
+            required
+          />
+        </Form.Group>
+
+        <Form.Group controlId="phone">
+          <Form.Label>Age</Form.Label>
+          <Form.Control
+            type="text"
+            name="age"
+            value={age}
+            placeholder="Enter Contact Phone"
+            onChange={(e) => onChange(e)}
+            required
+          />
+        </Form.Group>
+
+        <Form.Group controlId="phone">
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            type="text"
+            name="address"
+            value={address}
+            placeholder="Enter Contact Phone"
+            onChange={(e) => onChange(e)}
+            required
+          />
+        </Form.Group>
+
+
         <Form.Group controlId="phone">
           <Form.Label>Phone</Form.Label>
           <Form.Control

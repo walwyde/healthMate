@@ -23,13 +23,13 @@ const InsulinProfileSchema = new mongoose.Schema({
   },
   diagnosisDate: {
     type: Date,
-    required: false,
+    default: Date.now,
   },
   typeOfDiabetes: {
     type: String,
     required: false,
   },
-  medicatons: [
+  medications: [
     {
       medName: { type: String, required: false },
       medDose: { type: String, required: false },
@@ -46,8 +46,7 @@ const InsulinProfileSchema = new mongoose.Schema({
   },
   glucoseReadings: [
     {
-      readingDate: { type: String, required: false },
-      readingTime: { type: String, required: false },
+      readingDate: { type: Date, default: Date.now },
       glucoseLevel: { type: String, required: false },
     },
   ],

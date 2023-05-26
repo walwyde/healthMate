@@ -27,6 +27,7 @@
   },
   "proxy": "http://localhost:5005",
   "scripts": {
+    "clear-cache": "rm -rf build && rm -rf node_modules/.cache",
     "start": "vite",
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",

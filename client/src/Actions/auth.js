@@ -7,8 +7,6 @@ import {
   clear_profile
 } from "./types";
 
-
-import { toast } from 'react-toastify'
 import { setAlert } from "../utils/setAlert";
 import { loadUser } from "../Actions/register";
 import axios from "axios";

@@ -4,8 +4,6 @@ import {
   load_profile,
   load_profiles,
   profile_error,
-  delete_experience,
-  delete_education,
   delete_account,
   clear_profile,
   delete_profile_error,
@@ -221,3 +219,22 @@ export const getProfileById = (userId) => async (dispatch) => {
     });
   }
 };
+
+export const deleteAccount = () => async (dispatch) => {
+  if (window.confirm("Are you sure? This cannot be undone!")) {
+    try {
+      await axios.delete("http://localhost:5005/api/profile/me");
+
+      dispatch({
+        type: delete_account,
+      });
+
+      dispatch(setAlert("Account Deleted", "success"));
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: delete_profile_error,
+      });
+    }
+  }
+}

@@ -154,7 +154,7 @@ exports.newProfileCard = async (req, res) => {
 
       profileFields.glucoseReadings = glucoseReadings;
 
-      const profile = await new InsulinProfile(profileFields);
+      const profile = new InsulinProfile(profileFields);
 
       if (!profile) return res.status(400).json("user profile not created");
 
@@ -188,8 +188,8 @@ exports.newProfileCard = async (req, res) => {
         user: req.user.id,
       });
 
-      if (existingProfile)
-        return res.status(400).json("user profile already created");
+      if (!existingProfile)
+        return res.status(400).json("user profile not found");
 
       const profileFields = {};
 
@@ -213,7 +213,7 @@ exports.newProfileCard = async (req, res) => {
 
       const profile = new BpProfileCard(profileFields);
 
-      if (!profile) return res.status(400).json("user profile not created");
+      if (!profile) return res.status(400).json("user profile not updated");
 
       await profile.save();
 
@@ -234,41 +234,93 @@ exports.updateProfileCard = async (req, res) => {
   try {
     if (diabetic) {
       const {
+        name,
+        address,
         age,
+        phone,
+        contactName,
+        contactPhone,
+        medName,
+        medDose,
+        frequency,
         diagnosisDate,
         typeOfDiabetes,
-        medications,
         allergies,
-        emergencyContact,
-        glucoseReadings,
-        insulinDose,
-        doctor,
-        name,
+        insulinType,
+        docName,
+        docPhone,
+        docEmail,
+        readingDate,
+        readingTime,
+        glucoseLevel,
       } = req.body;
 
       const profileFields = {};
+      const medications = [];
+      let doctor = {};
+      const insulinDose = [];
+      const glucoseReadings = [];
+      let emergencyContact = {};
 
       profileFields.user = req.user.id;
 
       if (name) profileFields.name = name;
+      if (address) profileFields.address = address;
+      if(phone) profileFields.phone = phone;
       if (age) profileFields.age = age;
-      if (emergencyContact) profileFields.emergencyContact = emergencyContact;
       if (diagnosisDate) profileFields.diagnosisDate = diagnosisDate;
       if (typeOfDiabetes) profileFields.typeOfDiabetes = typeOfDiabetes;
-      if (medications) profileFields.medications = medications;
       if (allergies) profileFields.allergies = allergies;
       if (emergencyContact) profileFields.emergencyContact = emergencyContact;
-      if (glucoseReadings) profileFields.glucoseReadings = glucoseReadings;
-      if (insulinDose) profileFields.insulinDose = insulinDose;
-      if (doctor) profileFields.doctor = doctor;
+      if (insulinType)
+        insulinDose.push({
+          insulinType: insulinType,
+        });
+      profileFields.insulinDose = insulinDose;
+      if (docName && docPhone)
+        doctor = {
+          docName: docName,
+          docPhone: docPhone,
+          docEmail: docEmail,
+        };
+      profileFields.doctor = doctor;
+      if (contactName && contactPhone)
+        emergencyContact = {
+          contactName: contactName,
+          contactPhone: contactPhone,
+        };
+      profileFields.emergencyContact = emergencyContact;
+
+      if (medName && medDose && frequency) {
+        medName.split(",").map((item, i) => {
+          const obj = {
+            "medName": item,
+            "medDose": medDose.split(",")[i],
+            "frequency": frequency.split(",")[i],
+          };
+
+          medications.push(obj);
+        });
+      }
+      profileFields.medications = medications;
+
+      glucoseReadings.push({
+        readingDate: readingDate,
+        readingTime: readingTime,
+        glucoseLevel: glucoseLevel,
+      });
+
+      profileFields.glucoseReadings = glucoseReadings;
 
       const profile = await InsulinProfile.findOneAndUpdate(
         { user: req.user.id },
         { $set: profileFields },
-        { new: true }
+        { new: false }
       );
 
-      // profile.save();
+      if (!profile) return res.status(400).json("user profile not updated");
+
+      profile.save();
 
       return res.status(201).json(profile);
     }
@@ -314,7 +366,7 @@ exports.updateProfileCard = async (req, res) => {
       const profile = await BpProfileCard.findOneAndUpdate(
         { user: req.user.id },
         { $set: profileFields },
-        { new: true }
+        { new: false }
       );
 
       profile.save();
