@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { connect } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import PropTypes from "prop-types";
@@ -107,105 +107,143 @@ function Profile({
                       </div>
                     </div>
                     <MDBCardBody className="text-black p-4">
-                      <div className="mb-5">
-                        <p className="lead fw-normal mb-1">Basic Info</p>
-                        <div
-                          className="p-4"
-                          style={{ backgroundColor: "#f8f9fa" }}
-                        >
-                          <MDBCardText className="font-italic mb-1">
-                            Gender : <span>{profile && profile.gender}</span>
-                          </MDBCardText>
-                          <MDBCardText className="font-italic mb-1">
-                            Phone : <span>{profile && profile.phone}</span>
-                          </MDBCardText>
-                          <MDBCardText className="font-italic mb-0">
-                            Emergency Contact:{" "}
-                            <span>{profile && profile.emergencyContact}</span>
-                          </MDBCardText>
-                        </div>
-                      </div>
-
-                      <div className="mb-5">
-                        <p className="lead fw-normal mb-1">Personal Info</p>
-                        <div
-                          className="p-4"
-                          style={{ backgroundColor: "#f8f9fa" }}
-                        >
-                          <MDBCardText className="font-italic mb-1">
-                            Health Condition:{" "}
-                            {(user &&
-                              user.condition.MDBBtndiabetic &&
-                              "Diabetic") ||
-                              (user &&
-                                user.condition.hypertensive &&
-                                "Hypertensive")}
-                          </MDBCardText>
-                          <MDBCardText className="font-italic mb-1">
-                            Age : <span>{profile && profile.age}</span>
-                          </MDBCardText>
-                          <MDBCardText className="font-italic mb-0">
-                            Family History:{" "}
-                            <span>{profile && profile.familyHistory}</span>
-                          </MDBCardText>
-
-                          <MDBCardText className="font-italic mb-0">
-                            Other Conditions:{" "}
-                            <span>
-                              {profile && profile.otherHealthConditions}
-                            </span>
-                          </MDBCardText>
-
-                          <MDBCardText className="font-italic mb-0">
-                            Allergies:{" "}
-                            <span>{profile && profile.allergies}</span>
-                          </MDBCardText>
-                        </div>
-                      </div>
-
-                      <div className="mb-5">
-                        <p className="lead fw-normal mb-1">
-                          Blood Pressure Readings
-                        </p>
-                        <div
-                          className="p-4"
-                          style={{ backgroundColor: "#f8f9fa" }}
-                        >
-                          {profile.bloodPressureReadings.map((bp) => (
-                            <MDBCardText
-                              key={bp._id}
-                              className="font-italic mb-1"
+                      {user && user.condition.hypertensive && (
+                        <Fragment>
+                          <div className="mb-5">
+                            <p className="lead fw-normal mb-1">Basic Info</p>
+                            <div
+                              className="p-4"
+                              style={{ backgroundColor: "#f8f9fa" }}
                             >
-                              Systolic: - {bp.systolic}/ Diastolic -{" "}
-                              {bp.diastolic}
-                            </MDBCardText>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="mb-5">
-                        <p className="lead fw-normal mb-1">Medications</p>
-                        <div
-                          className="p-4"
-                          style={{ backgroundColor: "#f8f9fa" }}
-                        >
-                          {profile.medications.map((med) => (
-                            <div key={med._id}>
                               <MDBCardText className="font-italic mb-1">
-                                Medication Name: {med.name}
+                                Gender :{" "}
+                                <span>{profile && profile.gender}</span>
                               </MDBCardText>
-
                               <MDBCardText className="font-italic mb-1">
-                                Dosage: {med.dose}
+                                Phone : <span>{profile && profile.phone}</span>
                               </MDBCardText>
-
-                              <MDBCardText className="font-italic mb-1">
-                                Frequency: {med.frequency}
+                              <MDBCardText className="font-italic mb-0">
+                                Emergency Contact:{" "}
+                                <span>
+                                  {profile && profile.emergencyContact}
+                                </span>
                               </MDBCardText>
                             </div>
-                          ))}
-                        </div>
-                      </div>
+                          </div>
+
+                          <div className="mb-5">
+                            <p className="lead fw-normal mb-1">Personal Info</p>
+                            <div
+                              className="p-4"
+                              style={{ backgroundColor: "#f8f9fa" }}
+                            >
+                              <MDBCardText className="font-italic mb-1">
+                                Health Condition:{" "}
+                                {(user &&
+                                  user.condition.MDBBtndiabetic &&
+                                  "Diabetic") ||
+                                  (user &&
+                                    user.condition.hypertensive &&
+                                    "Hypertensive")}
+                              </MDBCardText>
+                              <MDBCardText className="font-italic mb-1">
+                                Age : <span>{profile && profile.age}</span>
+                              </MDBCardText>
+                              <MDBCardText className="font-italic mb-0">
+                                Family History:{" "}
+                                <span>{profile && profile.familyHistory}</span>
+                              </MDBCardText>
+
+                              <MDBCardText className="font-italic mb-0">
+                                Other Conditions:{" "}
+                                <span>
+                                  {profile && profile.otherHealthConditions}
+                                </span>
+                              </MDBCardText>
+
+                              <MDBCardText className="font-italic mb-0">
+                                Allergies:{" "}
+                                <span>{profile && profile.allergies}</span>
+                              </MDBCardText>
+                            </div>
+                          </div>
+
+                          <div className="mb-5">
+                            <p className="lead fw-normal mb-1">
+                              Blood Pressure Readings
+                            </p>
+                            <div
+                              className="p-4"
+                              style={{ backgroundColor: "#f8f9fa" }}
+                            >
+                              {profile.bloodPressureReadings.map((bp) => (
+                                <MDBCardText
+                                  key={bp._id}
+                                  className="font-italic mb-1"
+                                >
+                                  Systolic: - {bp.systolic}/ Diastolic -{" "}
+                                  {bp.diastolic}
+                                </MDBCardText>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="mb-5">
+                            <p className="lead fw-normal mb-1">Medications</p>
+                            <div
+                              className="p-4"
+                              style={{ backgroundColor: "#f8f9fa" }}
+                            >
+                              {profile.medications.map((med) => (
+                                <div key={med._id}>
+                                  <MDBCardText className="font-italic mb-1">
+                                    Medication Name: {med.name}
+                                  </MDBCardText>
+
+                                  <MDBCardText className="font-italic mb-1">
+                                    Dosage: {med.dose}
+                                  </MDBCardText>
+
+                                  <MDBCardText className="font-italic mb-1">
+                                    Frequency: {med.frequency}
+                                  </MDBCardText>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </Fragment>
+                      )}
+
+                      {user && user.condition.diabetic && (
+                        <Fragment>
+                          <div className="mb-5">
+                            <p className="lead fw-normal mb-1">Basic Info</p>
+                            <div
+                              className="p-4"
+                              style={{ backgroundColor: "#f8f9fa" }}
+                            >
+                              <MDBCardText className="font-italic mb-1">
+                                hey i'm a diabetic
+                              </MDBCardText>
+                              <MDBCardText className="font-italic mb-1"></MDBCardText>
+                              <MDBCardText className="font-italic mb-0"></MDBCardText>
+                            </div>
+                          </div>
+
+                          <div className="mb-5">
+                            <p className="lead fw-normal mb-1">Personal Info</p>
+                            <div
+                              className="p-4"
+                              style={{ backgroundColor: "#f8f9fa" }}
+                            >
+                              <MDBCardText className="font-italic mb-1"></MDBCardText>
+
+                              <MDBCardText className="font-italic mb-1"></MDBCardText>
+                              <MDBCardText className="font-italic mb-0"></MDBCardText>
+                            </div>
+                          </div>
+                        </Fragment>
+                      )}
 
                       <div className="d-flex justify-content-between align-items-center mb-4">
                         <MDBCardText className="lead fw-normal mb-0">

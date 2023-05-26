@@ -6,8 +6,6 @@ import {
   delete_education,
   delete_experience,
   delete_profile_error,
-  get_repos,
-  no_repos
 } from "../Actions/types";
 
 const initialState = {
@@ -35,18 +33,6 @@ export default function profile(state = initialState, action) {
         profiles: payload,
         loading: false
       }
-    case get_repos: 
-    return {
-      ...state,
-      repos: payload,
-      loading: false
-    }
-    case no_repos: 
-    return {
-      ...state,
-      errors: payload,
-      loading: false
-    }
     case profile_error:
       return {
         ...state,

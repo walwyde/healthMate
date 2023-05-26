@@ -13,7 +13,6 @@ router.get('/:id', mdlwre.auth, controller.getProfileById)
 
 router.post('/me',mdlwre.auth, 
 [
-  check("medications", "what is your current medication?").not().isEmpty(),
   check("age", "You Must Belong To An Age Bracket For Better Diagnosis").not().isEmpty(),
 ], 
 controller.newProfileCard)

@@ -51,11 +51,11 @@ export const createProfile = (formData, history) => async (dispatch) => {
         dispatch(setAlert(error.msg, "danger"))
       );
 
-    if (res) history.push("/profile");
+    if (res.data !== null) history.push("/profile");
 
     dispatch({
-      type: load_success,
-      payload: { token: res },
+      type: load_profile,
+      payload: res.data ,
     });
 
     dispatch(loadUser());
@@ -63,9 +63,11 @@ export const createProfile = (formData, history) => async (dispatch) => {
     dispatch(setAlert("Registration Successful", "success"));
   } catch (err) {
     console.log(err);
+    const errors = err.response.data.errors;
 
     dispatch({
       type: profile_error,
+      payload: errors ? errors : err.response.data
     });
   }
 };

@@ -9,6 +9,14 @@ const InsulinProfileSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  address: {
+    type: String,
+    required: false,
+  },
+  age: {
+    type: Number,
+    required: true,
+  },
   phone: {
     type: String,
     required: true,

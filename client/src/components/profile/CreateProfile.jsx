@@ -69,7 +69,8 @@ function CreateProfile  ({ createProfile, history, match, auth: { user } }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    createProfile(formData, history, diabetic && "diabetic" || hypertensive && "hypertensive");
+    console.log(formData); // remove this later
+    createProfile(formData, history);
   };
 
   const handleSubmit = (e) => {
@@ -313,6 +314,19 @@ function CreateProfile  ({ createProfile, history, match, auth: { user } }) {
             required
           />
         </Form.Group>
+
+        <Form.Group className="mb-3" controlId="systolic">
+            <Form.Label>Address</Form.Label>
+            <Form.Control
+              type="text"
+              value={address}
+              name="address"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter Address"
+              required
+            />
+          </Form.Group>
+
 
         <Form.Group controlId="diagnosisDate">
           <Form.Label>Diagnosis Date</Form.Label>

@@ -8,7 +8,6 @@ exports.getProfile = async (req, res) => {
   try {
     const { diabetic, hypertensive } = req.user.condition;
 
-
     let profile;
 
     if (diabetic)
@@ -22,9 +21,7 @@ exports.getProfile = async (req, res) => {
       }).populate("user", ["condition", "avatar"]);
 
     if (!profile) {
-      return res
-        .status(400)
-        .json(null);
+      return res.status(400).json(null);
     }
     res.json(profile);
   } catch (err) {
@@ -72,17 +69,25 @@ exports.newProfileCard = async (req, res) => {
 
     if (diabetic) {
       const {
+        name,
+        address,
         age,
-        contactInfo,
+        phone,
+        contactName,
+        contactPhone,
+        medName,
+        medDose,
+        frequency,
         diagnosisDate,
         typeOfDiabetes,
-        medications,
         allergies,
-        emergencyContact,
-        glucoseReadings,
-        insulinDose,
-        complications,
-        doctor,
+        insulinType,
+        docName,
+        docPhone,
+        docEmail,
+        readingDate,
+        readingTime,
+        glucoseLevel,
       } = req.body;
 
       const existingProfile = await InsulinProfile.findOne({
@@ -93,30 +98,71 @@ exports.newProfileCard = async (req, res) => {
         return res.status(400).json("user profile already created");
 
       const profileFields = {};
+      const medications = [];
+      let doctor = {};
+      const insulinDose = [];
+      const glucoseReadings = [];
+      let emergencyContact = {};
 
       profileFields.user = req.user.id;
 
+      if (name) profileFields.name = name;
+      if (address) profileFields.address = address;
+      if(phone) profileFields.phone = phone;
       if (age) profileFields.age = age;
-      if (contactInfo) profileFields.contactInfo = contactInfo;
       if (diagnosisDate) profileFields.diagnosisDate = diagnosisDate;
       if (typeOfDiabetes) profileFields.typeOfDiabetes = typeOfDiabetes;
-      if (medications) profileFields.medications = medications;
       if (allergies) profileFields.allergies = allergies;
       if (emergencyContact) profileFields.emergencyContact = emergencyContact;
-      if (glucoseReadings) profileFields.glucoseReadings = glucoseReadings;
-      if (insulinDose) profileFields.insulinDose = insulinDose;
-      if (complications) profileFields.complications = complications;
-      if (doctor) profileFields.doctor = doctor;
+      if (insulinType)
+        insulinDose.push({
+          insulinType: insulinType,
+        });
+      profileFields.insulinDose = insulinDose;
+      if (docName && docPhone)
+        doctor = {
+          docName: docName,
+          docPhone: docPhone,
+          docEmail: docEmail,
+        };
+      profileFields.doctor = doctor;
+      if (contactName && contactPhone)
+        emergencyContact = {
+          contactName: contactName,
+          contactPhone: contactPhone,
+        };
+      profileFields.emergencyContact = emergencyContact;
 
-      console.log(req.body);
-      if (!profileFields)
-        return res.status(400).json("user profile not created");
+      if (medName && medDose && frequency) {
+        medName.split(",").map((item, i) => {
+          let obj = {
+            medName: item,
+            medDose: medDose.split(",")[i],
+            frequency: frequency.split(",")[i],
+          };
 
-      const profile = new InsulinProfile(profileFields);
+          medications.push(obj);
+        });
+      }
+      profileFields.medications = medications;
+
+      glucoseReadings.push({
+        readingDate: readingDate,
+        readingTime: readingTime,
+        glucoseLevel: glucoseLevel,
+      });
+
+      profileFields.glucoseReadings = glucoseReadings;
+
+      const profile = await new InsulinProfile(profileFields);
 
       if (!profile) return res.status(400).json("user profile not created");
 
-      // await profile.save();
+      console.log(`profileFields: ${profileFields}`);
+
+      await profile.save();
+
+      console.log(profile);
 
       return res.status(200).json(profile);
     }
