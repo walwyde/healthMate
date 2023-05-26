@@ -2,7 +2,7 @@ import { useState, Fragment, useEffect } from "react";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import Navbar from "./components/layouts/Navbar";
 import Landing from "./components/Landing";
-import CreateProfile from "./components/workers/CreateProfile";
+import CreateProfile from "./components/profile/CreateProfile";
 import EditStaffProfile from "./components/workers/EditStaffProfile";
 import EditUserProfile from "./components/profile/EditUserProfile";
 import Register from "./components/auth/Register";

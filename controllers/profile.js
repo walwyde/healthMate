@@ -189,7 +189,6 @@ exports.updateProfileCard = async (req, res) => {
     if (diabetic) {
       const {
         age,
-        contactInfo,
         diagnosisDate,
         typeOfDiabetes,
         medications,
@@ -197,7 +196,6 @@ exports.updateProfileCard = async (req, res) => {
         emergencyContact,
         glucoseReadings,
         insulinDose,
-        complications,
         doctor,
         name,
       } = req.body;
@@ -206,8 +204,9 @@ exports.updateProfileCard = async (req, res) => {
 
       profileFields.user = req.user.id;
 
+      if (name) profileFields.name = name;
       if (age) profileFields.age = age;
-      if (contactInfo) profileFields.contactInfo = contactInfo;
+      if (emergencyContact) profileFields.emergencyContact = emergencyContact;
       if (diagnosisDate) profileFields.diagnosisDate = diagnosisDate;
       if (typeOfDiabetes) profileFields.typeOfDiabetes = typeOfDiabetes;
       if (medications) profileFields.medications = medications;
@@ -215,9 +214,7 @@ exports.updateProfileCard = async (req, res) => {
       if (emergencyContact) profileFields.emergencyContact = emergencyContact;
       if (glucoseReadings) profileFields.glucoseReadings = glucoseReadings;
       if (insulinDose) profileFields.insulinDose = insulinDose;
-      if (complications) profileFields.complications = complications;
       if (doctor) profileFields.doctor = doctor;
-      if (name) profileFields.name = name;
 
       const profile = await InsulinProfile.findOneAndUpdate(
         { user: req.user.id },

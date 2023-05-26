@@ -1,21 +1,13 @@
-import { useState, useEffect } from "react";
+import Reac, { useState } from "react";
+import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Form from "react-bootstrap/Form";
-import PropTypes from "prop-types";
-import { withRouter, Redirect } from "react-router-dom";
-import { editProfile } from "../../Actions/profile";
-import { getProfileById } from "../../Actions/profile";
+import { createProfile } from "../../Actions/profile";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
-const EditUserProfile = ({
-  profile: { profile, loading },
-  editProfile,
-  history,
-  getProfileById,
-  match,
-  auth: { user },
-}) => {
+function CreateProfile  ({ createProfile, history, match, auth: { user } }) {
   // init user state
   const diabetic = user && user.condition.diabetic;
   const hypertensive = user && user.condition.hypertensive;
@@ -49,13 +41,6 @@ const EditUserProfile = ({
     insulinType: "",
   });
 
-  // diabetic form state
-
-  const [dFormData, setdFormData] = useState({
-    insulinDose: [{ insulinType: "" }],
-    doctor: { name: "", phone: "", email: "" },
-  });
-
   // hpyertensive form constants
   const {
     name,
@@ -74,31 +59,6 @@ const EditUserProfile = ({
     familyHistory,
   } = formData;
 
-  useEffect(() => {
-    getProfileById(match.params._id);
-    setFormData({
-      name: loading || !profile.name ? "" : profile.name,
-      age: loading || !profile.age ? "" : profile.age,
-      gender: loading || !profile.gender ? "" : profile.gender,
-      address: loading || !profile.address ? "" : profile.address,
-      phone: loading || !profile.phone ? "" : profile.phone,
-      systolic: loading || !profile.systolic ? "" : profile.systolic,
-      diastolic: loading || !profile.diastolic ? "" : profile.diastolic,
-      medName: loading || !profile.medName ? "" : profile.medName,
-      medDose: loading || !profile.medDose ? "" : profile.medDose,
-      frequency: loading || !profile.frequency ? "" : profile.frequency,
-      otherHealthConditions:
-        loading || !profile.otherHealthConditions
-          ? ""
-          : profile.otherHealthConditions,
-      allergies: loading || !profile.allergies ? "" : profile.allergies,
-      emergencyContact:
-        loading || !profile.emergencyContact ? "" : profile.emergencyContact,
-      familyHistory:
-        loading || !profile.profileHistory ? "" : profile.profileHistory,
-    });
-  }, [loading]);
-
   // Helper functions
 
   // hypertensive form functions
@@ -109,11 +69,7 @@ const EditUserProfile = ({
 
   const onSubmit = (e) => {
     e.preventDefault();
-    editProfile(
-      formData,
-      history,
-      user.condition.diabetic ? "diabetic" : "hypertensive"
-    );
+    createProfile(formData, history, diabetic && "diabetic" || hypertensive && "hypertensive");
   };
 
   const handleSubmit = (e) => {
@@ -321,7 +277,31 @@ const EditUserProfile = ({
 
   if (diabetic)
     return (
-      <Form onSubmit={e => onSubmit(e)}>
+      
+      <Form onSubmit={(e) => onSubmit(e)}>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Full Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={name}
+              name="name"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter full names"
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Age</Form.Label>
+            <Form.Control
+              type="text"
+              value={age}
+              name="age"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter age"
+              required
+            />
+          </Form.Group>
+
         <Form.Group controlId="phone">
           <Form.Label>Phone</Form.Label>
           <Form.Control
@@ -483,18 +463,15 @@ const EditUserProfile = ({
   }
 };
 
-EditUserProfile.propTypes = {
-  editProfile: PropTypes.func.isRequired,
-  getProfileById: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
+CreateProfile.propTypes = {
+  createProfile: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  profile: state.profile,
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { editProfile, getProfileById })(
-  withRouter(EditUserProfile)
+export default connect(mapStateToProps, { createProfile })(
+  withRouter(CreateProfile)
 );

@@ -19,7 +19,7 @@ import {
   MDBInput,
 } from "mdb-react-ui-kit";
 
-function Profile  ({
+function Profile({
   auth: { user, isStaff },
   profile: { profile, loading },
   loadCurrentProfile,
@@ -43,15 +43,7 @@ function Profile  ({
                     Please Use This Link To Update Your Profile Card For Better
                     Experience.
                   </MDBCardText>
-                  <MDBBtn
-                    href={
-                      isStaff
-                        ? `/edit-staff-profile/${user._id}`
-                        : `/edit-user-profile/${user._id}`
-                    }
-                  >
-                    Edit Card Profile
-                  </MDBBtn>
+                  <MDBBtn href={`/create-profile`}>Create Card Profile</MDBBtn>
                 </MDBCardBody>
               </MDBCard>
             )
@@ -180,25 +172,23 @@ function Profile  ({
                           style={{ backgroundColor: "#f8f9fa" }}
                         >
                           {profile.bloodPressureReadings.map((bp) => (
-                            <MDBCardText key={bp._id} className="font-italic mb-1">
+                            <MDBCardText
+                              key={bp._id}
+                              className="font-italic mb-1"
+                            >
                               Systolic: - {bp.systolic}/ Diastolic -{" "}
                               {bp.diastolic}
                             </MDBCardText>
                           ))}
-
-                          
                         </div>
                       </div>
 
                       <div className="mb-5">
-                        <p className="lead fw-normal mb-1">
-                          Medications
-                        </p>
+                        <p className="lead fw-normal mb-1">Medications</p>
                         <div
                           className="p-4"
                           style={{ backgroundColor: "#f8f9fa" }}
                         >
-
                           {profile.medications.map((med) => (
                             <div key={med._id}>
                               <MDBCardText className="font-italic mb-1">
@@ -216,7 +206,6 @@ function Profile  ({
                           ))}
                         </div>
                       </div>
-
 
                       <div className="d-flex justify-content-between align-items-center mb-4">
                         <MDBCardText className="lead fw-normal mb-0">
@@ -285,7 +274,7 @@ function Profile  ({
       </MDBContainer>
     </div>
   );
-};
+}
 
 Profile.propTypes = {
   auth: PropTypes.object.isRequired,

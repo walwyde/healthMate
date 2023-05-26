@@ -40,7 +40,7 @@ export const createProfile = (formData, history) => async (dispatch) => {
     },
   };
   try {
-    const res = await axios.put(
+    const res = await axios.post(
       "http://localhost:5005/api/profile/me",
       formData,
       config
@@ -92,32 +92,90 @@ export const editProfile =
 
         const { medName, medDose, frequency, systolic, diastolic } = formData;
 
-          medName.split(",")
-          .map((item, i) => {
-            let medication = {
-              name: item,
-              dose: medDose.split(',')[i],
-              frequency: frequency.split(',')[i],
-            };
+        medName.split(",").map((item, i) => {
+          let medication = {
+            name: item,
+            dose: medDose.split(",")[i],
+            frequency: frequency.split(",")[i],
+          };
 
-            medications.push(medication);
-          });
+          medications.push(medication);
+        });
 
         systolic.split(",").map((item, i) => {
           let reading = {
             systolic: item,
-            diastolic: diastolic.split(',')[i],
+            diastolic: diastolic.split(",")[i],
           };
-          pressureReadings.push(reading);});
+          pressureReadings.push(reading);
+        });
 
         var reFormed = { ...formData, medications, pressureReadings };
 
         reFormed.medications = medications;
         reFormed.bloodPressureReadings = pressureReadings;
-
       }
-      const res = await axios.put(`http://localhost:5005/api/profile/me`, reFormed, config);
 
+      if (condition === "diabetic") {
+        const config = {
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+        };
+        let medications = [];
+        let emergencyContact = {};
+        let doctor = {};
+
+        var reFormed = { ...formData };
+
+        const {
+          medName,
+          medDose,
+          frequency,
+          contactName,
+          contactPhone,
+          docName,
+          docPhone,
+          docEmail,
+        } = formData;
+
+        medName.split(",").map((item, i) => {
+          let medication = {
+            name: item,
+            dose: medDose.split(",")[i],
+            frequency: frequency.split(",")[i],
+          };
+
+          medications.push(medication);
+        });
+
+        if (contactName && contactPhone)
+          emergencyContact = {
+            name: contactName,
+            phone: contactPhone,
+          };
+
+        if ((docName && docPhone, docEmail))
+          doctor = {
+            docName: docName,
+            docPhone: docPhone,
+            docEmail: docEmail,
+          };
+
+        reFormed.medications = medications;
+        reFormed.emergencyContact = emergencyContact;
+        reFormed.doctor = doctor;
+      }
+
+      console.log(reFormed);
+
+      const res = await axios.put(
+        `http://localhost:5005/api/profile/me`,
+        reFormed,
+        config
+      );
+
+      console.log(res);
       if (res.data.errors)
         return res.data.errors.forEach((error) =>
           dispatch(setAlert(error.msg, "danger"))

@@ -5,9 +5,13 @@ const InsulinProfileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  name: {
+    type: String,
+    required: true,
+  },
   phone: {
-      type: String,
-      required: true,
+    type: String,
+    required: true,
   },
   diagnosisDate: {
     type: Date,
@@ -19,24 +23,23 @@ const InsulinProfileSchema = new mongoose.Schema({
   },
   medicatons: [
     {
-      name: { type: String, required: false },
-      dose: { type: String, required: false },
+      medName: { type: String, required: false },
+      medDose: { type: String, required: false },
       frequency: { type: String, required: false },
     },
   ],
-  allergies: [
-    {
-      name: { type: String, required: false },
-    },
-  ],
+  allergies: {
+    type: String,
+    required: false,
+  },
   emergencyContact: {
-    name: { type: String, required: false },
-    phone: { type: String, required: false },
+    contactName: { type: String, required: false },
+    contactPhone: { type: String, required: false },
   },
   glucoseReadings: [
     {
-      date: { type: String, required: false },
-      time: { type: String, required: false },
+      readingDate: { type: String, required: false },
+      readingTime: { type: String, required: false },
       glucoseLevel: { type: String, required: false },
     },
   ],
@@ -45,11 +48,11 @@ const InsulinProfileSchema = new mongoose.Schema({
       insulinType: { type: String, required: false },
     },
   ],
-  
+
   doctor: {
-    name: { type: String, required: false },
-    phone: { type: String, required: false },
-    email: { type: String, required: false },
+    docName: { type: String, required: false },
+    docPhone: { type: String, required: false },
+    docEmail: { type: String, required: false },
   },
   date: {
     type: Date,
