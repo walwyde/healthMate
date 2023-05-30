@@ -4,6 +4,8 @@ const InsulinProfile = require("../models/InsulinProfile");
 const BpProfileCard = require("../models/BpProfile"); // Import the ProfileCard model
 const User = require("../models/User");
 
+const HealthWorker = require("../models/HealthWorker");
+
 exports.getProfile = async (req, res) => {
   try {
     const { diabetic, hypertensive } = req.user.condition;
@@ -20,6 +22,12 @@ exports.getProfile = async (req, res) => {
         user: req.user.id,
       }).populate("user", ["condition", "avatar"]);
 
+    if (!diabetic && !hypertensive)
+      profile = await HealthWorker.findOne({ user: req.user.id }).populate(
+        "user",
+        ["avatar"]
+      );
+
     if (!profile) {
       return res.status(400).json(null);
     }
@@ -32,22 +40,26 @@ exports.getProfile = async (req, res) => {
 
 exports.getProfileById = async (req, res) => {
   try {
-    const { diabetic } = req.user.condition;
+    const { diabetic, hypertensive } = req.user.condition;
 
     const profile = diabetic
       ? await InsulinProfile.findOne({ user: req.params.id }).populate("user", [
           "condition",
           "avatar",
         ])
-      : await BpProfileCard.findOne({ user: req.params.id }).populate("user", [
+      : hypertensive
+      ? await BpProfileCard.findOne({ user: req.params.id }).populate("user", [
           "avatar",
           "condition",
+        ])
+      : await HealthWorker.findOne({ user: req.user.id }).populate("user", [
+          "avatar",
         ]);
     if (!profile) return res.json("user not found");
     res.status(200).json(profile);
   } catch (error) {
     if (error.kind == "ObjectId") {
-      res.json({ msg: "user not found" });
+      res.json(null);
     }
     console.log(error.message);
   }
@@ -66,6 +78,69 @@ exports.newProfileCard = async (req, res) => {
     const user = await User.findById(req.user.id);
 
     const { diabetic, hypertensive } = user.condition;
+
+    if (user.isStaff) {
+      const existingProfile = await HealthWorker.findById(req.user.id);
+
+      if (existingProfile)
+        return res
+          .status(400)
+          .json({ error: { msg: "user profile already exists" } });
+
+      const profileFields = {};
+      const licenceDetails = {};
+      const contactDetails = {};
+
+      const {
+        name,
+        email,
+        nin,
+        phone,
+        address,
+        age,
+        title,
+        gender,
+        licenceType,
+        licenceNum,
+        expiryDate,
+        professionalDesignation,
+      } = req.body;
+
+      if (name) profileFields.name = name;
+      if (nin) profileFields.nin = nin;
+      if (age) profileFields.age = age;
+      if (email) contactDetails.email = email;
+      if (phone) contactDetails.phone = phone;
+      if (address) contactDetails.address = address;
+      profileFields.contactDetails = contactDetails;
+
+      if (licenceType) licenceDetails.licenceType = licenceType;
+      if (licenceNum) licenceDetails.licenceNum = licenceNum;
+
+      if (expiryDate) licenceDetails.expiryDate = expiryDate;
+
+      profileFields.licenceDetails = licenceDetails;
+
+      if (title) profileFields.title = title;
+      if (gender) profileFields.gender = gender;
+      if (licenceDetails) profileFields.licenceDetails = licenceDetails;
+      if (contactDetails) profileFields.contactDetails = contactDetails;
+      if (professionalDesignation)
+        profileFields.professionalDesignation = professionalDesignation;
+
+      profileFields.user = req.user.id;
+
+      const profile = new HealthWorker(profileFields);
+
+      if (!profile)
+        return res
+          .status(400)
+          .json({ errors: { msg: "profile could not be created" } });
+
+      await profile.save();
+
+      return res.status(200).json(profile);
+    }
 
     if (diabetic) {
       const {
@@ -108,7 +183,7 @@ exports.newProfileCard = async (req, res) => {
 
       if (name) profileFields.name = name;
       if (address) profileFields.address = address;
-      if(phone) profileFields.phone = phone;
+      if (phone) profileFields.phone = phone;
       if (age) profileFields.age = age;
       if (diagnosisDate) profileFields.diagnosisDate = diagnosisDate;
       if (typeOfDiabetes) profileFields.typeOfDiabetes = typeOfDiabetes;
@@ -169,13 +244,14 @@ exports.newProfileCard = async (req, res) => {
 
     if (hypertensive) {
       const {
+        avatar,
         name,
         age,
         gender,
         phone,
+        address,
         email,
-        systolic,
-        diastolic,
+        bloodPressureReadings,
         medications,
         lifestyleModifications,
         otherHealthConditions,
@@ -188,8 +264,8 @@ exports.newProfileCard = async (req, res) => {
         user: req.user.id,
       });
 
-      if (!existingProfile)
-        return res.status(400).json("user profile not found");
+      if (existingProfile)
+        return res.status(400).json("user profile already created");
 
       const profileFields = {};
 
@@ -199,10 +275,11 @@ exports.newProfileCard = async (req, res) => {
       if (age) profileFields.age = age;
       if (gender) profileFields.gender = gender;
       if (phone) profileFields.phone = phone;
+      if (address) profileFields.address = address;
       if (medications) profileFields.medications = medications;
       if (email) profileFields.email = email;
-      if (diastolic) profileFields.diastolic = diastolic;
-      if (systolic) profileFields.systolic = systolic;
+      if (bloodPressureReadings)
+        profileFields.bloodPressureReadings = bloodPressureReadings;
       if (lifestyleModifications)
         profileFields.lifestyleModifications = lifestyleModifications;
       if (otherHealthConditions)
@@ -210,10 +287,11 @@ exports.newProfileCard = async (req, res) => {
       if (familyHistory) profileFields.familyHistory = familyHistory;
       if (allergies) profileFields.allergies = allergies;
       if (emergencyContact) profileFields.emergencyContact = emergencyContact;
+      if (avatar) profileFields.avatar = avatar;
 
       const profile = new BpProfileCard(profileFields);
 
-      if (!profile) return res.status(400).json("user profile not updated");
+      if (!profile) return res.status(400).json("user profile not created");
 
       await profile.save();
 
@@ -266,7 +344,7 @@ exports.updateProfileCard = async (req, res) => {
 
       if (name) profileFields.name = name;
       if (address) profileFields.address = address;
-      if(phone) profileFields.phone = phone;
+      if (phone) profileFields.phone = phone;
       if (age) profileFields.age = age;
       if (diagnosisDate) profileFields.diagnosisDate = diagnosisDate;
       if (typeOfDiabetes) profileFields.typeOfDiabetes = typeOfDiabetes;
@@ -294,9 +372,9 @@ exports.updateProfileCard = async (req, res) => {
       if (medName && medDose && frequency) {
         medName.split(",").map((item, i) => {
           const obj = {
-            "medName": item,
-            "medDose": medDose.split(",")[i],
-            "frequency": frequency.split(",")[i],
+            medName: item,
+            medDose: medDose.split(",")[i],
+            frequency: frequency.split(",")[i],
           };
 
           medications.push(obj);
@@ -373,6 +451,66 @@ exports.updateProfileCard = async (req, res) => {
 
       res.status(201).json(profile);
     }
+
+    // update staff profile
+
+    const profileFields = {};
+    const licenceDetails = {};
+    const contactDetails = {};
+
+    const {
+      name,
+      email,
+      nin,
+      phone,
+      address,
+      age,
+      title,
+      gender,
+      licenceType,
+      licenceNum,
+      expiryDate,
+      professionalDesignation,
+    } = req.body;
+
+    if (name) profileFields.name = name;
+    if (nin) profileFields.nin = nin;
+    if (age) profileFields.age = age;
+    if (email) contactDetails.email = email;
+    if (phone) contactDetails.phone = phone;
+    if (address) contactDetails.address = address;
+    profileFields.contactDetails = contactDetails;
+
+    if (licenceType) licenceDetails.licenceType = licenceType;
+    if (licenceNum) licenceDetails.licenceNum = licenceNum;
+
+    if (expiryDate) licenceDetails.expiryDate = expiryDate;
+
+    profileFields.licenceDetails = licenceDetails;
+
+    if (title) profileFields.title = title;
+    if (gender) profileFields.gender = gender;
+    if (licenceDetails) profileFields.licenceDetails = licenceDetails;
+    if (contactDetails) profileFields.contactDetails = contactDetails;
+    if (professionalDesignation)
+      profileFields.professionalDesignation = professionalDesignation;
+
+    profileFields.user = req.user.id;
+
+    const profile = await HealthWorker.findOneAndUpdate(
+      { user: req.user.id },
+      { $set: profileFields },
+      { new: false }
+    );
+
+    if (!profile)
+      return res
+        .status(400)
+        .json({ errors: { msg: "profile could not be edited" } });
+
+    await profile.save();
+
+    return res.status(200).json(profile);
   } catch (err) {
     console.log(err);
   }

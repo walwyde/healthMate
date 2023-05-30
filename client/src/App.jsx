@@ -3,7 +3,7 @@ import PrivateRoute from "./components/auth/PrivateRoute";
 import Navbar from "./components/layouts/Navbar";
 import Landing from "./components/Landing";
 import CreateProfile from "./components/profile/CreateProfile";
-import EditStaffProfile from "./components/workers/EditStaffProfile";
+import EditStaffProfile from "./components/EditStaffProfile";
 import EditUserProfile from "./components/profile/EditUserProfile";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
@@ -20,8 +20,6 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Container from "react-bootstrap/esm/Container";
 import { loadUser } from "./Actions/register";
-// import { ToastContainer} from "react-toastify";
-// import 'react-toastify/dist/ReactToastify.css';
 import store from "./store";
 
 if (localStorage.token) {

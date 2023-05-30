@@ -167,6 +167,8 @@ export const editProfile =
         reFormed.doctor = doctor;
       }
 
+      var reFormed = { ...formData }
+
       console.log(reFormed);
 
       const res = await axios.put(

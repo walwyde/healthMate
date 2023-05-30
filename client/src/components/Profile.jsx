@@ -41,16 +41,16 @@ function Profile({
           {!loading && profile === null
             ? user && (
                 <MDBCard>
-                  <MDBCardImage src={user.avatar} position="top" alt="..." />
+                  <MDBCardImage src={user.avatar && user.avatar || URL.createObjectURL(user.avatar)} position="top" alt="..." />
                   <MDBCardBody>
                     <MDBCardTitle>Hello {user.name.split(" ")[0]}</MDBCardTitle>
                     <MDBCardText>
                       Please Use This Link To Update Your Profile Card For
                       Better Experience.
                     </MDBCardText>
-                    <MDBBtn href={`/create-profile`}>
+                    <MDBCardLink className="text-decoration-none" href="/create-profile" >
                       Create Card Profile
-                    </MDBBtn>
+                    </MDBCardLink>
                   </MDBCardBody>
                 </MDBCard>
               )

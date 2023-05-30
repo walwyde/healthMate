@@ -4,14 +4,14 @@ const mongoose = require("mongoose");
 const healthWorkerSchema = new mongoose.Schema({
   title: {
     type: String,
-    emun: ["Doctor", "Professor", "Nurse"],
+    emun: ["doctor", "professor", "other"],
   },
  user : {
 type: mongoose.Schema.Types.ObjectId,
  ref: "User",
  },
-  dateOfBirth: {
-    type: Date,
+  age: {
+    type: String,
     required: true,
   },
   gender: {
@@ -42,13 +42,13 @@ type: mongoose.Schema.Types.ObjectId,
     type: String,
     required: true,
   },
-  licenseDetails: {
-    type: {
+  licenceDetails: {
+    licenceType: {
       type: String,
       enum: ["Medical", "Pharmacy", "Nursing", "Therapy"],
       required: true,
     },
-    number: {
+    licenceNum: {
       type: String,
       required: true,
       unique: true,

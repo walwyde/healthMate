@@ -4,13 +4,14 @@ POST http://localhost:5005/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-	"name": "auwal diabetic",
-	"email": "auwal@test.com",
+	"name": "auwal Staff",
+	"email": "staff2@test.com",
 	"password": "password",
 	"password2": "password",
+	"isStaff": true,
 	"condition": {
-		"hypertensive": false,
-		"diabetic": true
+		"diabetic": false,
+		"hypertensive": false
 	}
 }
 
