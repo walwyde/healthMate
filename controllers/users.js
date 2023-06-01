@@ -150,4 +150,19 @@ exports.deleteMessage = async (req, res) => {
   }
 };
 
+exports.getDoctors = async (req, res) => {
+  try {
+    const doctors = await User.find({isStaff: true})
+
+
+    if(!doctors) return res.status(404).json({ errors: [{msg:"Doctors Not Found"}] })
+
+    res.json(doctors)
+    
+  } catch (err) {
+    console.log(err.message)
+    res.status(500).json({ errors: [{msg:"Server Error"}] })
+  }
+}
+
 

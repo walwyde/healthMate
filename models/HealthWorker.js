@@ -58,6 +58,25 @@ type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
   },
+  availability: [
+    {
+      day: {
+        type: String,
+        enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        required: true,
+      },
+      time: {
+        type: String,
+        enum: ["Morning", "Afternoon", "Evening"],
+        required: true,
+      },
+    date: {
+      type: Date,
+      default: Date.now,
+    },
+  }
+  ]
+
 });
 
 // create the model

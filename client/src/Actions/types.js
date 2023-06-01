@@ -42,4 +42,18 @@ export const new_message = "new_message";
 export const message_deleted = "message_deleted";
 export const update_message = "update_message";
 export const delete_message_error = "delete_message_error";
+export const get_appointments = "get_appointments";
+export const get_appointment = "get_appointment";
+export const no_appointments = "no_appointments";
+export const no_appointment = "no_appointment";
+export const new_appointment = "new_appointment";
+export const appointment_error = "appointment_error";
+export const delete_appointment = "appointment_deleted";
+export const update_appointment = "update_appointment";
+export const delete_appointment_error = "delete_appointment_error";
+export const get_doctors = "get_doctors";
+export const get_doctor = "get_doctor";
+export const no_doctors = "no_doctors";
+export const no_doctor = "no_doctor";
+
 

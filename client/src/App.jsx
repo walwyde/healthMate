@@ -8,7 +8,7 @@ import EditUserProfile from "./components/profile/EditUserProfile";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Alert from "./components/layouts/Alerts";
-import Appointments from "./components/Appointments";
+import Appointments from "./components/appointment/Appointments";
 import Profile from "./components/Profile";
 import Message from "./components/messages/message";
 import Messages from "./components/messages/messages";
@@ -64,6 +64,9 @@ function App() {
                 path="/edit-user-profile/:_id"
                 component={EditUserProfile}
               />
+              <PrivateRoute exact path="/message/:_id" component={Message} />
+              <PrivateRoute exact path="/chat" component={Chat} />
+             
             </Switch>
             {/* <ToastContainer /> */}
           </Container>
