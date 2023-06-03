@@ -20,7 +20,15 @@ import {
 export const getDoctors = () => async dispatch => {
   try {
 
-    const res = await axios.get('http://localhost:5005/api/users');
+    const res = await axios.get('http://localhost:5005/api/appointment/doctors');
+
+    if (res.data.errors === 0) {
+      return dispatch({
+        type: no_doctors,
+        payload: res.data.errors.msg 
+      });
+    }
+
     dispatch({
       type: get_doctors,
       payload: res.data

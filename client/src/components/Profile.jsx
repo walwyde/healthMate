@@ -41,14 +41,24 @@ function Profile({
           {!loading && profile === null
             ? user && (
                 <MDBCard>
-                  <MDBCardImage src={user.avatar && user.avatar || URL.createObjectURL(user.avatar)} position="top" alt="..." />
+                  <MDBCardImage
+                    src={
+                      (user.avatar && user.avatar) ||
+                      URL.createObjectURL(user.avatar)
+                    }
+                    position="top"
+                    alt="..."
+                  />
                   <MDBCardBody>
                     <MDBCardTitle>Hello {user.name.split(" ")[0]}</MDBCardTitle>
                     <MDBCardText>
                       Please Use This Link To Update Your Profile Card For
                       Better Experience.
                     </MDBCardText>
-                    <MDBCardLink className="text-decoration-none" href="/create-profile" >
+                    <MDBCardLink
+                      className="text-decoration-none"
+                      href="/create-profile"
+                    >
                       Create Card Profile
                     </MDBCardLink>
                   </MDBCardBody>
@@ -397,61 +407,62 @@ function Profile({
                           </Fragment>
                         )}
 
+      {user && user.isStaff && (
+        <Fragment>
+         <MDBContainer>
+      <h1 className="mt-4">Profile</h1>
+      <MDBRow>
+        <MDBCol md="6">
+          <MDBTypography variant="h5">Name:</MDBTypography>
+          <p>John Doe</p>
+
+          <MDBTypography variant="h5">Email:</MDBTypography>
+          <p>johndoe@example.com</p>
+
+          <MDBTypography variant="h5">NIN:</MDBTypography>
+          <p>123456789</p>
+
+          <MDBTypography variant="h5">Phone:</MDBTypography>
+          <p>123-456-7890</p>
+
+          <MDBTypography variant="h5">Address:</MDBTypography>
+          <p>123 Main St, City, State</p>
+        </MDBCol>
+
+        <MDBCol md="6">
+          <MDBTypography variant="h5">Age:</MDBTypography>
+          <p>30</p>
+
+          <MDBTypography variant="h5">Title:</MDBTypography>
+          <p>Doctor</p>
+
+          <MDBTypography variant="h5">Gender:</MDBTypography>
+          <p>Male</p>
+
+          <MDBTypography variant="h5">Licence Type:</MDBTypography>
+          <p>Medical</p>
+
+          <MDBTypography variant="h5">Licence Number:</MDBTypography>
+          <p>ABC123</p>
+
+          <MDBTypography variant="h5">Expiry Date:</MDBTypography>
+          <p>2025-12-31</p>
+
+          <MDBTypography variant="h5">Professional Designation:</MDBTypography>
+          <p>Specialist</p>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
+        </Fragment>
+      )}
+
                         <div className="d-flex justify-content-between align-items-center mb-4">
                           <MDBCardText className="lead fw-normal mb-0">
                             Appointments
                           </MDBCardText>
                         </div>
-                        <MDBRow>
-                          <MDBCol className="mb-2">
-                            <MDBCard
-                              className="mb-5"
-                              style={{ borderRadius: "15px" }}
-                            >
-                              <MDBCardBody className="p-4">
-                                <MDBTypography tag="h3">
-                                  Session With Dr John Doe
-                                </MDBTypography>
-                                <MDBCardText className="small">
-                                  <MDBIcon far icon="star" size="lg" />
-                                  <span className="mx-2">|</span> Scheduled on{" "}
-                                  <strong>date</strong> at address
-                                </MDBCardText>
-                                <hr className="my-4" />
-                                <div className="d-flex justify-content-start align-items-center">
-                                  <MDBCardText className="text-uppercase mb-0">
-                                    <MDBIcon fas icon="ellipsis-h ms-4 me-2" />{" "}
-                                    <span className="text-muted small">
-                                      <MDBBtn
-                                        outline
-                                        color="dark"
-                                        floating
-                                        size="sm"
-                                      >
-                                        Delete
-                                      </MDBBtn>
-                                    </span>{" "}
-                                    <span className="ms-3 me-4">|</span>
-                                  </MDBCardText>
-                                  <a href="#!">
-                                    <MDBCardImage
-                                      width="35"
-                                      src={user.avatar}
-                                      alt="avatar"
-                                      className="rounded-circle me-3"
-                                      fluid
-                                    />
-                                  </a>
-                                  {/* <MDBBtn outline color="dark" floating size="sm">
-                              <MDBIcon fas icon="plus" />
-                            </MDBBtn> */}
-                                </div>
-                              </MDBCardBody>
-                            </MDBCard>
-                          </MDBCol>
-                        </MDBRow>
                       </MDBCardBody>
-                  <div className="d-flex justify-content-between align-items-center mb-4">
+                      <div className="d-flex justify-content-between align-items-center mb-4">
                         <MDBCardLink
                           href={`/edit-user-profile/${user._id}`}
                           className="text-center btn btn-primary"
@@ -464,7 +475,7 @@ function Profile({
                         >
                           delete Account
                         </MDBBtn>
-                  </div>
+                      </div>
                     </MDBCard>
                   </MDBCol>
                 </MDBRow>

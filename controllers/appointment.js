@@ -1,4 +1,5 @@
 const Appointment = require('../models/Appointment');
+const HealthWorker = require('../models/HealthWorker');
 
 // @route   GET api/appointment 
 
@@ -140,4 +141,34 @@ exports.deleteAppointment = async (req, res) => {
     }
   
   }
+
+// @route   PUT api/appointment/doctors/
+
+// @desc    Get all doctors for appointment
+
+// @access  Private
+
+exports.getDoctors = async (req, res) => {
+
+  try {
+
+    const doctors = await HealthWorker.find().sort({ date: -1 }).populate('user', ['name']);
+
+    if (!doctors) {
+
+      return res.status(404).json({ errors: { msg: 'Doctors not found' }});
+
+    }
+
+    res.json(doctors);
+
+  } catch (err) {
+
+    console.error(err.message);
+
+    res.status(500).send('Server Error');
+
+  }
+
+}
 

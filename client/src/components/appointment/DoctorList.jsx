@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Container, Card, ListGroup, Button, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { newAppointment } from '../../Actions/appointment';
 
-const DoctorList = ({ doctors, newAppointment }) => {
+const DoctorList = ({ doctors, newAppointment, loading }) => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [date , setDate] = useState('');
@@ -17,11 +17,14 @@ const DoctorList = ({ doctors, newAppointment }) => {
     }
   };
 
+  console.log(doctors);
+
   return (
+    
     <Container>
-      {doctors && doctors.map((doctor, index) => (
+      {!loading && doctors.map((doctor, index) => (
         <Card key={index} className="mb-3">
-          <Card.Header>Doctor: {doctor.name}</Card.Header>
+          <Card.Header>Doctor: {doctor.title} {doctor.user.name}</Card.Header>
           <Card.Body>
             <Card.Title>Available Time Slots:</Card.Title>
             <ListGroup>
@@ -71,7 +74,7 @@ const DoctorList = ({ doctors, newAppointment }) => {
 };
 
 DoctorList.propTypes = {
-  newAppointment: PropTypes.func.isRequired,  
+  newAppointment: PropTypes.func.isRequired,
   doctors: PropTypes.array.isRequired,
 };
 
