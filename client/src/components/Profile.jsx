@@ -407,60 +407,89 @@ function Profile({
                           </Fragment>
                         )}
 
-      {user && user.isStaff && (
-        <Fragment>
-         <MDBContainer>
-      <h1 className="mt-4">Profile</h1>
-      <MDBRow>
-        <MDBCol md="6">
-          <MDBTypography variant="h5">Name:</MDBTypography>
-          <p>John Doe</p>
+                        {user && user.isStaff && (
+                          <Fragment>
+                            {!loading && profile && (
+                              <MDBContainer>
+                                <h1 className="mt-4">Profile</h1>
+                                <MDBRow>
+                                  <MDBCol md="6">
+                                    <MDBTypography variant="h5">
+                                      Name:
+                                    </MDBTypography>
+                                    <p>{`${profile.title} ${profile.user.name}`}</p>
 
-          <MDBTypography variant="h5">Email:</MDBTypography>
-          <p>johndoe@example.com</p>
+                                    <MDBTypography variant="h5">
+                                      Email:
+                                    </MDBTypography>
+                                    <p>{profile.contactDetails.email}</p>
 
-          <MDBTypography variant="h5">NIN:</MDBTypography>
-          <p>123456789</p>
+                                    <MDBTypography variant="h5">
+                                      NIN:
+                                    </MDBTypography>
+                                    <p>{profile.nin}</p>
 
-          <MDBTypography variant="h5">Phone:</MDBTypography>
-          <p>123-456-7890</p>
+                                    <MDBTypography variant="h5">
+                                      Phone:
+                                    </MDBTypography>
+                                    <p>{profile.contactDetails.phone}</p>
 
-          <MDBTypography variant="h5">Address:</MDBTypography>
-          <p>123 Main St, City, State</p>
-        </MDBCol>
+                                    <MDBTypography variant="h5">
+                                      Address:
+                                    </MDBTypography>
+                                    <p>{profile.contactDetails.address}</p>
+                                  </MDBCol>
 
-        <MDBCol md="6">
-          <MDBTypography variant="h5">Age:</MDBTypography>
-          <p>30</p>
+                                  <MDBCol md="6">
+                                    <MDBTypography variant="h5">
+                                      Age:
+                                    </MDBTypography>
+                                    <p>{profile.age}</p>
 
-          <MDBTypography variant="h5">Title:</MDBTypography>
-          <p>Doctor</p>
+                                    <MDBTypography variant="h5">
+                                      Title:
+                                    </MDBTypography>
+                                    <p>{profile.title && profile.title}</p>
 
-          <MDBTypography variant="h5">Gender:</MDBTypography>
-          <p>Male</p>
+                                    <MDBTypography variant="h5">
+                                      Gender:
+                                    </MDBTypography>
+                                    <p>{profile.gender && profile.gender}</p>
 
-          <MDBTypography variant="h5">Licence Type:</MDBTypography>
-          <p>Medical</p>
+                                    {profile.user._id === user._id && (
+                                      <Fragment>
 
-          <MDBTypography variant="h5">Licence Number:</MDBTypography>
-          <p>ABC123</p>
+                                    <MDBTypography variant="h5">
+                                      Licence Type:
+                                    </MDBTypography>
+                                    <p>{profile.licenceDetails && profile.licenceDetails.licenceType}</p>
 
-          <MDBTypography variant="h5">Expiry Date:</MDBTypography>
-          <p>2025-12-31</p>
+                                    <MDBTypography variant="h5">
+                                      Licence Number:
+                                    </MDBTypography>
+                                    <p>{profile.licenceDetails && profile.licenceDetails.licenceNum}</p>
 
-          <MDBTypography variant="h5">Professional Designation:</MDBTypography>
-          <p>Specialist</p>
-        </MDBCol>
-      </MDBRow>
-    </MDBContainer>
-        </Fragment>
-      )}
+                                  
+                                        <MDBTypography variant="h5">
+                                          Expiry Date:
+                                        </MDBTypography>
+                                        <p><Moment fromNow={'yyyy mm dd'}>{profile.licenceDetails && profile.licenceDetails.expiryDate}</Moment></p>
+                                      </Fragment>
+                                    )}
 
-                        <div className="d-flex justify-content-between align-items-center mb-4">
-                          <MDBCardText className="lead fw-normal mb-0">
-                            Appointments
-                          </MDBCardText>
-                        </div>
+                                    <MDBTypography variant="h5">
+                                      Professional Designation:
+                                    </MDBTypography>
+                                    <p>
+                                      {profile.professionalDesignation &&
+                                        profile.professionalDesignation}
+                                    </p>
+                                  </MDBCol>
+                                </MDBRow>
+                              </MDBContainer>
+                            )}
+                          </Fragment>
+                        )}
                       </MDBCardBody>
                       <div className="d-flex justify-content-between align-items-center mb-4">
                         <MDBCardLink

@@ -4,7 +4,7 @@ import {
   register_success,
   register_fail,
   log_out,
-  clear_profile
+  clear_profile,
 } from "./types";
 
 import { setAlert } from "../utils/setAlert";
@@ -12,7 +12,6 @@ import { loadUser } from "../Actions/register";
 import axios from "axios";
 
 export const login = (formData, history) => async (dispatch) => {
-
   const options = {
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
@@ -20,24 +19,20 @@ export const login = (formData, history) => async (dispatch) => {
   };
 
   try {
-
     const res = await axios.post(
       "http://localhost:5005/api/auth",
       formData,
       options
     );
 
-    if(res) history.push("/profile");
+    if (res) history.push("/profile");
 
-    console.log(JSON.stringify(res.data))
+    console.log(JSON.stringify(res.data));
 
-    
     dispatch({
       type: login_success,
       payload: {
-
         token: res.data,
-
       },
     });
     dispatch(loadUser());
@@ -46,12 +41,9 @@ export const login = (formData, history) => async (dispatch) => {
     console.log(err);
     const errors = err.response.data.errors;
 
-    if(errors) {
+    if (errors) {
       console.log(errors);
-      errors.forEach((error) => dispatch(toast(error.msg, { type: "error", theme: "colored", autoClose: 3000, closeOnClick: true, pauseOnHover: true, hideProgressBar: false })));
-    }
-    if (err) {
-      dispatch(setAlert(err.response.data, "danger"));
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
     }
 
     dispatch({
@@ -65,9 +57,9 @@ export const register = (formData, history) => async (dispatch) => {
   const reFormed = { ...formData };
 
   if (condition === "hypertensive")
-    reFormed.condition = { "hypertensive": true, "diabetic": false };
+    reFormed.condition = { hypertensive: true, diabetic: false };
   if (condition === "diabetic")
-    reFormed.condition = { "hypertensive": false, "diabetic": true };
+    reFormed.condition = { hypertensive: false, diabetic: true };
 
   console.log(reFormed.condition);
 
@@ -83,9 +75,7 @@ export const register = (formData, history) => async (dispatch) => {
       config
     );
 
-      history.push('/profile')
-
-    console.log(res.response);
+    history.push("/profile");
 
     dispatch({
       type: register_success,
@@ -96,7 +86,6 @@ export const register = (formData, history) => async (dispatch) => {
 
     dispatch(setAlert("Registration Successful", "success"));
   } catch (err) {
-    console.log(err.response);
     const errors = err.response.data.errors;
     if (errors)
       errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));

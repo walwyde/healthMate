@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import Loading from '../layouts/Loading'
 import DoctorList from './DoctorList'
 import {getDoctors} from '../../Actions/appointment'
+import { Link } from 'react-router-dom'
+import {Button} from 'react-bootstrap'
 import { connect } from 'react-redux'
 
 const Appointments = ({
@@ -21,6 +23,10 @@ const Appointments = ({
         <h1>Available Doctors</h1>
         <DoctorList doctors={doctors} loading={loading}/>
       </div>}
+
+      <Button variant="link" as={Link} to="/profile" className="mb-3 text-decoration-none">
+      Back To Profile
+    </Button>
       </Fragment>
   )
 }

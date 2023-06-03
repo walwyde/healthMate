@@ -1,7 +1,8 @@
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { withRouter, Redirect } from "react-router-dom";
 import { login } from "../../Actions/auth";
 import { connect } from "react-redux";
@@ -23,7 +24,9 @@ const Login = ({ login, history, isAuthenticated }) => {
     login(formData, history);
   };
   
-  return isAuthenticated ? (<Redirect to={"/profile"}  />) : ( <Form onSubmit={(e) => onSubmit(e)}>
+  return isAuthenticated ? (<Redirect to={"/profile"}  />) : ( 
+  <Fragment>
+  <Form onSubmit={(e) => onSubmit(e)}>
     <Form.Group className="mb-3" controlId="formBasicEmail">
       <Form.Label>Email address</Form.Label>
       <Form.Control
@@ -54,6 +57,13 @@ const Login = ({ login, history, isAuthenticated }) => {
       Submit
     </Button>
   </Form>
+
+  <h6 className="text-muted mt-3">Already have an account?</h6>
+
+  <Link to="/register" className="text-decoration-none m-2">
+    Register
+  </Link>
+  </Fragment>
   )
 };
 

@@ -2,6 +2,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Fragment, useState } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom";
 import { register } from "../../Actions/auth";
 import { connect } from "react-redux";
@@ -33,6 +34,7 @@ const Register = ({ register, history }) => {
   };
 
   return (
+    <Fragment>
     <Form onSubmit={(e) => onSubmit(e)}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
@@ -103,6 +105,15 @@ const Register = ({ register, history }) => {
         Submit
       </Button>
     </Form>
+
+    <h6 className="text-muted mt-3">Already have an account?</h6>
+
+    <Link to="/login" className="text-decoration-none m-2">
+
+      Login
+    </Link>
+
+    </Fragment>
   );
 };
 

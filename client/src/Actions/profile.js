@@ -7,6 +7,8 @@ import {
   delete_account,
   clear_profile,
   delete_profile_error,
+  availability_error,
+  add_availability
 } from "./types";
 import { setAlert } from "../utils/setAlert";
 
@@ -53,7 +55,7 @@ export const createProfile = (formData, history) => async (dispatch) => {
 
     dispatch({
       type: load_profile,
-      payload: res.data ,
+      payload: res.data,
     });
 
     dispatch(loadUser());
@@ -65,7 +67,7 @@ export const createProfile = (formData, history) => async (dispatch) => {
 
     dispatch({
       type: profile_error,
-      payload: errors ? errors : err.response.data
+      payload: errors ? errors : err.response.data,
     });
   }
 };
@@ -167,7 +169,7 @@ export const editProfile =
         reFormed.doctor = doctor;
       }
 
-      var reFormed = { ...formData }
+      var reFormed = { ...formData };
 
       console.log(reFormed);
 
@@ -239,4 +241,31 @@ export const deleteAccount = () => async (dispatch) => {
       });
     }
   }
-}
+};
+
+export const addAvailability = (formData) => async (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  };
+  try {
+    const res = await axios.post(
+      `http://localhost:5005/api/profile/me/availability`
+    );
+
+    if (res.errors) return  dispatch(setAlert(error.msg, "danger"));
+
+    dispatch({
+      type: add_availability,
+      payload: res.data,
+    });
+
+  } catch (err) {
+    console.log(err);
+    dispatch({
+      type: availability_error,
+      payload: err.response.data,
+    });
+  }
+};

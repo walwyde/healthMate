@@ -55,5 +55,8 @@ export const get_doctors = "get_doctors";
 export const get_doctor = "get_doctor";
 export const no_doctors = "no_doctors";
 export const no_doctor = "no_doctor";
+export const add_availability = "add_availability";
+export const availability_error = "availability_error"; 
+export const load_availability = 'load_availability'
 
 

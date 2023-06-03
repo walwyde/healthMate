@@ -396,6 +396,12 @@ exports.updateProfileCard = async (req, res) => {
         { new: false }
       );
 
+      const userName =  await User.findOneAndUpdate({ _id: req.user.id }, { $set: { name: name } });
+
+      if (!userName) return res.status(400).json("user name not updated");
+
+      userName.save();
+
       if (!profile) return res.status(400).json("user profile not updated");
 
       profile.save();
@@ -447,12 +453,26 @@ exports.updateProfileCard = async (req, res) => {
         { new: false }
       );
 
+      const userName =  await User.findOneAndUpdate({ _id: req.user.id }, { $set: { name: name } });
+
+      if (!userName) return res.status(400).json("user name not updated");
+
+      userName.save();
+
       profile.save();
 
       res.status(201).json(profile);
     }
 
     // update staff profile
+
+
+    const userName =  await User.findOneAndUpdate({ _id: req.user.id }, { $set: { name: name } });
+
+    if (!userName) return res.status(400).json("user name not updated");
+
+    userName.save();
+
 
     const profileFields = {};
     const licenceDetails = {};
@@ -532,6 +552,52 @@ exports.deleteUserProfile = async (req, res) => {
     res.json("profile deleted");
   } catch (err) {
     console.log(err.message);
+    res.status(500).json({ msg: err.message });
+  }
+};
+
+exports.updateAvailability = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  try {
+
+    const availability = { ...req.body};
+    console.log(req.body)
+    const profile = await HealthWorker.findOne({ user: req.user.id });
+
+    if (!profile)
+      return res.status(400).json({ errors: { msg: "profile not found" } });
+
+    profile.availability.push(availability);
+
+    await profile.save();
+
+    res.json(profile.availability);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ msg: err.message });
+  }
+};
+
+exports.clearAvailability = async (req, res) => {
+  
+  try {
+
+    const profile = await HealthWorker.findOne({ user: req.user.id });
+
+    if (!profile)
+      return res.status(400).json({ errors: { msg: "profile not found" } });
+
+    profile.availability = [];
+
+    await profile.save();
+
+    res.json(profile.availability);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ msg: err.message });
   }
 };

@@ -7,12 +7,14 @@ import { newAppointment } from '../../Actions/appointment';
 const DoctorList = ({ doctors, newAppointment, loading }) => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
-  const [date , setDate] = useState('');
+  const [date , setDate] = useState({
+    date: '',
+  });
 
   const handleAppointmentBooking = () => {
     if (selectedDoctor && selectedTimeSlot) {
       // Implement your logic to handle appointment booking here
-      console.log(`Appointment booked for ${selectedDoctor.name} at ${selectedTimeSlot} on ${date}`);
+      console.log(`Appointment booked for ${selectedDoctor.user.name} at ${selectedTimeSlot} on ${date}`);
       newAppointment(selectedDoctor._id, selectedTimeSlot, date);
     }
   };
@@ -28,14 +30,16 @@ const DoctorList = ({ doctors, newAppointment, loading }) => {
           <Card.Body>
             <Card.Title>Available Time Slots:</Card.Title>
             <ListGroup>
-              {doctor.availability.map((slot, slotIndex) => (
+              {doctor.availability.map((slot) => (
                 <ListGroup.Item
-                  key={slotIndex}
-                  onClick={() => setSelectedTimeSlot(slot)}
-                  active={selectedTimeSlot === slot}
+                  key={slot._id}
+                  onClick={() => setSelectedTimeSlot(slot.time)}
+                  active={selectedTimeSlot === slot.time}
                   style={{ cursor: 'pointer' }}
                 >
-                  {slot}
+                 <p> {slot.day}</p>
+                 <p>{slot.time}</p>
+                 <hr />
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -46,7 +50,6 @@ const DoctorList = ({ doctors, newAppointment, loading }) => {
                 type="date"
                 name="date"
                 onChange={(e) => setDate(e.target.value)}
-                onClick={() => setDate(date)}
                 style={{ cursor: 'pointer' }}
                 value={date}
               />

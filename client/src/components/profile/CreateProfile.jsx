@@ -2,6 +2,7 @@ import Reac, { useState, Fragment } from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
+import { Link } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { createProfile } from "../../Actions/profile";
 import { connect } from "react-redux";
@@ -46,17 +47,17 @@ function CreateProfile({
     docEmail: "",
     readingDate: "",
     insulinType: "",
-    
+
     // health staff from state
-    
-    email: '',
-    dob: '',
-    nin: '',
-    licenceType: '',
-    professionalDesignation: '',
-    expiryDate: '',
-    title: '',
-    licenceNum: '',
+
+    email: "",
+    dob: "",
+    nin: "",
+    licenceType: "",
+    professionalDesignation: "",
+    expiryDate: "",
+    title: "",
+    licenceNum: "",
   });
 
   // hpyertensive form constants
@@ -69,7 +70,7 @@ function CreateProfile({
     professionalDesignation,
     expiryDate,
     title,
-    
+
     name,
     age,
     gender,
@@ -109,12 +110,10 @@ function CreateProfile({
     <Fragment>
       <Spinner />
     </Fragment>
-  ) : !isAdmin && !isStaff && !diabetic && !hypertensive ? 
+  ) : !isAdmin && !isStaff && !diabetic && !hypertensive ? (
     <Redirect to="/profile" />
-   : 
-    !loading &&
-    hypertensive ?
-    (<Fragment>
+  ) : !loading && hypertensive ? (
+    <Fragment>
       <h1 className="large text-primary">Create Profile</h1>
       <Form onSubmit={(e) => onSubmit(e)}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -297,371 +296,375 @@ function CreateProfile({
           Submit
         </Button>
       </Form>
-    </Fragment>)
-    
-    :
-      // {/* Render the form for diabetic patients */}
 
-      !loading && diabetic ? (
-        <Fragment>
-           <h1 className="large text-primary">Create Profile</h1>
-          <Form onSubmit={(e) => onSubmit(e)}>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={name}
-                name="name"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter full names"
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Age</Form.Label>
-              <Form.Control
-                type="text"
-                value={age}
-                name="age"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter age"
-                required
-              />
-            </Form.Group>
+      <Link to="/profile" className="btn btn-primary m-2">
+        Back to Profile
+      </Link>
+    </Fragment>
+  ) : // {/* Render the form for diabetic patients */}
 
-            <Form.Group controlId="phone">
-              <Form.Label>Phone</Form.Label>
-              <Form.Control
-                type="text"
-                name="phone"
-                value={phone}
-                placeholder="Enter Contact Phone"
-                onChange={(e) => onChange(e)}
-                required
-              />
-            </Form.Group>
+  !loading && diabetic ? (
+    <Fragment>
+      <h1 className="large text-primary">Create Profile</h1>
+      <Form onSubmit={(e) => onSubmit(e)}>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Full Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={name}
+            name="name"
+            onChange={(e) => onChange(e)}
+            placeholder="Enter full names"
+            required
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Age</Form.Label>
+          <Form.Control
+            type="text"
+            value={age}
+            name="age"
+            onChange={(e) => onChange(e)}
+            placeholder="Enter age"
+            required
+          />
+        </Form.Group>
 
-            <Form.Group className="mb-3" controlId="systolic">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                type="text"
-                value={address}
-                name="address"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter Address"
-                required
-              />
-            </Form.Group>
+        <Form.Group controlId="phone">
+          <Form.Label>Phone</Form.Label>
+          <Form.Control
+            type="text"
+            name="phone"
+            value={phone}
+            placeholder="Enter Contact Phone"
+            onChange={(e) => onChange(e)}
+            required
+          />
+        </Form.Group>
 
-            <Form.Group controlId="diagnosisDate">
-              <Form.Label>Diagnosis Date</Form.Label>
-              <Form.Control
-                type="date"
-                name="diagnosisDate"
-                value={formData.diagnosisDate}
-                onChange={(e) => onChange(e)}
-              />
-            </Form.Group>
+        <Form.Group className="mb-3" controlId="systolic">
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            type="text"
+            value={address}
+            name="address"
+            onChange={(e) => onChange(e)}
+            placeholder="Enter Address"
+            required
+          />
+        </Form.Group>
 
-            <Form.Group controlId="typeOfDiabetes">
-              <Form.Label>Type of Diabetes</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Diabetes A, B or C "
-                name="typeOfDiabetes"
-                value={formData.typeOfDiabetes}
-                onChange={(e) => onChange(e)}
-              />
-            </Form.Group>
+        <Form.Group controlId="diagnosisDate" className="mb-3">
+          <Form.Label>Diagnosis Date</Form.Label>
+          <Form.Control
+            type="date"
+            name="diagnosisDate"
+            value={formData.diagnosisDate}
+            onChange={(e) => onChange(e)}
+          />
+        </Form.Group>
 
-            {/* Medications */}
-            <Form.Group controlId="medications">
-              <Form.Label>Medications</Form.Label>
+        <Form.Group controlId="typeOfDiabetes" className="mb-3">
+          <Form.Label>Type of Diabetes</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Diabetes A, B or C "
+            name="typeOfDiabetes"
+            value={formData.typeOfDiabetes}
+            onChange={(e) => onChange(e)}
+          />
+        </Form.Group>
 
-              <Form.Control
-                type="text"
-                name="medName"
-                value={medName}
-                placeholder="Enter medication name(s) seperated by commas(,)"
-                onChange={(e) => onChange(e)}
-              />
-              <Form.Control
-                type="text"
-                name="medDose"
-                placeholder="Enter medication dose(s) seperated by commas(,)"
-                value={medDose}
-                onChange={(e) => onChange(e)}
-              />
-              <Form.Control
-                type="text"
-                name="frequency"
-                placeholder="Enter medication frequency(s) seperated by commas(,)"
-                value={frequency}
-                onChange={(e) => onChange(e)}
-              />
-            </Form.Group>
+        {/* Medications */}
+        <Form.Group controlId="medications" className="mb-3">
+          <Form.Label>Medications</Form.Label>
 
-            {/* Allergies */}
-            <Form.Group controlId="allergies">
-              <Form.Label>Allergies</Form.Label>
+          <Form.Control
+            type="text"
+            name="medName"
+            value={medName}
+            placeholder="Enter medication name(s) seperated by commas(,)"
+            onChange={(e) => onChange(e)}
+          />
+          <Form.Control
+            type="text"
+            name="medDose"
+            placeholder="Enter medication dose(s) seperated by commas(,)"
+            value={medDose}
+            onChange={(e) => onChange(e)}
+          />
+          <Form.Control
+            type="text"
+            name="frequency"
+            placeholder="Enter medication frequency(s) seperated by commas(,)"
+            value={frequency}
+            onChange={(e) => onChange(e)}
+          />
+        </Form.Group>
 
-              <Form.Control
-                type="text"
-                name="allergies"
-                value={allergies}
-                placeholder="Enter allergy(s) seperated by commas(,)"
-                onChange={(e) => onChange(e)}
-              />
-            </Form.Group>
+        {/* Allergies */}
+        <Form.Group controlId="allergies" className="mb-3">
+          <Form.Label>Allergies</Form.Label>
 
-            {/* Emergency Contact */}
-            <Form.Group controlId="emergencyContact">
-              <Form.Label>Emergency Contact</Form.Label>
-              <Form.Control
-                type="text"
-                name="contactPhone"
-                placeholder="Enter emergency contact"
-                value={formData.contactPhone}
-                onChange={(e) => onChange(e)}
-              />
-              <Form.Control
-                type="text"
-                name="contactName"
-                value={formData.contactName}
-                placeholder="Enter emergency contact name"
-                onChange={(e) => onChange(e)}
-              />
-            </Form.Group>
+          <Form.Control
+            type="text"
+            name="allergies"
+            value={allergies}
+            placeholder="Enter allergy(s) seperated by commas(,)"
+            onChange={(e) => onChange(e)}
+          />
+        </Form.Group>
 
-            {/* Glucose Readings */}
-            <Form.Group controlId="glucoseReadings">
-              <Form.Label>Glucose Readings</Form.Label>
+        {/* Emergency Contact */}
+        <Form.Group controlId="emergencyContact" className="mb-3">
+          <Form.Label>Emergency Contact</Form.Label>
+          <Form.Control
+            type="text"
+            name="contactPhone"
+            placeholder="Enter emergency contact"
+            value={formData.contactPhone}
+            onChange={(e) => onChange(e)}
+          />
+          <Form.Control
+            type="text"
+            name="contactName"
+            value={formData.contactName}
+            placeholder="Enter emergency contact name"
+            onChange={(e) => onChange(e)}
+          />
+        </Form.Group>
 
-              <Form.Control
-                type="date"
-                name="readingDate"
-                value={formData.readingDate}
-                placeholder="Enter reading Date"
-                onChange={(e) => onChange(e)}
-              />
+        {/* Glucose Readings */}
+        <Form.Group controlId="glucoseReadings" className="mb-3">
+          <Form.Label>Glucose Readings</Form.Label>
 
-              <Form.Control
-                type="text"
-                name="glucoseLevel"
-                value={formData.glucoseLevel}
-                placeholder="Enter glucose reading level"
-                onChange={(e) => onChange(e)}
-              />
-            </Form.Group>
+          <Form.Control
+            type="date"
+            name="readingDate"
+            value={formData.readingDate}
+            placeholder="Enter reading Date"
+            onChange={(e) => onChange(e)}
+          />
 
-            {/* Insulin Dose */}
-            <Form.Group controlId="insulinDose">
-              <Form.Label>Insulin Dose</Form.Label>
-              <Form.Control
-                type="text"
-                name="insulinType"
-                value={formData.insulinType}
-                placeholder="Enter insulin type"
-                onChange={(e) => onChange(e)}
-              />
-            </Form.Group>
+          <Form.Control
+            type="text"
+            name="glucoseLevel"
+            value={formData.glucoseLevel}
+            placeholder="Enter glucose reading level"
+            onChange={(e) => onChange(e)}
+          />
+        </Form.Group>
 
-            {/* Doctor */}
-            <Form.Group controlId="doctor">
-              <Form.Label>Doctor</Form.Label>
-              <Form.Control
-                type="text"
-                name="docName"
-                value={formData.docName}
-                placeholder="Enter your doctor's name"
-                onChange={(e) => onChange(e)}
-              />
-              <Form.Control
-                type="text"
-                name="docPhone"
-                value={formData.docPhone}
-                placeholder="Enter your doctor's phone no_"
-                onChange={(e) => onChange(e)}
-              />
-              <Form.Control
-                type="email"
-                name="docEmail"
-                value={formData.docEmail}
-                placeholder="Enter your doctor's email"
-                onChange={(e) => onChange(e)}
-              />
-            </Form.Group>
+        {/* Insulin Dose */}
+        <Form.Group controlId="insulinDose" className="mb-3">
+          <Form.Label>Insulin Dose</Form.Label>
+          <Form.Control
+            type="text"
+            name="insulinType"
+            value={formData.insulinType}
+            placeholder="Enter insulin type"
+            onChange={(e) => onChange(e)}
+          />
+        </Form.Group>
 
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-          </Form>
-        </Fragment>
-      )
-:
-   !loading && isStaff && (<Fragment>
-     <h1 className="large text-primary">Create Profile</h1>
+        {/* Doctor */}
+        <Form.Group controlId="doctor" className="mb-3">
+          <Form.Label>Doctor</Form.Label>
+          <Form.Control
+            type="text"
+            name="docName"
+            value={formData.docName}
+            placeholder="Enter your doctor's name"
+            onChange={(e) => onChange(e)}
+          />
+          <Form.Control
+            type="text"
+            name="docPhone"
+            value={formData.docPhone}
+            placeholder="Enter your doctor's phone no_"
+            onChange={(e) => onChange(e)}
+          />
+          <Form.Control
+            type="email"
+            name="docEmail"
+            value={formData.docEmail}
+            placeholder="Enter your doctor's email"
+            onChange={(e) => onChange(e)}
+          />
+        </Form.Group>
 
-     <Form onSubmit={(e) => onSubmit(e)}>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
 
-     <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                value={title}
-                name="title"
-                onChange={(e) => onChange(e)}
-                placeholder="Dr, Prof, Other"
-                required
-              />
-            </Form.Group>
+      <Link to="/profile" className="btn btn-primary m-2">
+        Back to Profile
+      </Link>
+    </Fragment>
+  ) : (
+    !loading &&
+    isStaff && (
+      <Fragment>
+        <h1 className="large text-primary">Create Profile</h1>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={name}
-                name="name"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter your full name"
-                required
-              />
-            </Form.Group>
+        <Form onSubmit={(e) => onSubmit(e)}>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              type="text"
+              value={title}
+              name="title"
+              onChange={(e) => onChange(e)}
+              placeholder="Dr, Prof, Other"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Gender</Form.Label>
-              <Form.Select
-                value={gender}
-                name="gender"
-                onChange={(e) => onChange(e)}
-                placeholder="Dr, Prof, Other"
-                required
-                >
-                <option>
-                  Select Gender
-                </option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="others">Others</option>
-                </Form.Select>
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Full Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={name}
+              name="name"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter your full name"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Age</Form.Label>
-              <Form.Control
-                type="text"
-                value={age}
-                name="age"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter age"
-                required
-              />
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Gender</Form.Label>
+            <Form.Select
+              value={gender}
+              name="gender"
+              onChange={(e) => onChange(e)}
+              placeholder="Dr, Prof, Other"
+              required
+            >
+              <option>Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="others">Others</option>
+            </Form.Select>
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Contact Address</Form.Label>
-              <Form.Control
-                type="text"
-                value={address}
-                name="address"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter office address"
-                required
-              />
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Age</Form.Label>
+            <Form.Control
+              type="text"
+              value={age}
+              name="age"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter age"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Contact Phone</Form.Label>
-              <Form.Control
-                type="text"
-                value={phone}
-                name="phone"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter your phone number"
-                required
-              />
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Contact Address</Form.Label>
+            <Form.Control
+              type="text"
+              value={address}
+              name="address"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter office address"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Contact Email </Form.Label>
-              <Form.Control
-                type="text"
-                value={email}
-                name="email"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter your contact email address"
-                required
-              />
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Contact Phone</Form.Label>
+            <Form.Control
+              type="text"
+              value={phone}
+              name="phone"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter your phone number"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>NIN Number</Form.Label>
-              <Form.Control
-                type="text"
-                value={nin}
-                name="nin"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter your identification number"
-                required
-              />
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Contact Email </Form.Label>
+            <Form.Control
+              type="text"
+              value={email}
+              name="email"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter your contact email address"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>professional Designation</Form.Label>
-              <Form.Control
-                type="text"
-                value={professionalDesignation}
-                name="professionalDesignation"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter your area of specialty"
-                required
-              />
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>NIN Number</Form.Label>
+            <Form.Control
+              type="text"
+              value={nin}
+              name="nin"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter your identification number"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Medical Licence Type</Form.Label>
-              <Form.Control
-                type="text"
-                value={licenceType}
-                name="licenceType"
-                onChange={(e) => onChange(e)}
-                placeholder="Medical, Pharmaceutical, Other"
-                required
-              />
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>professional Designation</Form.Label>
+            <Form.Control
+              type="text"
+              value={professionalDesignation}
+              name="professionalDesignation"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter your area of specialty"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Medical Licence Number</Form.Label>
-              <Form.Control
-                type="text"
-                value={licenceNum}
-                name="licenceNum"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter licence number"
-                required
-              />
-            </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Medical Licence Type</Form.Label>
+            <Form.Control
+              type="text"
+              value={licenceType}
+              name="licenceType"
+              onChange={(e) => onChange(e)}
+              placeholder="Medical, Pharmaceutical, Other"
+              required
+            />
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Medical Licence Expiry Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={expiryDate}
-                name="expiryDate"
-                onChange={(e) => onChange(e)}
-                placeholder="Enter licence expiry date"
-                required
-              />
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Medical Licence Number</Form.Label>
+            <Form.Control
+              type="text"
+              value={licenceNum}
+              name="licenceNum"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter licence number"
+              required
+            />
+          </Form.Group>
 
-              </Form.Group>
-            <Button type="submit">
-            Submit
-            </Button>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Medical Licence Expiry Date</Form.Label>
+            <Form.Control
+              type="date"
+              value={expiryDate}
+              name="expiryDate"
+              onChange={(e) => onChange(e)}
+              placeholder="Enter licence expiry date"
+              required
+            />
+          </Form.Group>
+          <Button type="submit">Submit</Button>
+        </Form>
 
-            </Form>
-
-   </Fragment>)
-  
+        <Link to="/profile" className="btn btn-primary m-2">
+          Back to Profile
+        </Link>
+      </Fragment>
+    )
+  );
 }
 
 CreateProfile.propTypes = {

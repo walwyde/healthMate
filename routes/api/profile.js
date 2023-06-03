@@ -10,6 +10,12 @@ router.get("/me", mdlwre.auth, controller.getProfile)
 
 router.get('/:id', mdlwre.auth, controller.getProfileById)
 
+router.post('/me/availability', mdlwre.auth, [
+  check('day', 'input available Day').not().isEmpty(),
+  check('time', 'please include time of day').not().isEmpty()
+], controller.updateAvailability)
+
+router.delete('/me/availability', mdlwre.auth, controller.clearAvailability)
 
 router.post('/me',mdlwre.auth, 
 [
@@ -20,5 +26,7 @@ controller.newProfileCard)
 router.put('/me', mdlwre.auth, controller.updateProfileCard) 
 
 router.delete('/me', mdlwre.auth, controller.deleteUserProfile)
+
+
 
 module.exports = router

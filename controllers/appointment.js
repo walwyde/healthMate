@@ -78,6 +78,8 @@ exports.createAppointment = async (req, res) => {
   // Build appointment object
 
   try {
+    console.log(appointmentFields)
+
     let appointment = await Appointment.findOne({ doctor: doctor });
 
     if (appointment) {
@@ -88,13 +90,17 @@ exports.createAppointment = async (req, res) => {
         { new: true }
       );
 
+      appointment.save();
+
       return res.json(appointment);
     }
 
     // Create
     appointment = new Appointment(appointmentFields);
 
-    await appointment.save();
+    // await appointment.save();
+
+
     res.json(appointment);
   } catch (err) {
     console.error(err.message);
@@ -152,7 +158,7 @@ exports.getDoctors = async (req, res) => {
 
   try {
 
-    const doctors = await HealthWorker.find().sort({ date: -1 }).populate('user', ['name']);
+    const doctors = await HealthWorker.find().sort({ date: -1 }).populate('user', ['name', 'availability']);
 
     if (!doctors) {
 
@@ -170,5 +176,29 @@ exports.getDoctors = async (req, res) => {
 
   }
 
+}
+
+exports.updateAppointment = async (req, res) => {
+  
+    try {
+
+      const appointment = await Appointment.findById(req.params.id);
+
+      if (!appointment) {
+        res.status(404).json({ msg: 'Appointment not found' });
+      }
+
+      if (appointment.user.toString() !== req.user.id) {
+        res.status(401).json({ msg: 'User not authorized' });
+      }
+
+      const updatedAppointment = await Appointment.findOneAndUpdate(
+        { _id: req.params.id },
+        {$set: req.body},
+        {true: false}
+      )
+    } catch(err) {
+      console.log(err);
+    }
 }
 

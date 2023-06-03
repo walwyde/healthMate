@@ -12,6 +12,7 @@ import {
   delete_appointment,
   update_appointment,
   delete_appointment_error,
+  load_availability
 } from "../Actions/types";
 
 const initialState = {
@@ -36,8 +37,7 @@ export default function (state = initialState, action) {
         ...state,
         doctors: payload,
         loading: false,
-      };
-
+      }
     default:
       return state;
   }

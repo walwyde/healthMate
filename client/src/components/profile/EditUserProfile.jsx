@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import { withRouter, Redirect } from "react-router-dom";
 import { editProfile } from "../../Actions/profile";
 import { getProfileById } from "../../Actions/profile";
+import { addAvailability , clearAvailability } from "../../Actions/appointment";
 import { connect } from "react-redux";
 
 const EditUserProfile = ({
@@ -14,6 +15,8 @@ const EditUserProfile = ({
   editProfile,
   history,
   getProfileById,
+  addAvailability,
+  clearAvailability,
   match,
   auth: { user },
 }) => {
@@ -58,6 +61,9 @@ const EditUserProfile = ({
     email: "",
     nin: "",
     professionalDesignation: "",
+    date: new Date().toISOString().split("T")[0], // Default to current date
+    day: "",
+    time: "",
   });
 
   // Handle Image Upload
@@ -69,6 +75,9 @@ const EditUserProfile = ({
 
   // hpyertensive form constants
   const {
+    day,
+    time,
+    date,
     expiryDate,
     professionalDesignation,
     nin,
@@ -146,11 +155,31 @@ const EditUserProfile = ({
     );
   };
 
-  const handleSubmit = (e) => {
+  
+  // staff form functions
+
+  const onSubmitAvailability = (e) => {
+    const { date, day, time} = formData
+    const availability = {
+      "date": date,
+      "day":  day,
+      "time": time,
+    }
     e.preventDefault();
-    // Handle form submission logic
-    console.log(formData);
-  };
+    addAvailability(availability);
+
+    setFormData({
+      ...formData,
+      date: "",
+      day: "",
+      time: "",
+
+    })
+  }
+
+  const handleClearAvailability = () => {
+    clearAvailability();
+  }
 
   return loading ? (
     <Fragment>
@@ -350,8 +379,7 @@ const EditUserProfile = ({
             value={selectedFile}
             name="avatar"
             onChange={(e) => onChange(e)}
-            placeholder="Enter family History"
-            required
+            placeholder="Enter Profile Image"
           />
         </Form.Group>
 
@@ -559,6 +587,17 @@ const EditUserProfile = ({
           />
         </Form.Group>
 
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Profile Image</Form.Label>
+          <Form.Control
+            type="file"
+            value={selectedFile}
+            name="avatar"
+            onChange={(e) => onChange(e)}
+            placeholder="Enter Profile Image"
+          />
+        </Form.Group>
+
         <Button variant="primary" type="submit">
           Submit
         </Button>
@@ -721,6 +760,63 @@ const EditUserProfile = ({
             required
           />
         </Form.Group>
+
+        <Form.Text className="text-muted mb-3 text-center  ">
+          Add Availability
+        </Form.Text>
+        <Form.Group controlId="day" className="mb-3">
+          <Form.Label>Day:</Form.Label>
+          <Form.Select
+            name="day"
+            onChange={e => onChange(e)}
+            value={day}
+          >
+            <option value="">Select a day</option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group controlId="time">
+          <Form.Label>Time:</Form.Label>
+          <Form.Select
+            name="time"
+            onChange={e => onChange(e)}
+            value={time}
+          >
+            <option value="">Select a time</option>
+            <option value="Morning">9 AM</option>
+            <option value="Afternoon">12 PM</option>
+            <option value="Evening">4 PM</option>
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group controlId="date" className="mb-3">
+          <Button variant="primary" onClick={e => onSubmitAvailability(e)} className="mt-3">
+            Add Availability
+          </Button>
+        </Form.Group>
+
+        <Form.Group controlId="date" className="mb-3">
+          <Button variant="primary" onClick={e => handleClearAvailability(e)} className="mt-3">
+            clear Availability
+          </Button>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Profile Image</Form.Label>
+          <Form.Control
+            type="file"
+            value={selectedFile}
+            name="avatar"
+            onChange={(e) => onChange(e)}
+            placeholder="Enter your profile image"
+          />
+        </Form.Group>
+
         <Button type="submit">Submit</Button>
       </Form>
     </Fragment>
@@ -737,6 +833,8 @@ EditUserProfile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  addAvailability: PropTypes.func.isRequired,
+  clearAvailability: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -744,6 +842,9 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { editProfile, getProfileById })(
-  withRouter(EditUserProfile)
-);
+export default connect(mapStateToProps, {
+  editProfile,
+  getProfileById,
+  addAvailability,
+  clearAvailability,
+})(withRouter(EditUserProfile));
