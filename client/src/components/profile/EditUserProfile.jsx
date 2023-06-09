@@ -67,7 +67,7 @@ const EditUserProfile = ({
   });
 
   // Handle Image Upload
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState('');
 
   const handleFileUpload = (event) => {
     setSelectedFile(event.target.files[0]);

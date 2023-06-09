@@ -85,16 +85,11 @@ function Profile({
                             fluid
                             style={{ width: "150px", zIndex: "1" }}
                           />
-                          <MDBBtn
-                            outline
-                            color="dark"
-                            style={{ height: "36px", overflow: "visible" }}
-                          >
-                            Edit profile
-                          </MDBBtn>
                         </div>
                         <div className="ms-3" style={{ marginTop: "130px" }}>
-                          <MDBTypography tag="h5">{user.name}</MDBTypography>
+                          <MDBTypography tag="h5">
+                            {user.name && user.name}
+                          </MDBTypography>
                           <MDBCardText>
                             {profile && profile.address}
                           </MDBCardText>
@@ -458,22 +453,31 @@ function Profile({
 
                                     {profile.user._id === user._id && (
                                       <Fragment>
+                                        <MDBTypography variant="h5">
+                                          Licence Type:
+                                        </MDBTypography>
+                                        <p>
+                                          {profile.licenceDetails &&
+                                            profile.licenceDetails.licenceType}
+                                        </p>
 
-                                    <MDBTypography variant="h5">
-                                      Licence Type:
-                                    </MDBTypography>
-                                    <p>{profile.licenceDetails && profile.licenceDetails.licenceType}</p>
+                                        <MDBTypography variant="h5">
+                                          Licence Number:
+                                        </MDBTypography>
+                                        <p>
+                                          {profile.licenceDetails &&
+                                            profile.licenceDetails.licenceNum}
+                                        </p>
 
-                                    <MDBTypography variant="h5">
-                                      Licence Number:
-                                    </MDBTypography>
-                                    <p>{profile.licenceDetails && profile.licenceDetails.licenceNum}</p>
-
-                                  
                                         <MDBTypography variant="h5">
                                           Expiry Date:
                                         </MDBTypography>
-                                        <p><Moment fromNow={'yyyy mm dd'}>{profile.licenceDetails && profile.licenceDetails.expiryDate}</Moment></p>
+                                        <p>
+                                          <Moment fromNow={"yyyy mm dd"}>
+                                            {profile.licenceDetails &&
+                                              profile.licenceDetails.expiryDate}
+                                          </Moment>
+                                        </p>
                                       </Fragment>
                                     )}
 

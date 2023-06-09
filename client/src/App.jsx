@@ -2,6 +2,7 @@ import { useState, Fragment, useEffect } from "react";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import Navbar from "./components/layouts/Navbar";
 import Landing from "./components/Landing";
+import HealthTipsPage from "./components/tipsPage/HealthTipsPage";
 import CreateProfile from "./components/profile/CreateProfile";
 import EditStaffProfile from "./components/EditStaffProfile";
 import EditUserProfile from "./components/profile/EditUserProfile";
@@ -10,8 +11,8 @@ import Login from "./components/auth/Login";
 import Alert from "./components/layouts/Alerts";
 import Appointments from "./components/appointment/Appointments";
 import Profile from "./components/Profile";
-import Message from "./components/messages/message";
-import Messages from "./components/messages/messages";
+import Message from "./components/messaging/components/active-conversation/active-conversation";
+import Messages from "./components/messaging/components/active-conversation/active-conversation";
 import Chat from "./components/Chat";
 import { setHeader } from "./utils/setHeader";
 import { Provider } from "react-redux";
@@ -41,6 +42,7 @@ function App() {
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path='/health-tips' component={HealthTipsPage} />
               <PrivateRoute
                 exact
                 path="/create-profile"

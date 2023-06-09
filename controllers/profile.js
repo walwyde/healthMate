@@ -466,14 +466,6 @@ exports.updateProfileCard = async (req, res) => {
 
     // update staff profile
 
-
-    const userName =  await User.findOneAndUpdate({ _id: req.user.id }, { $set: { name: name } });
-
-    if (!userName) return res.status(400).json("user name not updated");
-
-    userName.save();
-
-
     const profileFields = {};
     const licenceDetails = {};
     const contactDetails = {};
@@ -529,6 +521,12 @@ exports.updateProfileCard = async (req, res) => {
         .json({ errors: { msg: "profile could not be edited" } });
 
     await profile.save();
+
+    const userName =  await User.findOneAndUpdate({ _id: req.user.id }, { $set: { name: name } });
+
+    if (!userName) return res.status(400).json("user name not updated");
+
+    userName.save();
 
     return res.status(200).json(profile);
   } catch (err) {

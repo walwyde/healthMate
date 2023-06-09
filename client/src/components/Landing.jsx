@@ -4,6 +4,7 @@ import Image from "react-bootstrap/Image";
 import Container from "react-bootstrap/esm/Container";
 import { Row, Col } from "react-bootstrap";
 import "../index.css";
+import { Link } from "react-router-dom";
 import Stack from "react-bootstrap/Stack";
 import PropTypes from "prop-types";
 
@@ -33,9 +34,9 @@ const Landing = (props) => {
         </p>
       </div>
       <div className="centered">
-        <Button className="" variant="primary">
+        <Link to="/health-tips" className="text-decoration-none m-5" variant="primary">
           Get Started
-        </Button>
+       </Link>
       </div>
       <footer className="bg-dark text-light buttom-fixed">
         <p>healthMate &copy; 2023 All Rights Reserved</p>
