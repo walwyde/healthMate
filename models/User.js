@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
   },
   messages: [
     {
-      user: {
+      reciever: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Message",
       },

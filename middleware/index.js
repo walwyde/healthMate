@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 
 
-
 exports.auth = async (req, res, next) => {
   try {
     const token = req.header("x-auth-token");
@@ -12,6 +11,7 @@ exports.auth = async (req, res, next) => {
       return res.status(401).json("authorization denied, no signed token");
     }
     const decoded = jwt.verify(token, config.get("jwtSecret"));
+
 
     req.user = decoded.user;
 

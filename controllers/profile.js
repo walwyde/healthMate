@@ -7,31 +7,38 @@ const User = require("../models/User");
 const HealthWorker = require("../models/HealthWorker");
 
 exports.getProfile = async (req, res) => {
+  console.log(req.user);
+
   try {
-    const { diabetic, hypertensive } = req.user.condition;
+    const user = await User.findOne({ _id: req.user.id })
+      .populate("condition")
+      .select("-password");
+    const { diabetic, hypertensive } = user.condition;
+
+    if (!user) return res.status(404).json(null);
 
     let profile;
 
     if (diabetic)
       profile = await InsulinProfile.findOne({
         user: req.user.id,
-      }).populate("user", ["condition", "avatar"]);
+      }).populate("user", ["condition", "avatar", "name"]);
 
     if (hypertensive)
       profile = await BpProfileCard.findOne({
         user: req.user.id,
-      }).populate("user", ["condition", "avatar"]);
+      }).populate("user", ["condition", "avatar", "name"]);
 
-    if (!diabetic && !hypertensive)
+    if (user.isStaff)
       profile = await HealthWorker.findOne({ user: req.user.id }).populate(
         "user",
-        ["avatar"]
+        ["avatar", "name"]
       );
 
     if (!profile) {
-      return res.status(400).json(null);
+      return res.status(404).json(null);
     }
-    res.json(profile);
+    res.status(200).json(profile);
   } catch (err) {
     res.status(500).json({ message: "server error" });
     console.log(err);
@@ -40,22 +47,17 @@ exports.getProfile = async (req, res) => {
 
 exports.getProfileById = async (req, res) => {
   try {
-    const { diabetic, hypertensive } = req.user.condition;
-
-    const profile = diabetic
-      ? await InsulinProfile.findOne({ user: req.params.id }).populate("user", [
-          "condition",
-          "avatar",
-        ])
-      : hypertensive
-      ? await BpProfileCard.findOne({ user: req.params.id }).populate("user", [
-          "avatar",
-          "condition",
-        ])
-      : await HealthWorker.findOne({ user: req.user.id }).populate("user", [
-          "avatar",
-        ]);
-    if (!profile) return res.json("user not found");
+    const profile =
+      (await InsulinProfile.findOne({ user: req.params.id }).populate("user", [
+        "condition",
+        "avatar",
+      ])) ||
+      (await BpProfileCard.findOne({ user: req.params.id }).populate("user", [
+        "avatar",
+        "condition",
+      ])) ||
+      (await HealthWorker.findOne({ _id: req.params.id }).populate("user"));
+    if (!profile) return res.status(404).json(null);
     res.status(200).json(profile);
   } catch (error) {
     if (error.kind == "ObjectId") {
@@ -194,7 +196,7 @@ exports.newProfileCard = async (req, res) => {
           insulinType: insulinType,
         });
       profileFields.insulinDose = insulinDose;
-      if (docName && docPhone)
+      if (docName && docPhone && docEmail)
         doctor = {
           docName: docName,
           docPhone: docPhone,
@@ -243,6 +245,29 @@ exports.newProfileCard = async (req, res) => {
     }
 
     if (hypertensive) {
+      let medications = [];
+      let pressureReadings = [];
+
+      const { medName, medDose, frequency, systolic, diastolic } = req.body;
+
+      medName.split(",").map((item, i) => {
+        let medication = {
+          name: item,
+          dose: medDose.split(",")[i],
+          frequency: frequency.split(",")[i],
+        };
+
+        medications.push(medication);
+      });
+
+      systolic.split(",").map((item, i) => {
+        let reading = {
+          systolic: item,
+          diastolic: diastolic.split(",")[i],
+        };
+        pressureReadings.push(reading);
+      });
+
       const {
         avatar,
         name,
@@ -251,13 +276,14 @@ exports.newProfileCard = async (req, res) => {
         phone,
         address,
         email,
-        bloodPressureReadings,
-        medications,
         lifestyleModifications,
         otherHealthConditions,
         familyHistory,
         allergies,
         emergencyContact,
+        docName,
+        docPhone,
+        docEmail,
       } = req.body;
 
       const existingProfile = await BpProfileCard.findOne({
@@ -268,7 +294,7 @@ exports.newProfileCard = async (req, res) => {
         return res.status(400).json("user profile already created");
 
       const profileFields = {};
-
+      const doctor = {};
       profileFields.user = req.user.id;
 
       if (name) profileFields.name = name;
@@ -278,8 +304,7 @@ exports.newProfileCard = async (req, res) => {
       if (address) profileFields.address = address;
       if (medications) profileFields.medications = medications;
       if (email) profileFields.email = email;
-      if (bloodPressureReadings)
-        profileFields.bloodPressureReadings = bloodPressureReadings;
+      profileFields.bloodPressureReadings = pressureReadings;
       if (lifestyleModifications)
         profileFields.lifestyleModifications = lifestyleModifications;
       if (otherHealthConditions)
@@ -288,6 +313,13 @@ exports.newProfileCard = async (req, res) => {
       if (allergies) profileFields.allergies = allergies;
       if (emergencyContact) profileFields.emergencyContact = emergencyContact;
       if (avatar) profileFields.avatar = avatar;
+      if (docName && docPhone && docEmail)
+        doctor = {
+          docName: docName,
+          docPhone: docPhone,
+          docEmail: docEmail,
+        };
+      profileFields.doctor = doctor;
 
       const profile = new BpProfileCard(profileFields);
 
@@ -396,7 +428,10 @@ exports.updateProfileCard = async (req, res) => {
         { new: false }
       );
 
-      const userName =  await User.findOneAndUpdate({ _id: req.user.id }, { $set: { name: name } });
+      const userName = await User.findOneAndUpdate(
+        { _id: req.user.id },
+        { $set: { name: name } }
+      );
 
       if (!userName) return res.status(400).json("user name not updated");
 
@@ -410,6 +445,7 @@ exports.updateProfileCard = async (req, res) => {
     }
 
     if (hypertensive) {
+      console.log(req.body);
       const {
         name,
         age,
@@ -424,9 +460,13 @@ exports.updateProfileCard = async (req, res) => {
         familyHistory,
         allergies,
         emergencyContact,
+        docName,
+        docPhone,
+        docEmail,
       } = req.body;
 
-      const profileFields = {};
+      const profileFields = { ...req.body };
+      let doctor = {}
 
       profileFields.user = req.user.id;
 
@@ -446,6 +486,13 @@ exports.updateProfileCard = async (req, res) => {
       if (familyHistory) profileFields.familyHistory = familyHistory;
       if (allergies) profileFields.allergies = allergies;
       if (emergencyContact) profileFields.emergencyContact = emergencyContact;
+      if (docName && docPhone && docEmail)
+        doctor = {
+          docName: docName,
+          docPhone: docPhone,
+          docEmail: docEmail,
+        };
+      profileFields.doctor = doctor;
 
       const profile = await BpProfileCard.findOneAndUpdate(
         { user: req.user.id },
@@ -453,7 +500,10 @@ exports.updateProfileCard = async (req, res) => {
         { new: false }
       );
 
-      const userName =  await User.findOneAndUpdate({ _id: req.user.id }, { $set: { name: name } });
+      const userName = await User.findOneAndUpdate(
+        { _id: req.user.id },
+        { $set: { name: name } }
+      );
 
       if (!userName) return res.status(400).json("user name not updated");
 
@@ -522,7 +572,10 @@ exports.updateProfileCard = async (req, res) => {
 
     await profile.save();
 
-    const userName =  await User.findOneAndUpdate({ _id: req.user.id }, { $set: { name: name } });
+    const userName = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      { $set: { name: name } }
+    );
 
     if (!userName) return res.status(400).json("user name not updated");
 
@@ -561,9 +614,8 @@ exports.updateAvailability = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
-
-    const availability = { ...req.body};
-    console.log(req.body)
+    const availability = { ...req.body };
+    console.log(req.body);
     const profile = await HealthWorker.findOne({ user: req.user.id });
 
     if (!profile)
@@ -581,9 +633,7 @@ exports.updateAvailability = async (req, res) => {
 };
 
 exports.clearAvailability = async (req, res) => {
-  
   try {
-
     const profile = await HealthWorker.findOne({ user: req.user.id });
 
     if (!profile)

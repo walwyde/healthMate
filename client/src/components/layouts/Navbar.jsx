@@ -1,62 +1,82 @@
 import React, { Fragment } from "react";
+import { Navbar, Nav } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import {connect} from 'react-redux'
+import { Link, NavLink } from "react-router-dom";
+import { connect } from "react-redux";
 import { logout } from "../../Actions/auth";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
+const Navigation = ({ isAuthenticated, logout }) => {
+  const authLinks = () => {
+    return (
+      <div>
+        <ul className="navbar-nav">
+          <li className="nav-item"></li>
+          <li className="nav-item">
+            <Link to="/messages">Messages</Link>
+          </li>
+         { <li className="nav-item">
+            <Link to="/appointments">Appointments</Link>
+          </li>}
+          <li className="nav-item">
+            <Link to="/profile">Profile</Link>
+          </li>
+          <li className="nav-item">
+            <Link to="/login" onClick={logout}>
+              Logout
+            </Link>
+          </li>
+        </ul>
+      </div>
+    );
+  };
 
-const Navigation = ({isAuthenticated, logout}) => {
-  const authLinks = (
-    <Fragment>
-      <Nav className="me-auto">
-        <Nav.Link href="/messages">Messages</Nav.Link>
-        <Nav.Link href="/profile">Proile</Nav.Link>
-        <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-          <NavDropdown.Item href="/appointments">Appointments</NavDropdown.Item>
-          <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-          <NavDropdown.Divider />
-          <NavDropdown.Item href="/about">About US</NavDropdown.Item>
-        </NavDropdown>
-      </Nav>
-      <Nav>
-        <Nav.Link href="#" onClick={logout}>Logout</Nav.Link>
-      </Nav>
-    </Fragment>
-  );
-
-  const guestLinks = (
-    <>
-      <Nav>
-        <Nav.Link href="/login">Login</Nav.Link>
-        <Nav.Link eventKey={2} href="/register">
-          Register
-        </Nav.Link>
-      </Nav>
-    </>
-  );
+  const guestLinks = () => {
+    return (
+      <Fragment>
+        <ul className="navbar-nav">
+          <li className="nav-item">
+            <NavLink to="/about">About</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink to="/health-tips">Tour</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink to="/login">Login</NavLink>
+          </li>
+          <li className="nav-item">
+            <NavLink to="/register">Register</NavLink>
+          </li>
+        </ul>
+      </Fragment>
+    );
+  };
   return (
-    <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
+    <Navbar expand="lg" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="/">HealthMate</Navbar.Brand>
+        <Navbar.Brand >
+          <Link to="/">
+        <img src="/HealthMate.png" alt="HealthMate" className="navbar-brand"  />
+        </Link>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          { isAuthenticated ? authLinks : guestLinks }
+          <Nav className="mr-auto">
+            {isAuthenticated ? authLinks() : guestLinks()}
+          </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
-}
+};
 
 Navigation.propTypes = {
   isAuthenticated: PropTypes.bool,
-  logout: PropTypes.func.isRequired
-}
+  logout: PropTypes.func.isRequired,
+};
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
-})
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+});
 
-export default connect(mapStateToProps, {logout})(Navigation);
+export default connect(mapStateToProps, { logout })(Navigation);

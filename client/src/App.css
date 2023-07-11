@@ -1,0 +1,27 @@
+a {
+  text-decoration: none;
+  color: #ddf;
+}
+.nav-item {
+  padding: 0.5rem;
+  border-radius: .25rem;
+}
+.nav-item:hover {
+  font-size: large;
+  background-color: #ccc;
+
+}
+.navbar-brand  {
+width: 3rem;
+align-self: center;
+justify-self: center;
+}
+
+@media(max-width:560px) {
+  .nav-item {
+    text-align: center;
+  }
+  .navbar-nav {
+    margin: 0.5rem;
+  }
+}

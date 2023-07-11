@@ -1,4 +1,5 @@
-import React from "react";
+import React, {Fragment} from 'react'
+import PropTypes from 'prop-types'
 
 import ConversationHeading from "./conversation-heading.jsx";
 import MessageLog from "./message-log.jsx";
@@ -55,45 +56,29 @@ const required = {
     e.preventDefault();
     console.log(e.target.value);
   },
-  handleCheckboxChange: (e) => {
-    e.preventDefault();
-    console.log(e.target.checked);
-  },
-  listenForEnter: (e) => {
-    console.log(e.key);
-  },
 };
 //owns message array state, assembles subcomponents:
 const api = () => (
-  <div className="panel panel-primary row">
-    <div className="panel-heading col-sm-1 col-md-4">
-      <div>
-        <div class="col-md-1">
-          <ConversationHeading correspondent={activeCorrespondence.client} />
-        </div>
-
-        <div class="col-md-1 d-none d-sm-block">
-          <div>
-         <img className="rounded" src="https://picsum.photos/200" alt="" srcset="" />
-          </div>
+  <Fragment>
+    <div className="row">
+      <div className="col-md-4">
+        <ConversationHeading correspondent={activeCorrespondence.client} />
+      </div>
+      <div className="panel-body col-sm-1 col-md-8 ">
+        <MessageLog activeCorrespondence={activeCorrespondence} />
+        <div className="panel-footer">
+          <NewMessageInput
+            enteredText={required.enteredText}
+            enterToSendStatus={required.enterToSendStatus}
+            handleSubmit={required.handleSubmit}
+            handleTextChange={required.handleTextChange}
+          />
         </div>
       </div>
     </div>
-    <div className="panel-body col-sm-1 col-md-8 ">
-      <MessageLog activeCorrespondence={activeCorrespondence} />
-    </div>
-
-    <div className="panel-footer">
-      <NewMessageInput
-        enteredText={required.enteredText}
-        enterToSendStatus={required.enterToSendStatus}
-        handleSubmit={required.handleSubmit}
-        handleTextChange={required.handleTextChange}
-        handleCheckboxChange={required.handleCheckboxChange}
-        listenForEnter={required.listenForEnter}
-      />
-    </div>
-  </div>
+  </Fragment>
 );
 
 export default api;
+
+  

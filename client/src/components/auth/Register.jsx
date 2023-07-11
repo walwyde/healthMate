@@ -16,13 +16,7 @@ const Register = ({ register, history }) => {
     condition: "",
   });
 
-  const {
-    email,
-    password,
-    name,
-    password2,
-    condition,
-  } = formData;
+  const { email, password, name, password2, condition } = formData;
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,84 +29,88 @@ const Register = ({ register, history }) => {
 
   return (
     <Fragment>
-    <Form onSubmit={(e) => onSubmit(e)}>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control
-          type="email"
-          value={email}
-          name="email"
-          onChange={(e) => onChange(e)}
-          placeholder="Enter email"
-          required
-        />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+      <div className="jumbotron">
+        <h1>Register</h1>
+      </div>
 
-      <Form.Group className="mb-3" controlId="formBasicName">
-        <Form.Label>Full Name</Form.Label>
-        <Form.Control
-          type="text"
-          value={name}
-          name="name"
-          onChange={(e) => onChange(e)}
-          placeholder="Please enter your full name"
-          required
-        />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicCheck">
-        <Form.Label>Condition</Form.Label>
-        <Form.Select
-          aria-label="Default select example"
-          value={condition}
-          onChange={(e) => onChange(e)}
-          name="condition"
-          required
-        >
-          <option>Select Your Medical Condition</option>
-          <option value="diabetic">Diabetic</option>
-          <option value="hypertensive">Hypertensive</option>
-        </Form.Select>
-      </Form.Group>
+      <Form onSubmit={(e) => onSubmit(e)}>
+        <Form.Group className="mb-3">
+          <Form.Label>Condition</Form.Label>
+          <Form.Select
+            aria-label="Default select example"
+            value={condition}
+            onChange={(e) => onChange(e)}
+            name="condition"
+            required
+          >
+            <option>Select Your Medical Condition</option>
+            <option value="diabetic">Diabetic</option>
+            <option value="hypertensive">Hypertensive</option>
+          </Form.Select>
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          value={password}
-          name="password"
-          onChange={(e) => onChange(e)}
-          placeholder="Password"
-          required
-        />
-      </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="email"
+            value={email}
+            name="email"
+            onChange={(e) => onChange(e)}
+            placeholder="Enter email"
+            required
+          />
+          <Form.Text className="text-muted">
+            We'll never share your email with anyone else.
+          </Form.Text>
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword2">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          value={password2}
-          name="password2"
-          onChange={(e) => onChange(e)}
-          placeholder="Password"
-          required
-        />
-      </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicName">
+          <Form.Label>Full Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={name}
+            name="name"
+            onChange={(e) => onChange(e)}
+            placeholder="Please enter your full name"
+            required
+          />
+        </Form.Group>
 
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            value={password}
+            name="password"
+            onChange={(e) => onChange(e)}
+            placeholder="Password"
+            required
+          />
+        </Form.Group>
 
-    <h6 className="text-muted mt-3">Already have an account?</h6>
+        <Form.Group className="mb-3" controlId="formBasicPassword2">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            value={password2}
+            name="password2"
+            onChange={(e) => onChange(e)}
+            placeholder="Password"
+            required
+          />
+        </Form.Group>
 
-    <Link to="/login" className="text-decoration-none m-2">
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
 
-      Login
-    </Link>
-
+        <Form.Group className="m-3">
+          <span className="text-muted">Already have an account?</span>
+          <Link to="/login" className="text-decoration-none p-3 text-primary">
+            Login
+          </Link>
+        </Form.Group>
+      </Form>
     </Fragment>
   );
 };

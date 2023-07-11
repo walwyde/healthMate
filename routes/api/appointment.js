@@ -16,6 +16,9 @@ router.get('/doctors', controller.getDoctors)
 // @access  Private
 router.get("/:id", auth.auth, controller.getAppointmentById);
 
+
+router.put("/:id", auth.auth, controller.approveAppointment);
+
 // @route   POST api/appointment
 // @desc    Create or update appointment
 // @access  Private

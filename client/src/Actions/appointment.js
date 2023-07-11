@@ -13,10 +13,11 @@ import {
   get_doctor,
   no_doctors,
   no_doctor,
-  load_availability
+  load_availability,
+  approved_appointment,
 } from "./types";
 
-import { setAlert} from '../utils/setAlert'
+import { setAlert } from "../utils/setAlert";
 
 export const addAvailability = (availability) => async (dispatch) => {
   const config = {
@@ -31,7 +32,7 @@ export const addAvailability = (availability) => async (dispatch) => {
       config
     );
 
-    console.log(res)
+    console.log(res);
 
     dispatch({
       type: load_availability,
@@ -39,29 +40,29 @@ export const addAvailability = (availability) => async (dispatch) => {
     });
     dispatch(setAlert("Appointment Added", "success"));
   } catch (err) {
-    const errors = err.response.data.errors
+    const errors = err.response.data.errors;
 
-    dispatch(setAlert(errors.msg, 'danger'))
+    dispatch(setAlert(errors.msg, "danger"));
     console.log(err);
     dispatch(setAlert("Appointment not added", "danger"));
   }
 };
 export const clearAvailability = () => async (dispatch) => {
-
   try {
-    const res = await axios.delete("http://localhost:5005/api/profile/me/availability");
-   
-  dispatch({
-    type: load_availability,
-    payload: res.data,
-  });
+    const res = await axios.delete(
+      "http://localhost:5005/api/profile/me/availability"
+    );
 
-  dispatch(setAlert("Availability Cleared", "success"));
-} catch (err) {
-  console.log(err);
+    dispatch({
+      type: load_availability,
+      payload: res.data,
+    });
 
-}
-}
+    dispatch(setAlert("Availability Cleared", "success"));
+  } catch (err) {
+    console.log(err);
+  }
+};
 export const getDoctors = () => async (dispatch) => {
   try {
     const res = await axios.get(
@@ -83,16 +84,18 @@ export const getDoctors = () => async (dispatch) => {
     console.log(err);
     dispatch({
       type: no_doctors,
-      payload: { msg: err.response.data, status: err.response.status },
+      payload: err.response 
     });
   }
 };
 
 // Get all appointments
 
-export const getAppointment = () => async (dispatch) => {
+export const getAppointment = (id) => async (dispatch) => {
   try {
-    const res = await axios.get("/api/appointment");
+    const res = await axios.get(`http://localhost:5005/api/appointment/${id}`);
+
+    console.log(res);
     dispatch({
       type: get_appointment,
       payload: res.data,
@@ -116,11 +119,14 @@ export const newAppointment = (doctor, time, date) => async (dispatch) => {
       "http://localhost:5005/api/appointment",
       formData
     );
-    dispatch({
-      type: new_appointment,
-      payload: res.data,
-    });
-    dispatch(setAlert("Appointment Created", "success"));
+
+    if (res) {
+      dispatch({
+        type: new_appointment,
+        payload: res.data,
+      });
+      dispatch(setAlert("Appointment Created", "success"));
+    }
   } catch (err) {
     // dispatch({
     //   type: appointment_error,
@@ -132,17 +138,24 @@ export const newAppointment = (doctor, time, date) => async (dispatch) => {
 
 export const deleteAppointment = (id) => async (dispatch) => {
   try {
-    await axios.delete(`/api/appointment/${id}`);
-    dispatch({
-      type: delete_appointment,
-      payload: id,
-    });
-    dispatch(setAlert("Appointment Deleted", "success"));
+    const res = await axios.delete(
+      `http://localhost:5005/api/appointment/${id}`
+    );
+
+    if (res) {
+      dispatch({
+        type: delete_appointment,
+        payload: id,
+      });
+    }
   } catch (err) {
-    dispatch({
-      type: appointment_error,
-      payload: { msg: err.response.data, status: err.response.status },
-    });
+    if (err) {
+      console.log(err);
+    }
+    // dispatch({
+    //   type: appointment_error,
+    //   payload: { msg: err.response.data, status: err.response.status },
+    // });
   }
 };
 
@@ -180,4 +193,42 @@ export const filterAppointment = (text) => async (dispatch) => {
     type: filter_appointment,
     payload: text,
   });
+};
+
+export const getBookedAppointments = () => async (dispatch) => {
+  try {
+    const res = await axios.get("http://localhost:5005/api/appointment");
+
+    dispatch({
+      type: get_appointments,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: appointment_error,
+      payload: { msg: err.response.data, status: err.response.status },
+    });
+  }
+};
+
+export const approveAppointment = (id) => async (dispatch) => {
+  try {
+    const res = await axios.put(`http://localhost:5005/api/appointment/${id}`, {
+      _id: id,
+    });
+
+    console.log(res.data);
+
+    if (res) {
+      dispatch({
+        type: approved_appointment,
+        payload: res.data,
+      });
+
+      dispatch(() => setAlert("Appointment Approved", "success"));
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(() => setAlert("OOPS! Something went wrong", "danger"));
+  }
 };

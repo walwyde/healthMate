@@ -50,6 +50,7 @@ export const new_appointment = "new_appointment";
 export const appointment_error = "appointment_error";
 export const delete_appointment = "appointment_deleted";
 export const update_appointment = "update_appointment";
+export const approved_appointment = "approved_appointment";
 export const delete_appointment_error = "delete_appointment_error";
 export const get_doctors = "get_doctors";
 export const get_doctor = "get_doctor";

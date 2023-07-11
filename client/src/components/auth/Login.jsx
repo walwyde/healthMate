@@ -23,48 +23,55 @@ const Login = ({ login, history, isAuthenticated }) => {
     e.preventDefault();
     login(formData, history);
   };
-  
-  return isAuthenticated ? (<Redirect to={"/profile"}  />) : ( 
-  <Fragment>
-  <Form onSubmit={(e) => onSubmit(e)}>
-    <Form.Group className="mb-3" controlId="formBasicEmail">
-      <Form.Label>Email address</Form.Label>
-      <Form.Control
-        type="email"
-        value={email}
-        name="email"
-        onChange={(e) => onChange(e)}
-        placeholder="Enter email"
-        required
-      />
-      <Form.Text className="text-muted">
-        We'll never share your email with anyone else.
-      </Form.Text>
-    </Form.Group>
 
-    <Form.Group className="mb-3" controlId="formBasicPassword">
-      <Form.Label>Password</Form.Label>
-      <Form.Control
-        type="password"
-        value={password}
-        name="password"
-        onChange={(e) => onChange(e)}
-        placeholder="Password"
-        required
-      />
-    </Form.Group>
-    <Button variant="primary" type="submit">
-      Submit
-    </Button>
-  </Form>
+  return isAuthenticated ? (
+    <Redirect to={"/profile"} />
+  ) : (
+    <Fragment>
+      <div className="jumbotron">
+        <h1>Login</h1>
+      </div>
 
-  <h6 className="text-muted mt-3">Already have an account?</h6>
+      <Form onSubmit={(e) => onSubmit(e)}>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="email"
+            value={email}
+            name="email"
+            onChange={(e) => onChange(e)}
+            placeholder="Enter email"
+            required
+          />
+          <Form.Text className="text-muted">
+            We'll never share your email with anyone else.
+          </Form.Text>
+        </Form.Group>
 
-  <Link to="/register" className="text-decoration-none m-2">
-    Register
-  </Link>
-  </Fragment>
-  )
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            value={password}
+            name="password"
+            onChange={(e) => onChange(e)}
+            placeholder="Password"
+            required
+          />
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+
+        <Form.Group className="m-3">
+          <span className="text-muted">Don't have an account?</span>
+          <Link to="/register" className="text-decoration-none p-3 text-primary">
+            Register
+          </Link>
+        </Form.Group>
+      </Form>
+    </Fragment>
+  );
 };
 
 Login.propTypes = {

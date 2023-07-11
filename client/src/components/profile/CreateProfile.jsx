@@ -12,6 +12,7 @@ function CreateProfile({
   createProfile,
   history,
   match,
+  profile: { profile },
   auth: { user, loading },
 }) {
   // init user state
@@ -97,15 +98,12 @@ function CreateProfile({
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(formData); // remove this later
-    createProfile(formData, history);
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic
-    console.log(formData);
+    createProfile(formData, history);
+
   };
+  if (!loading && profile) return <Redirect to="/profile" />;
+
   return loading ? (
     <Fragment>
       <Spinner />
@@ -292,6 +290,34 @@ function CreateProfile({
             required
           />
         </Form.Group>
+
+         {/* Doctor */}
+         <Form.Group controlId="doctor" className="mb-3">
+          <Form.Label>Doctor</Form.Label>
+          <Form.Control
+            type="text"
+            name="docName"
+            value={formData.docName}
+            placeholder="Enter your doctor's name"
+            onChange={(e) => onChange(e)}
+          />
+          <Form.Control
+            type="text"
+            name="docPhone"
+            value={formData.docPhone}
+            placeholder="Enter your doctor's phone no_"
+            onChange={(e) => onChange(e)}
+          />
+          <Form.Control
+            type="email"
+            name="docEmail"
+            value={formData.docEmail}
+            placeholder="Enter your doctor's email"
+            onChange={(e) => onChange(e)}
+          />
+        </Form.Group>
+
+        
         <Button variant="primary" type="submit">
           Submit
         </Button>
@@ -670,10 +696,12 @@ function CreateProfile({
 CreateProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  profile: state.profile,
 });
 
 export default connect(mapStateToProps, { createProfile })(

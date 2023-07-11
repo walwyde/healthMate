@@ -1,29 +1,26 @@
-const Appointment = require('../models/Appointment');
-const HealthWorker = require('../models/HealthWorker');
+const Appointment = require("../models/Appointment");
+const HealthWorker = require("../models/HealthWorker");
+const User = require("../models/User");
 
-// @route   GET api/appointment 
+// @route   GET api/appointment
 
 // @desc    Get all appointments
 
 // @access  Private
 
 exports.getAppointments = async (req, res) => {
-  
-    try {
-  
-      const appointments = await Appointment.find().sort({ date: -1 });
-  
-      res.json(appointments);
-  
-    } catch (err) {
-  
-      console.error(err.message);
-  
-      res.status(500).send('Server Error');
-  
-    }
-  
-}
+  try {
+    const appointments = await Appointment.find()
+      .populate("user")
+      .populate("doctor");
+
+    res.json(appointments);
+  } catch (err) {
+    console.error(err.message);
+
+    res.status(500).send("Server Error");
+  }
+};
 
 // @route   GET api/appointment/:id
 
@@ -32,28 +29,22 @@ exports.getAppointments = async (req, res) => {
 // @access  Private
 
 exports.getAppointmentById = async (req, res) => {
-
   try {
-
-    const appointment = await Appointment.findById(req.params.id);
+    const appointment = await Appointment.findById(req.params.id)
+      .populate(["user", "doctor"])
+      .exec();
 
     if (!appointment) {
-
-      return res.status(404).json({ msg: 'Appointment not found' });
-
+      return res.status(404).json({ msg: "Appointment not found" });
     }
 
     res.json(appointment);
-
   } catch (err) {
-
     console.error(err.message);
 
-    res.status(500).send('Server Error');
-
+    res.status(500).send("Server Error");
   }
-
-}
+};
 
 // @route   POST api/appointment
 
@@ -62,7 +53,6 @@ exports.getAppointmentById = async (req, res) => {
 // @access  Private
 
 exports.createAppointment = async (req, res) => {
-
   const { doctor, time, date } = req.body;
 
   let appointmentFields = {};
@@ -78,35 +68,34 @@ exports.createAppointment = async (req, res) => {
   // Build appointment object
 
   try {
-    console.log(appointmentFields)
-
-    let appointment = await Appointment.findOne({ doctor: doctor });
+    let appointment = await Appointment.findOne({ user: req.user.id });
 
     if (appointment) {
+      const match = appointment.doctor.toString() === doctor;
       // Update
-      appointment = await Appointment.findOneAndUpdate(
-        { user: req.user.id },
-        { $set: appointmentFields },
-        { new: true }
-      );
+      if (match) {
+        const updated = await Appointment.findOneAndUpdate(
+          { user: req.user.id },
+          { $set: appointmentFields },
+          { new: true }
+        );
+        await updated.save();
 
-      appointment.save();
-
-      return res.json(appointment);
+        return res.json(appointment);
+      }
     }
 
     // Create
     appointment = new Appointment(appointmentFields);
 
-    // await appointment.save();
-
+    await appointment.save();
 
     res.json(appointment);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-}
+};
 
 // @route   DELETE api/appointment/:id
 
@@ -115,38 +104,28 @@ exports.createAppointment = async (req, res) => {
 // @access  Private
 
 exports.deleteAppointment = async (req, res) => {
-  
-    try {
-  
-      const appointment = await Appointment.findById(req.params.id);
-  
-      if (!appointment) {
-  
-        return res.status(404).json({ msg: 'Appointment not found' });
-  
-      }
-  
-      // Check user
-  
-      if (appointment.user.toString() !== req.user.id) {
-  
-        return res.status(401).json({ msg: 'User not authorized' });
-  
-      }
-  
-      await appointment.remove();
-  
-      res.json({ msg: 'Appointment removed' });
-  
-    } catch (err) {
-  
-      console.error(err.message);
-  
-      res.status(500).send('Server Error');
-  
+  try {
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({ msg: "Appointment not found" });
     }
-  
+
+    // Check user
+
+    if (appointment.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "User not authorized" });
+    }
+
+    await appointment.remove();
+
+    res.json({ msg: "Appointment removed" });
+  } catch (err) {
+    console.error(err.message);
+
+    res.status(500).send("Server Error");
   }
+};
 
 // @route   PUT api/appointment/doctors/
 
@@ -155,50 +134,74 @@ exports.deleteAppointment = async (req, res) => {
 // @access  Private
 
 exports.getDoctors = async (req, res) => {
-
   try {
-
-    const doctors = await HealthWorker.find().sort({ date: -1 }).populate('user', ['name', 'availability']);
+    const doctors = await HealthWorker.find()
+      .sort({ date: -1 })
+      .populate("user", ["name", "availability"]);
 
     if (!doctors) {
-
-      return res.status(404).json({ errors: { msg: 'Doctors not found' }});
-
+      return res.status(404).json({ errors: { msg: "Doctors not found" } });
     }
 
     res.json(doctors);
-
   } catch (err) {
-
     console.error(err.message);
 
-    res.status(500).send('Server Error');
-
+    res.status(500).send("Server Error");
   }
-
-}
+};
 
 exports.updateAppointment = async (req, res) => {
-  
-    try {
+  try {
+    const appointment = await Appointment.findById(req.params.id);
 
-      const appointment = await Appointment.findById(req.params.id);
-
-      if (!appointment) {
-        res.status(404).json({ msg: 'Appointment not found' });
-      }
-
-      if (appointment.user.toString() !== req.user.id) {
-        res.status(401).json({ msg: 'User not authorized' });
-      }
-
-      const updatedAppointment = await Appointment.findOneAndUpdate(
-        { _id: req.params.id },
-        {$set: req.body},
-        {true: false}
-      )
-    } catch(err) {
-      console.log(err);
+    if (!appointment) {
+      res.status(404).json({ msg: "Appointment not found" });
     }
-}
 
+    if (appointment.user.toString() !== req.user.id) {
+      res.status(401).json({ msg: "User not authorized" });
+    }
+
+    const updatedAppointment = await Appointment.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: req.body },
+      { new: true }
+    );
+
+    res.json(updatedAppointment);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.approveAppointment = async (req, res) => {
+  try {
+    const newStatus = {
+      status : "approved"
+    };
+    const app = await Appointment.findById(req.body._id);
+
+
+    if (!app)
+      return res
+        .status(404)
+        .json({ errors: [{ msg: "Appointment no found" }] });
+
+    const approved = await Appointment.findOneAndUpdate(
+      { _id: req.body._id },
+      { $set: { status: 'approved' } },
+      { new: true }
+    );
+
+    console.log(approved);
+
+
+    await approved.save();
+
+    res.status(201).json(approved);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ errors: [{ msg: "Server Error" }] });
+  }
+};

@@ -1,43 +1,74 @@
-import React, {useEffect, Fragment} from 'react'
-import PropTypes from 'prop-types'
-import Loading from '../layouts/Loading'
-import DoctorList from './DoctorList'
-import {getDoctors} from '../../Actions/appointment'
-import { Link } from 'react-router-dom'
-import {Button} from 'react-bootstrap'
-import { connect } from 'react-redux'
+import React, { useEffect, Fragment } from "react";
+import PropTypes from "prop-types";
+import { withRouter, Link } from "react-router-dom";
+import { connect } from "react-redux";
+import DoctorList from "./DoctorList";
+import BookedAppointment from "./BookedAppointment";
+import {
+  getDoctors,
+  getBookedAppointments,
+  deleteAppointment,
+} from "../../Actions/appointment";
+import { Button } from "react-bootstrap";
 
 const Appointments = ({
-  getDoctors, appointment: {doctors, loading}
+  getDoctors,
+  appointment: { doctors, loading },
+  auth,
+  history
 }) => {
-
   useEffect(() => {
     getDoctors();
-  }, [loading]);
+  }, []);
 
-
-  return loading ? <Loading /> : (
+  return auth.user && auth.user.isStaff ? (
     <Fragment>
-   { !loading && doctors.length < 1 ? <h1 className='heading text-primary my-5'>No Doctors Available</h1> :
-      <div>
-        <h1>Available Doctors</h1>
-        <DoctorList doctors={doctors} loading={loading}/>
-      </div>}
+      <div className="jumbotron">
+        <h4 className="lead text-primary">Booked Appointments</h4>
+      </div>
+      <BookedAppointment />
+    </Fragment>
+  ) : (
+    <Fragment>
+      <div className="row">
+        <div className="col-md-7">
+          {!loading && doctors.length < 1 ? (
+            <h1 className="heading text-primary my-5">No Doctors Available</h1>
+          ) : (
+            <div>
+              <h1>Available Doctors</h1>
+              <DoctorList doctors={doctors} loading={loading} />
+            </div>
+          )}
 
-      <Button variant="link" as={Link} to="/profile" className="mb-3 text-decoration-none">
-      Back To Profile
-    </Button>
-      </Fragment>
-  )
-}
+          <button onClick={() => history.push("/profile")} className="btn btn-primary btn-sm" >Back To Profile</button>
+        </div>
+
+        <div className="col-md-5">
+          <div className="jumbotron text-center">
+            <h4>Booked Appointments</h4>
+          </div>
+          <BookedAppointment />
+        </div>
+      </div>
+    </Fragment>
+  );
+};
 
 Appointments.propTypes = {
   getDoctors: PropTypes.func.isRequired,
-  appointment: PropTypes.object.isRequired
-}
+  appointment: PropTypes.object.isRequired,
+  getBookedAppointments: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  deleteAppointment: PropTypes.func.isRequired,
+};
 
-const mapStateToProps = state => ({
-  appointment: state.appointment
-})
-
-export default connect(mapStateToProps, {getDoctors})(Appointments)
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  appointment: state.appointment,
+});
+export default connect(mapStateToProps, {
+  getDoctors,
+  getBookedAppointments,
+  deleteAppointment,
+})(withRouter(Appointments));

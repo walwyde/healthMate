@@ -1,4 +1,5 @@
 import axios from "axios";
+// import { loadUser } from '../Actions/register'
 
 import {
   load_profile,
@@ -8,9 +9,10 @@ import {
   clear_profile,
   delete_profile_error,
   availability_error,
-  add_availability
+  add_availability,
 } from "./types";
 import { setAlert } from "../utils/setAlert";
+import { loadUser } from "./register";
 
 export const loadCurrentProfile = () => async (dispatch) => {
   dispatch({
@@ -19,12 +21,16 @@ export const loadCurrentProfile = () => async (dispatch) => {
   try {
     const res = await axios.get("http://localhost:5005/api/profile/me");
 
-    console.log(res);
+    if (res) {
+      dispatch({
+        type: clear_profile,
+      });
 
-    dispatch({
-      type: load_profile,
-      payload: res.data,
-    });
+      dispatch({
+        type: load_profile,
+        payload: res.data,
+      });
+    }
   } catch (err) {
     console.log(err);
     dispatch({
@@ -88,6 +94,9 @@ export const editProfile =
           "Content-Type": "application/json;charset=utf-8",
         },
       };
+
+      var reFormed = {};
+
       if (condition === "hypertensive") {
         let medications = [];
         let pressureReadings = [];
@@ -112,7 +121,7 @@ export const editProfile =
           pressureReadings.push(reading);
         });
 
-        var reFormed = { ...formData, medications, pressureReadings };
+        reFormed = { ...formData };
 
         reFormed.medications = medications;
         reFormed.bloodPressureReadings = pressureReadings;
@@ -128,7 +137,7 @@ export const editProfile =
         let emergencyContact = {};
         let doctor = {};
 
-        var reFormed = { ...formData };
+        reFormed = { ...formData };
 
         const {
           medName,
@@ -169,17 +178,12 @@ export const editProfile =
         reFormed.doctor = doctor;
       }
 
-      var reFormed = { ...formData };
-
-      console.log(reFormed);
-
       const res = await axios.put(
         `http://localhost:5005/api/profile/me`,
         reFormed,
         config
       );
 
-      console.log(res);
       if (res.data.errors)
         return res.data.errors.forEach((error) =>
           dispatch(setAlert(error.msg, "danger"))
@@ -209,12 +213,17 @@ export const getProfileById = (userId) => async (dispatch) => {
       `http://localhost:5005/api/profile/${userId}`
     );
 
-    console.log(response.data);
+    if (response) {
+      dispatch({
+        type: clear_profile,
+        payload: response.data,
+      });
 
-    dispatch({
-      type: load_profile,
-      payload: response.data,
-    });
+      dispatch({
+        type: load_profile,
+        payload: response.data,
+      });
+    }
   } catch (err) {
     console.log(err);
     dispatch({
@@ -254,13 +263,12 @@ export const addAvailability = (formData) => async (dispatch) => {
       `http://localhost:5005/api/profile/me/availability`
     );
 
-    if (res.errors) return  dispatch(setAlert(error.msg, "danger"));
+    if (res.errors) return dispatch(setAlert(error.msg, "danger"));
 
     dispatch({
       type: add_availability,
       payload: res.data,
     });
-
   } catch (err) {
     console.log(err);
     dispatch({

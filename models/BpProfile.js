@@ -73,8 +73,13 @@ const BpProfileCardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  doctor: {
+    docName: { type: String, required: false },
+    docPhone: { type: String, required: false },
+    docEmail: { type: String, required: false },
+  },
 });
 
-const BpProfileCard = mongoose.model("ProfileCard", BpProfileCardSchema);
+const BpProfileCard = mongoose.model("bpProfileCard", BpProfileCardSchema);
 
 module.exports = BpProfileCard;

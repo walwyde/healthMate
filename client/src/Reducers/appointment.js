@@ -12,7 +12,8 @@ import {
   delete_appointment,
   update_appointment,
   delete_appointment_error,
-  load_availability
+  load_availability,
+  approved_appointment,
 } from "../Actions/types";
 
 const initialState = {
@@ -32,12 +33,42 @@ export default function (state = initialState, action) {
         appointments: action.payload,
         loading: false,
       };
-      case get_doctors:
+    case get_appointment:
+      return {
+        ...state,
+        appointment: payload,
+        loading: false,
+      };
+    case get_doctors:
       return {
         ...state,
         doctors: payload,
         loading: false,
-      }
+      };
+    case new_appointment:
+      const find = state.appointments.find((app) => app._id === payload._id);
+      return {
+        ...state,
+        appointments: find
+          ? [
+              ...state.appointments.filter((app) => app._id !== payload._id),
+              payload,
+            ]
+          : [...state.appointments, payload],
+        loading: false,
+      };
+    case delete_appointment:
+      return {
+        ...state,
+        appointments: state.appointments.filter((app) => app._id !== payload),
+        loading: false,
+      };
+    case approved_appointment:
+      const apps = [...state.appointments];
+      const app = state.appointments.find((app) => app._id === payload._id);
+      const index = state.appointments.indexOf(app);
+      apps[index] = payload;
+      return { ...state, appointments: apps, loading: false };
     default:
       return state;
   }

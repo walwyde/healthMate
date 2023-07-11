@@ -6,14 +6,13 @@ import {
   delete_education,
   delete_experience,
   delete_profile_error,
-  load_availability
+  load_availability,
 } from "../Actions/types";
 
 const initialState = {
   profile: null,
   viewedProfiles: [],
   profiles: [],
-  repos: [],
   loading: true,
   errors: {},
 };
@@ -32,11 +31,12 @@ export default function profile(state = initialState, action) {
       return {
         ...state,
         profiles: payload,
-        loading: false
-      }
+        loading: false,
+      };
     case profile_error:
       return {
         ...state,
+        profile: null,
         loading: false,
         errors: payload,
       };
@@ -44,28 +44,20 @@ export default function profile(state = initialState, action) {
       return {
         ...state,
         profile: null,
-        repos: [],
         loading: false,
       };
-      case delete_profile_error:
-        return {
-          ...state,
-          repos: [],
-          loading: false,
-          errors: payload
-        };
-    case delete_education:
-    case delete_experience:
+    case delete_profile_error:
       return {
         ...state,
-        profile: payload,
         loading: false,
+        errors: payload,
       };
-      case load_availability: 
+
+    case load_availability:
       return {
         ...state,
-        profile: {...state.profile, availability: payload}
-      }
+        profile: { ...state.profile, availability: payload },
+      };
     default:
       return state;
   }

@@ -10,9 +10,12 @@ import PropTypes from "prop-types";
 
 const Landing = (props) => {
   return (
-    <div className="landing">
+    <div className="landing row">
       <div className="landing-text-container px-5">
-        <h1 className="text-center mt-2">Welcome to Healthmate</h1>
+       
+      </div>
+      <div className="intro">
+      <h1 className="text-center mt-2">Welcome to Healthmate</h1>
         <h5 className="text-center"> Your personal health companion</h5>
         <p className="intro-text">
           <span className="text-primary text-lead">At HealthMate,</span> we believe that true well-being
@@ -32,15 +35,14 @@ const Landing = (props) => {
           </span>
          
         </p>
+
       </div>
-      <div className="centered">
-        <Link to="/health-tips" className="text-decoration-none m-5" variant="primary">
+        <div className="form-group centered mb-5 infront">
+      <Link to="/health-tips" className="text-decoration-none btn btn-primary btn-sm">
           Get Started
        </Link>
       </div>
-      <footer className="bg-dark text-light buttom-fixed">
-        <p>healthMate &copy; 2023 All Rights Reserved</p>
-      </footer>
+     
     </div>
   );
 };

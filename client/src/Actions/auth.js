@@ -25,9 +25,7 @@ export const login = (formData, history) => async (dispatch) => {
       options
     );
 
-    if (res) history.push("/profile");
-
-    console.log(JSON.stringify(res.data));
+    if (res) history.replace("/profile");
 
     dispatch({
       type: login_success,
@@ -39,11 +37,15 @@ export const login = (formData, history) => async (dispatch) => {
     dispatch(setAlert("You Have Been Logged In", "success"));
   } catch (err) {
     console.log(err);
-    const errors = err.response.data.errors;
+    const errors = err.response.data.errors
+
+    if(err.response.code === "ERR_NETWORK") {
+      dispatch(setAlert(err.message, "danger"))
+    }
 
     if (errors) {
       console.log(errors);
-      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+      errors.map((error) => dispatch(setAlert(error.msg, "danger")));
     }
 
     dispatch({

@@ -1,20 +1,31 @@
+/*
+
+.intro-text {
+  width: 85%;
+  margin: auto;
+  padding-bottom: 4rem;
+}
+
+.text-lead {
+  font-size: larger;
+  margin-left: 1rem;
+  border-left: 2px solid;
+} */
+
 .landing {
   position: relative;
   background: url("/landing.jpg") no-repeat center center/cover;
-  height: 100vh;
-  width: 100%;
-}
-.buttom-fixed {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
+  height: 30rem;
+  /* width: 100%; */
 }
 .centered {
   text-align: center;
-  position: relative;
-  bottom: -70%;
+  margin: auto;
+}
+.buttom-fixed {
+  position: absolute;
+  width: 100%;
+  text-align: center;
 }
 .landing-text-container {
   position: absolute;
@@ -27,15 +38,8 @@
   overflow: auto;
   text-align: center;
   font-size: large;
+  opacity: 0.7;
 }
-.intro-text {
-  width: 85%;
-  margin: auto;
-  padding-bottom: 4rem;
-}
-
-.text-lead {
-  font-size: larger;
-  margin-left: 1rem;
-  border-left: 2px solid;
+.infront {
+  z-index: 1;
 }

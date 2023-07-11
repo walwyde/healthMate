@@ -2,22 +2,21 @@ import { useState, useEffect, Fragment } from "react";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Form from "react-bootstrap/Form";
-import Link from "react-bootstrap/NavLink";
+import {Link} from "react-router-dom";
 import PropTypes from "prop-types";
 import { withRouter, Redirect } from "react-router-dom";
 import { editProfile } from "../../Actions/profile";
-import { getProfileById } from "../../Actions/profile";
-import { addAvailability , clearAvailability } from "../../Actions/appointment";
+import { loadCurrentProfile } from "../../Actions/profile";
+import { addAvailability, clearAvailability } from "../../Actions/appointment";
 import { connect } from "react-redux";
 
 const EditUserProfile = ({
   profile: { profile, loading },
   editProfile,
   history,
-  getProfileById,
+  loadCurrentProfile,
   addAvailability,
   clearAvailability,
-  match,
   auth: { user },
 }) => {
   // init user state
@@ -67,7 +66,7 @@ const EditUserProfile = ({
   });
 
   // Handle Image Upload
-  const [selectedFile, setSelectedFile] = useState('');
+  const [selectedFile, setSelectedFile] = useState("");
 
   const handleFileUpload = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -102,7 +101,7 @@ const EditUserProfile = ({
   } = formData;
 
   useEffect(() => {
-    getProfileById(match.params._id);
+    loadCurrentProfile();
     setFormData({
       name: loading || !profile.name ? "" : profile.name,
       age: loading || !profile.age ? "" : profile.age,
@@ -136,7 +135,7 @@ const EditUserProfile = ({
       expiryDate: loading || !profile.expiryDate ? "" : profile.expiryDate,
       nin: loading || !profile.nin ? "" : profile.nin,
     });
-  }, [loading]);
+  }, [loadCurrentProfile]);
 
   // Helper functions
 
@@ -155,16 +154,15 @@ const EditUserProfile = ({
     );
   };
 
-  
   // staff form functions
 
   const onSubmitAvailability = (e) => {
-    const { date, day, time} = formData
+    const { date, day, time } = formData;
     const availability = {
-      "date": date,
-      "day":  day,
-      "time": time,
-    }
+      date: date,
+      day: day,
+      time: time,
+    };
     e.preventDefault();
     addAvailability(availability);
 
@@ -173,13 +171,12 @@ const EditUserProfile = ({
       date: "",
       day: "",
       time: "",
-
-    })
-  }
+    });
+  };
 
   const handleClearAvailability = () => {
     clearAvailability();
-  }
+  };
 
   return loading ? (
     <Fragment>
@@ -187,10 +184,10 @@ const EditUserProfile = ({
     </Fragment>
   ) : !loading && hypertensive ? (
     <Fragment>
-      <Link href="/profile" className="btn btn-primary m-2">
+      <Link to="/profile" className="btn btn-primary m-2">
         Back to Profile
       </Link>
-      <h1 className="large text-primary">
+      <h1 className="heading text-center text-primary">
         <fa-fas-user></fa-fas-user> Edit Profile
       </h1>
 
@@ -380,6 +377,32 @@ const EditUserProfile = ({
             name="avatar"
             onChange={(e) => onChange(e)}
             placeholder="Enter Profile Image"
+          />
+        </Form.Group>
+
+         {/* Doctor */}
+         <Form.Group controlId="doctor" className="mb-3">
+          <Form.Label>Doctor</Form.Label>
+          <Form.Control
+            type="text"
+            name="docName"
+            value={formData.docName}
+            placeholder="Enter your doctor's name"
+            onChange={(e) => onChange(e)}
+          />
+          <Form.Control
+            type="text"
+            name="docPhone"
+            value={formData.docPhone}
+            placeholder="Enter your doctor's phone no_"
+            onChange={(e) => onChange(e)}
+          />
+          <Form.Control
+            type="email"
+            name="docEmail"
+            value={formData.docEmail}
+            placeholder="Enter your doctor's email"
+            onChange={(e) => onChange(e)}
           />
         </Form.Group>
 
@@ -766,11 +789,7 @@ const EditUserProfile = ({
         </Form.Text>
         <Form.Group controlId="day" className="mb-3">
           <Form.Label>Day:</Form.Label>
-          <Form.Select
-            name="day"
-            onChange={e => onChange(e)}
-            value={day}
-          >
+          <Form.Select name="day" onChange={(e) => onChange(e)} value={day}>
             <option value="">Select a day</option>
             <option value="Monday">Monday</option>
             <option value="Tuesday">Tuesday</option>
@@ -782,11 +801,7 @@ const EditUserProfile = ({
 
         <Form.Group controlId="time">
           <Form.Label>Time:</Form.Label>
-          <Form.Select
-            name="time"
-            onChange={e => onChange(e)}
-            value={time}
-          >
+          <Form.Select name="time" onChange={(e) => onChange(e)} value={time}>
             <option value="">Select a time</option>
             <option value="Morning">9 AM</option>
             <option value="Afternoon">12 PM</option>
@@ -795,13 +810,21 @@ const EditUserProfile = ({
         </Form.Group>
 
         <Form.Group controlId="date" className="mb-3">
-          <Button variant="primary" onClick={e => onSubmitAvailability(e)} className="mt-3">
+          <Button
+            variant="primary"
+            onClick={(e) => onSubmitAvailability(e)}
+            className="mt-3"
+          >
             Add Availability
           </Button>
         </Form.Group>
 
         <Form.Group controlId="date" className="mb-3">
-          <Button variant="primary" onClick={e => handleClearAvailability(e)} className="mt-3">
+          <Button
+            variant="primary"
+            onClick={(e) => handleClearAvailability(e)}
+            className="mt-3"
+          >
             clear Availability
           </Button>
         </Form.Group>
@@ -830,7 +853,7 @@ const EditUserProfile = ({
 
 EditUserProfile.propTypes = {
   editProfile: PropTypes.func.isRequired,
-  getProfileById: PropTypes.func.isRequired,
+  loadCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   addAvailability: PropTypes.func.isRequired,
@@ -844,7 +867,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   editProfile,
-  getProfileById,
+  loadCurrentProfile,
   addAvailability,
   clearAvailability,
 })(withRouter(EditUserProfile));

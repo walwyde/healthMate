@@ -28,23 +28,23 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = await req.body;
 
-    const user = await User.findOne({ email });
+    const activeUser = await User.findOne({ email });
 
-    if (!user) {
+    if (!activeUser) {
       return res.status(404).json({ errors: [{ msg: "user not found" }] });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, activeUser.password);
 
     if (!isMatch) {
-      return res.status(401).send("password incorrect");
+      return res.status(400).send({ errors: [{ msg: "password incorrect"}]});
     }
 
     const payload = {
       user: {
-        name: user.name,
-        id: user.id,
-        condition: user.condition,
+        name: activeUser.name,
+        id: activeUser.id,
+        condition: {...activeUser.condition},
       },
     };
 
