@@ -6,5 +6,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     mainFields: []
+  },
+  define: {
+    'process.env': process.env
   }
 })

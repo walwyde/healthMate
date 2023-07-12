@@ -6,23 +6,23 @@ import { connect } from "react-redux";
 import { logout } from "../../Actions/auth";
 import PropTypes from "prop-types";
 
-const Navigation = ({ isAuthenticated, logout }) => {
+const Navigation = ({ isAuthenticated, logout, message: {newMessages} }) => {
   const authLinks = () => {
     return (
       <div>
         <ul className="navbar-nav">
           <li className="nav-item"></li>
           <li className="nav-item">
-            <Link to="/messages">Messages</Link>
+          <Link className="nav-link" to="/messages"><span className="sm badge badge-info">{newMessages.length}</span>Messages</Link>
           </li>
          { <li className="nav-item">
-            <Link to="/appointments">Appointments</Link>
+            <Link className="nav-link" to="/appointments">Appointments</Link>
           </li>}
           <li className="nav-item">
-            <Link to="/profile">Profile</Link>
+            <Link className="nav-link" to="/profile">Profile</Link>
           </li>
           <li className="nav-item">
-            <Link to="/login" onClick={logout}>
+            <Link className="nav-link" to="/login" onClick={logout}>
               Logout
             </Link>
           </li>
@@ -34,18 +34,18 @@ const Navigation = ({ isAuthenticated, logout }) => {
   const guestLinks = () => {
     return (
       <Fragment>
-        <ul className="navbar-nav">
+        <ul className="navbar-nav ml-5">
           <li className="nav-item">
-            <NavLink to="/about">About</NavLink>
+            <NavLink className="nav-link" to="/about">About</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/health-tips">Tour</NavLink>
+            <NavLink className="nav-link" to="/health-tips">Tour</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/login">Login</NavLink>
+            <NavLink className="nav-link" to="/login">Login</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink to="/register">Register</NavLink>
+            <NavLink className="nav-link" to="/register">Register</NavLink>
           </li>
         </ul>
       </Fragment>
@@ -73,10 +73,12 @@ const Navigation = ({ isAuthenticated, logout }) => {
 Navigation.propTypes = {
   isAuthenticated: PropTypes.bool,
   logout: PropTypes.func.isRequired,
+  message: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  message: state.message,
 });
 
 export default connect(mapStateToProps, { logout })(Navigation);

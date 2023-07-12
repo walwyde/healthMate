@@ -59,5 +59,9 @@ export const no_doctor = "no_doctor";
 export const add_availability = "add_availability";
 export const availability_error = "availability_error"; 
 export const load_availability = 'load_availability'
-
+export const init_convo = 'init_convo'
+export const clear_messages = 'clear_messages'
+export const init_convo_error = 'init_convo_error'
+export const get_conversations = 'get_conversations'
+export const get_conversations_error = 'get_conversations_error'
 

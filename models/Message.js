@@ -1,30 +1,32 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ConversationSchema = new mongoose.Schema({
-  participants: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }],
+  correspondent: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
 const MessageSchema = new mongoose.Schema({
-  conversation: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Conversation',
-  },
+  
   sender: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
-  content: String,
+  conversation: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Conversation",
+  },
+  content: {
+    type: String,
+    required: true,
+  },
   timestamp: {
     type: Date,
     default: Date.now,
   },
 });
 
-const Conversation = mongoose.model('Conversation', ConversationSchema);
-const Message = mongoose.model('Message', MessageSchema);
+const Conversation = mongoose.model("Conversation", ConversationSchema);
+const Message = mongoose.model("Message", MessageSchema);
 
 module.exports = {
   Conversation,

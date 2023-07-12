@@ -1,12 +1,12 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const morgan = require("morgan");
+const cors = require("cors");
 const authRoutes = require("./routes/api/auth");
 const profileRoutes = require("./routes/api/profile");
 const userRoutes = require("./routes/api/users");
 const messageRoutes = require("./routes/api/message");
 const appointmentRoutes = require("./routes/api/appointment");
-const cors = require("cors");
 
 const app = express();
 

@@ -1,5 +1,4 @@
 const { check, validationResult } = require("express-validator");
-const config = require("config");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -76,7 +75,7 @@ exports.newUser = async (req, res) => {
       id: user.id,
       condition: user.condition.diabetic || user.condition.hypertensive
     }};
-    jwt.sign(payLoad, config.get("jwtSecret"), {
+    jwt.sign(payLoad, process.env.JWTSECRET, {
       expiresIn: "2h",
     }, (err, token) => {
       if (err) {

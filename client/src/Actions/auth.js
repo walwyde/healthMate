@@ -36,7 +36,7 @@ export const login = (formData, history) => async (dispatch) => {
     dispatch(loadUser());
     dispatch(setAlert("You Have Been Logged In", "success"));
   } catch (err) {
-    console.log(err);
+    console.log(err.response);
     const errors = err.response.data.errors
 
     if(err.response.code === "ERR_NETWORK") {

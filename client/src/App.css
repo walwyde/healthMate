@@ -6,6 +6,7 @@ a {
   padding: 0.5rem;
   border-radius: .25rem;
 }
+
 .nav-item:hover {
   font-size: large;
   background-color: #ccc;

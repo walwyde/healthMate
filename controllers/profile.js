@@ -1,5 +1,4 @@
 const { validationResult } = require("express-validator");
-const config = require("config");
 const InsulinProfile = require("../models/InsulinProfile");
 const BpProfileCard = require("../models/BpProfile"); // Import the ProfileCard model
 const User = require("../models/User");

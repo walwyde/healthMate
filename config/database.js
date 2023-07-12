@@ -1,11 +1,11 @@
 const mongoose = require("mongoose")
 const config = require("config")
-const dbURI = config.get("mongooseURI")
+
 
 const connectDB = async () => {
   try{
     mongoose.set("strictQuery", true)
-    const connection = await mongoose.connect(dbURI)
+    const connection = await mongoose.connect(config.get("mongo_URI"))
 
 
     console.log(`connected to database ----> ${connection.connection.host}`)
