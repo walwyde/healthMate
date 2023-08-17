@@ -2,6 +2,7 @@ const express = require("express");
 const connectDB = require("./config/database");
 const morgan = require("morgan");
 const cors = require("cors");
+
 const authRoutes = require("./routes/api/auth");
 const profileRoutes = require("./routes/api/profile");
 const userRoutes = require("./routes/api/users");
@@ -10,10 +11,14 @@ const appointmentRoutes = require("./routes/api/appointment");
 
 const app = express();
 
+
+
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
+
+
 
 const PORT = process.env.PORT || 5005;
 

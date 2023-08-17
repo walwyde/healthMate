@@ -2,7 +2,7 @@ import { useState, useEffect, Fragment } from "react";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Form from "react-bootstrap/Form";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { withRouter, Redirect } from "react-router-dom";
 import { editProfile } from "../../Actions/profile";
@@ -380,8 +380,8 @@ const EditUserProfile = ({
           />
         </Form.Group>
 
-         {/* Doctor */}
-         <Form.Group controlId="doctor" className="mb-3">
+        {/* Doctor */}
+        <Form.Group controlId="doctor" className="mb-3">
           <Form.Label>Doctor</Form.Label>
           <Form.Control
             type="text"
@@ -415,7 +415,7 @@ const EditUserProfile = ({
 
   !loading && profile && diabetic ? (
     <Fragment>
-      <Link href="/profile" className="btn btn-primary m-2">
+      <Link to="/profile" className="btn btn-primary m-2">
         Back to Profile
       </Link>
       <h1 className="large text-primary">
@@ -426,6 +426,7 @@ const EditUserProfile = ({
         <Form.Group controlId="phone">
           <Form.Label>Full Name</Form.Label>
           <Form.Control
+            className="mb-3"
             type="text"
             name="name"
             value={name}
@@ -438,6 +439,7 @@ const EditUserProfile = ({
         <Form.Group controlId="phone">
           <Form.Label>Age</Form.Label>
           <Form.Control
+            className="mb-3"
             type="text"
             name="age"
             value={age}
@@ -450,6 +452,7 @@ const EditUserProfile = ({
         <Form.Group controlId="phone">
           <Form.Label>Address</Form.Label>
           <Form.Control
+            className="mb-3"
             type="text"
             name="address"
             value={address}
@@ -462,6 +465,7 @@ const EditUserProfile = ({
         <Form.Group controlId="phone">
           <Form.Label>Phone</Form.Label>
           <Form.Control
+            className="mb-3"
             type="text"
             name="phone"
             value={phone}
@@ -474,6 +478,7 @@ const EditUserProfile = ({
         <Form.Group controlId="diagnosisDate">
           <Form.Label>Diagnosis Date</Form.Label>
           <Form.Control
+            className="mb-3"
             type="date"
             name="diagnosisDate"
             value={formData.diagnosisDate}
@@ -484,6 +489,7 @@ const EditUserProfile = ({
         <Form.Group controlId="typeOfDiabetes">
           <Form.Label>Type of Diabetes</Form.Label>
           <Form.Control
+            className="mb-3"
             type="text"
             placeholder="Diabetes A, B or C "
             name="typeOfDiabetes"
@@ -497,6 +503,7 @@ const EditUserProfile = ({
           <Form.Label>Medications</Form.Label>
 
           <Form.Control
+            className="mb-3"
             type="text"
             name="medName"
             value={medName}
@@ -504,6 +511,7 @@ const EditUserProfile = ({
             onChange={(e) => onChange(e)}
           />
           <Form.Control
+            className="mb-3"
             type="text"
             name="medDose"
             placeholder="Enter medication dose(s) seperated by commas(,)"
@@ -511,6 +519,7 @@ const EditUserProfile = ({
             onChange={(e) => onChange(e)}
           />
           <Form.Control
+            className="mb-3"
             type="text"
             name="frequency"
             placeholder="Enter medication frequency(s) seperated by commas(,)"
@@ -524,6 +533,7 @@ const EditUserProfile = ({
           <Form.Label>Allergies</Form.Label>
 
           <Form.Control
+            className="mb-3"
             type="text"
             name="allergies"
             value={allergies}
@@ -536,6 +546,7 @@ const EditUserProfile = ({
         <Form.Group controlId="emergencyContact">
           <Form.Label>Emergency Contact</Form.Label>
           <Form.Control
+            className="mb-3"
             type="text"
             name="contactPhone"
             placeholder="Enter emergency contact"
@@ -543,6 +554,7 @@ const EditUserProfile = ({
             onChange={(e) => onChange(e)}
           />
           <Form.Control
+            className="mb-3"
             type="text"
             name="contactName"
             value={formData.contactName}
@@ -556,6 +568,7 @@ const EditUserProfile = ({
           <Form.Label>Glucose Readings</Form.Label>
 
           <Form.Control
+            className="mb-3"
             type="date"
             name="readingDate"
             value={formData.readingDate}
@@ -564,6 +577,7 @@ const EditUserProfile = ({
           />
 
           <Form.Control
+            className="mb-3"
             type="text"
             name="glucoseLevel"
             value={formData.glucoseLevel}
@@ -576,6 +590,7 @@ const EditUserProfile = ({
         <Form.Group controlId="insulinDose">
           <Form.Label>Insulin Dose</Form.Label>
           <Form.Control
+            className="mb-3"
             type="text"
             name="insulinType"
             value={formData.insulinType}
@@ -588,6 +603,7 @@ const EditUserProfile = ({
         <Form.Group controlId="doctor">
           <Form.Label>Doctor</Form.Label>
           <Form.Control
+            className="mb-3"
             type="text"
             name="docName"
             value={formData.docName}
@@ -595,6 +611,7 @@ const EditUserProfile = ({
             onChange={(e) => onChange(e)}
           />
           <Form.Control
+            className="mb-3"
             type="text"
             name="docPhone"
             value={formData.docPhone}
@@ -602,6 +619,7 @@ const EditUserProfile = ({
             onChange={(e) => onChange(e)}
           />
           <Form.Control
+            className="mb-3"
             type="email"
             name="docEmail"
             value={formData.docEmail}
@@ -613,6 +631,7 @@ const EditUserProfile = ({
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Profile Image</Form.Label>
           <Form.Control
+            className="mb-3"
             type="file"
             value={selectedFile}
             name="avatar"
@@ -628,7 +647,7 @@ const EditUserProfile = ({
     </Fragment>
   ) : !loading && user && user.isStaff ? (
     <Fragment>
-      <Link href="/profile" className="btn btn-primary m-2">
+      <Link to="/profile" className="btn btn-primary m-2">
         Back to Profile
       </Link>
       <h1 className="large text-primary">

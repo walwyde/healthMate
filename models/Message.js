@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 const ConversationSchema = new mongoose.Schema({
-  correspondent: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
+  unReadMessages: { type: Boolean, default: false },
 });
 
 const MessageSchema = new mongoose.Schema({
-  
   sender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -19,9 +19,8 @@ const MessageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  timestamp: {
+  timeStamp: {
     type: Date,
-    default: Date.now,
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { connect } from "react-redux";
 import { Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -21,16 +21,16 @@ import {
 } from "mdb-react-ui-kit";
 
 const Profile = ({
-  auth: { user, isStaff },
+  auth: { user, authloading },
   profile: { profile, loading },
   loadCurrentProfile,
   deleteAccount,
 }) => {
   useEffect(() => {
     loadCurrentProfile();
-  }, []);
+  }, [loading, authloading, loadCurrentProfile]);
 
-  return loading ? (
+  return loading && !profile ? (
     <Fragment>
       <Spinner />
     </Fragment>
@@ -38,95 +38,93 @@ const Profile = ({
     <Fragment>
       <div className="gradient-custom-2" style={{ backgroundColor: "#9de2ff" }}>
         <MDBContainer className="m-1">
-          {!loading && profile === null
-            ? user && (
-                <MDBCard>
-                  <MDBCardImage
-                    fluid
-                    style={{ width: "400px", margin: "auto" }}
-                    src={
-                      (user.avatar && user.avatar) ||
-                      URL.createObjectURL(user.avatar)
-                    }
-                    position="top"
-                    alt="..."
-                  />
-                  <MDBCardBody style={{ textAlign: "center" }}>
-                    <MDBCardTitle>
-                      Hello {user.name && user.name.split(" ")[0]}
-                    </MDBCardTitle>
-                    <MDBCardText>
-                      Please Use This Link To Update Your Profile Card For
-                      Better Experience.{" "}
-                      <i className="fa fa-chevron-down" aria-hidden="true"></i>
-                    </MDBCardText>
-                    <MDBCardLink
-                      className="text-decoration-none text-info"
-                      href="/create-profile"
+          {!authloading && user && !loading && profile === null ? (
+            <MDBCard>
+              <MDBCardImage
+                fluid
+                style={{ width: "400px", margin: "auto" }}
+                src={!authloading && user && user.avatar}
+                position="top"
+                alt="..."
+              />
+              <MDBCardBody style={{ textAlign: "center" }}>
+                <MDBCardTitle>
+                  Hello {!authloading && user.name.split(" ")[0]}
+                </MDBCardTitle>
+                <MDBCardText>
+                  Please Use This Link To Update Your Profile Card For Better
+                  Experience.{" "}
+                  <i className="fa fa-chevron-down" aria-hidden="true"></i>
+                </MDBCardText>
+                <MDBCardLink
+                  className="text-decoration-none text-info"
+                  href="/create-profile"
+                >
+                  Create Card Profile
+                </MDBCardLink>
+              </MDBCardBody>
+            </MDBCard>
+          ) : (
+            !loading &&
+            profile &&
+            !authloading && user && (
+              <MDBRow className="justify-content-center align-items-center h-100">
+                <MDBCol lg="9" xl="7">
+                  <MDBCard>
+                    <div
+                      className="rounded-top text-white d-flex flex-row"
+                      style={{ backgroundColor: "#000", height: "200px" }}
                     >
-                      Create Card Profile
-                    </MDBCardLink>
-                  </MDBCardBody>
-                </MDBCard>
-              )
-            : !loading &&
-              user &&
-              profile && (
-                <MDBRow className="justify-content-center align-items-center h-100">
-                  <MDBCol lg="9" xl="7">
-                    <MDBCard>
                       <div
-                        className="rounded-top text-white d-flex flex-row"
-                        style={{ backgroundColor: "#000", height: "200px" }}
+                        className="ms-4 mt-5 d-flex flex-column"
+                        style={{ width: "150px" }}
                       >
-                        <div
-                          className="ms-4 mt-5 d-flex flex-column"
-                          style={{ width: "150px" }}
-                        >
-                          <MDBCardImage
-                            src={user.avatar}
-                            alt="Generic placeholder image"
-                            className="mt-4 mb-2 img-thumbnail"
-                            fluid
-                            style={{ width: "150px", zIndex: "1" }}
-                          />
-                        </div>
-                        <div className="ms-3" style={{ marginTop: "130px" }}>
-                          <MDBCardText tag="h5">
-                            {profile.name && profile.name}
-                          </MDBCardText>
-                          <MDBCardText>
-                            {profile && profile.address}
-                          </MDBCardText>
-                        </div>
+                        <MDBCardImage
+                          src={user.avatar}
+                          alt="Generic placeholder image"
+                          className="mt-4 mb-2 img-thumbnail"
+                          fluid
+                          style={{ width: "150px", zIndex: "1" }}
+                        />
                       </div>
-                      <div
-                        className="p-4 text-black"
-                        style={{ backgroundColor: "#f8f9fa" }}
-                      >
-                        <div className="d-flex justify-content-end text-center py-1">
-                          {/* <div>
+                      <div className="ms-3" style={{ marginTop: "130px" }}>
+                        <MDBCardText tag="h5">
+                          {profile.name && profile.name}
+                        </MDBCardText>
+                        <MDBCardText>{profile && profile.address}</MDBCardText>
+                      </div>
+                    </div>
+                    <div
+                      className="p-4 text-black"
+                      style={{ backgroundColor: "#f8f9fa" }}
+                    >
+                      <div className="d-flex justify-content-end text-center py-1">
+                        {/* <div>
                       <MDBCardText className="mb-1 h5">253</MDBCardText>
                       <MDBCardText className="small text-muted mb-0">
                         Photos
                       </MDBCardText>
                     </div> */}
-                          {/* <div className="px-3">
+                        {/* <div className="px-3">
                       <MDBCardText className="mb-1 h5">1026</MDBCardText>
                       <MDBCardText className="small text-muted mb-0">
                         Followers
                       </MDBCardText>
                     </div> */}
-                          {/* <div>
+                        {/* <div>
                       <MDBCardText className="mb-1 h5">478</MDBCardText>
                       <MDBCardText className="small text-muted mb-0">
                         Following
                       </MDBCardText>
                     </div> */}
-                        </div>
                       </div>
-                      <MDBCardBody className="text-black p-4">
-                        {user && user.condition.hypertensive && (
+                    </div>
+                    <MDBCardBody className="text-black p-4">
+                      {!authloading &&
+                        user &&
+                        user.condition.hypertensive &&
+                        !loading &&
+                        profile && (
                           <Fragment>
                             <div className="mb-5">
                               <p className="lead fw-normal mb-1">Basic Info</p>
@@ -265,7 +263,10 @@ const Profile = ({
                           </Fragment>
                         )}
 
-                        {user && user.condition.diabetic && (
+                      {!authloading &&
+                        user.condition.diabetic &&
+                        !loading &&
+                        profile && (
                           <Fragment>
                             <div className="mb-5">
                               <p className="lead fw-normal mb-1">Basic Info</p>
@@ -311,10 +312,12 @@ const Profile = ({
                               >
                                 <MDBCardText className="font-italic mb-1">
                                   Health Condition:{" "}
-                                  {(user &&
-                                    user.condition.MDBBtndiabetic &&
+                                  {(!authloading &&
+                                    user &&
+                                    user.condition.diabetic &&
                                     "Diabetic") ||
-                                    (user &&
+                                    (!authloading &&
+                                      user &&
                                       user.condition.hypertensive &&
                                       "Hypertensive")}
                                 </MDBCardText>
@@ -430,98 +433,116 @@ const Profile = ({
                           </Fragment>
                         )}
 
-                        {user && user.isStaff && (
-                          <Fragment>
-                            {!loading && profile && (
-                              <MDBContainer>
-                                <MDBCard>
-                                  <MDBCardBody>
-                                    <h1 className="mt-4 text-primary text-center">
-                                      Profile
-                                    </h1>
+                      {!authloading && user && user.isStaff && (
+                        <Fragment>
+                          {!loading && profile && (
+                            <MDBContainer>
+                              <MDBCard>
+                                <MDBCardBody>
+                                  <h1 className="mt-4 text-primary text-center">
+                                    Profile
+                                  </h1>
 
-                                    <MDBCardText className="font-italic mb-1">
-                                      Gender: {profile.gender && profile.gender}
-                                    </MDBCardText>
+                                  <MDBCardText className="font-italic mb-1">
+                                    Gender:{" "}
+                                    {!loading &&
+                                      profile.gender &&
+                                      profile.gender}
+                                  </MDBCardText>
 
-                                    <MDBCardText className="font-italic mb-1">
-                                      Email:
-                                      {profile.contactDetails.email}
-                                    </MDBCardText>
+                                  <MDBCardText className="font-italic mb-1">
+                                    Email:
+                                    {!loading &&
+                                      profile.contactDetails &&
+                                      profile.contactDetails.email}
+                                  </MDBCardText>
 
-                                    <MDBCardText className="font-italic mb-1">
-                                      NIN:
-                                      {profile.nin}
-                                    </MDBCardText>
+                                  <MDBCardText className="font-italic mb-1">
+                                    NIN:
+                                    {!loading && profile.nin && profile.nin}
+                                  </MDBCardText>
 
-                                    <MDBCardText className="font-italic mb-1">
-                                      Phone:
-                                      {profile.contactDetails.phone}
-                                    </MDBCardText>
+                                  <MDBCardText className="font-italic mb-1">
+                                    Phone:
+                                    {!loading &&
+                                      profile.contactDetails &&
+                                      profile.contactDetails.phone}
+                                  </MDBCardText>
 
-                                    <MDBCardText className="font-italic mb-1">
-                                      Address:
-                                      {profile.contactDetails.address}
-                                    </MDBCardText>
+                                  <MDBCardText className="font-italic mb-1">
+                                    Address:
+                                    {!loading &&
+                                      profile.contactDetails &&
+                                      profile.contactDetails.address}
+                                  </MDBCardText>
 
-                                    <MDBCardText className="font-italic mb-1">
-                                      Age: {profile.age}
-                                    </MDBCardText>
+                                  <MDBCardText className="font-italic mb-1">
+                                    Age:{" "}
+                                    {!loading && profile.age && profile.age}
+                                  </MDBCardText>
 
-                                    {profile.user._id === user._id && (
+                                  {!loading &&
+                                    profile.user._id &&
+                                    profile.user._id === !authloading &&
+                                    user._id && (
                                       <Fragment>
                                         <MDBCardText className="font-italic mb-1">
                                           Licence Type:{" "}
-                                          {profile.licenceDetails &&
+                                          {!loading &&
+                                            profile.licenceDetails &&
                                             profile.licenceDetails.licenceType}
                                         </MDBCardText>
 
                                         <MDBCardText variant="h5">
                                           Licence Number:{" "}
-                                          {profile.licenceDetails &&
+                                          {!loading &&
+                                            profile.licenceDetails &&
                                             profile.licenceDetails.licenceNum}
                                         </MDBCardText>
 
                                         <MDBCardText variant="h5">
                                           Expiry Date:{" "}
                                           <Moment fromNow={"yyyy mm dd"}>
-                                            {profile.licenceDetails &&
+                                            {!loading &&
+                                              profile.licenceDetails &&
                                               profile.licenceDetails.expiryDate}
                                           </Moment>
                                         </MDBCardText>
                                       </Fragment>
                                     )}
 
-                                    <MDBCardText>
-                                      Professional Designation:{" "}
-                                      {profile.professionalDesignation &&
-                                        profile.professionalDesignation}
-                                    </MDBCardText>
-                                  </MDBCardBody>
-                                </MDBCard>
-                              </MDBContainer>
-                            )}
-                          </Fragment>
-                        )}
-                      </MDBCardBody>
-                      <div className="d-flex justify-content-between align-items-center mb-4">
-                        <Link
-                          to={`/edit-user-profile/${user._id}`}
-                          className="text-center btn btn-primary"
-                        >
-                          Edit Profile
-                        </Link>
-                        <MDBBtn
-                          className="text-center btn btn-danger"
-                          onClick={deleteAccount}
-                        >
-                          delete Account
-                        </MDBBtn>
-                      </div>
-                    </MDBCard>
-                  </MDBCol>
-                </MDBRow>
-              )}
+                                  <MDBCardText>
+                                    Professional Designation:{" "}
+                                    {!loading &&
+                                      profile.professionalDesignation &&
+                                      profile.professionalDesignation}
+                                  </MDBCardText>
+                                </MDBCardBody>
+                              </MDBCard>
+                            </MDBContainer>
+                          )}
+                        </Fragment>
+                      )}
+                    </MDBCardBody>
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                      <Link
+                        to={`/edit-user-profile/${!authloading && user._id}`}
+                        className="text-center btn btn-primary"
+                      >
+                        Edit Profile
+                      </Link>
+                      <MDBBtn
+                        className="text-center btn btn-danger"
+                        onClick={deleteAccount}
+                      >
+                        delete Account
+                      </MDBBtn>
+                    </div>
+                  </MDBCard>
+                </MDBCol>
+              </MDBRow>
+            )
+          )}
         </MDBContainer>
       </div>
     </Fragment>

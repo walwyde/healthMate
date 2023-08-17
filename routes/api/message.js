@@ -4,7 +4,9 @@ const auth = require("../../middleware/index");
 
 const router = express.Router();
 
-router.get("/", auth.auth, controller.getConversations);
+router.post('/delete-message', auth.auth, controller.deleteMessage);
+
+router.post('/delete-conversation', auth.auth, controller.deleteConversation);
 
 router.get(
   "/:conversationId/messages",
@@ -22,5 +24,7 @@ router.get("/:conversationId/", auth.auth, controller.getConversationById);
 
 
 router.post('/:id', auth.auth, controller.newConversation);
+
+router.get("/", auth.auth, controller.getConversations);
 
 module.exports = router;

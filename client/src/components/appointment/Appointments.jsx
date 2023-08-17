@@ -24,7 +24,7 @@ const Appointments = ({
   return auth.user && auth.user.isStaff ? (
     <Fragment>
       <div className="jumbotron">
-        <h4 className="lead text-primary">Booked Appointments</h4>
+        <h4 className="lead text-primary text-center display-4">Booked Appointments</h4>
       </div>
       <BookedAppointment />
     </Fragment>

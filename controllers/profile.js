@@ -81,6 +81,7 @@ exports.newProfileCard = async (req, res) => {
     const { diabetic, hypertensive } = user.condition;
 
     if (user.isStaff) {
+      console.log(req.body);
       const existingProfile = await HealthWorker.findById(req.user.id);
 
       if (existingProfile)
@@ -88,9 +89,9 @@ exports.newProfileCard = async (req, res) => {
           .status(400)
           .json({ error: { msg: "user profile already exists" } });
 
-      const profileFields = {};
-      const licenceDetails = {};
-      const contactDetails = {};
+      let profileFields = {};
+      let licenceDetails = {};
+      let contactDetails = {};
 
       const {
         name,
@@ -124,7 +125,7 @@ exports.newProfileCard = async (req, res) => {
 
       if (title) profileFields.title = title;
       if (gender) profileFields.gender = gender;
-      if (licenceDetails) profileFields.licenceDetails = licenceDetails;
+      // if (licenceDetails) profileFields.licenceDetails = licenceDetails;
       if (contactDetails) profileFields.contactDetails = contactDetails;
       if (professionalDesignation)
         profileFields.professionalDesignation = professionalDesignation;
@@ -136,11 +137,11 @@ exports.newProfileCard = async (req, res) => {
       if (!profile)
         return res
           .status(400)
-          .json({ errors: { msg: "profile could not be created" } });
+          .json({ errors: [{ msg: "profile could not be created" }] });
 
       await profile.save();
 
-      return res.status(200).json(profile);
+      return res.status(201).json(profile);
     }
 
     if (diabetic) {
@@ -292,8 +293,8 @@ exports.newProfileCard = async (req, res) => {
       if (existingProfile)
         return res.status(400).json("user profile already created");
 
-      const profileFields = {};
-      const doctor = {};
+      let profileFields = {};
+      let doctor = {};
       profileFields.user = req.user.id;
 
       if (name) profileFields.name = name;
@@ -465,7 +466,7 @@ exports.updateProfileCard = async (req, res) => {
       } = req.body;
 
       const profileFields = { ...req.body };
-      let doctor = {}
+      let doctor = {};
 
       profileFields.user = req.user.id;
 

@@ -30,10 +30,14 @@
     "font-awesome": "^4.7.0",
     "gravatar": "^1.8.2",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "mdb-react-ui-kit": "^6.0.0",
     "mongoose": "^6.6.5",
+    "nodemailer": "^6.9.4",
     "react-router-dom": "^4.3.1",
+    "react-toastify": "^5.1.0",
     "request": "^2.88.2",
+    "sendgrid": "^5.2.3",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

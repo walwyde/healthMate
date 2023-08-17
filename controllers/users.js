@@ -3,6 +3,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar")
+const config = require("config");
 
 exports.getUsers = async (req, res) => {
   try {
@@ -72,10 +73,10 @@ exports.newUser = async (req, res) => {
 
     // generating jwt token
     const payLoad = {user: {
-      id: user.id,
-      condition: user.condition.diabetic || user.condition.hypertensive
+      id: user._id,
+      condition: {...user.condition}
     }};
-    jwt.sign(payLoad, process.env.JWTSECRET, {
+    jwt.sign(payLoad, config.get("jwtSecret"), {
       expiresIn: "2h",
     }, (err, token) => {
       if (err) {

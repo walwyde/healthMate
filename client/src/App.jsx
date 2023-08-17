@@ -9,7 +9,9 @@ import EditStaffProfile from "./components/EditStaffProfile";
 import EditUserProfile from "./components/profile/EditUserProfile";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-import Alert from "./components/layouts/Alerts";
+import Alerts from "./components/layouts/Alerts";
+import ResetPassword from "./components/auth/ResetPassword";
+import FindUSerEmail from "./components/auth/FindUSerEmail";
 import Appointments from "./components/appointment/Appointments";
 import Profile from "./components/Profile";
 import Message from "./components/messaging/components/active-conversation/active-conversation";
@@ -25,6 +27,9 @@ import { loadUser } from "./Actions/register";
 import store from "./store";
 import Appointment from "./components/appointment/Appointment";
 import ProfileView from "./components/ProfileView";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 if (localStorage.token) {
   setHeader(localStorage.getItem("token"));
 }
@@ -32,15 +37,15 @@ if (localStorage.token) {
 function App() {
   useEffect(() => {
     store.dispatch(loadUser());
-  }, []);
+  }, [loadUser]);
   return (
     <Provider store={store}>
       <Router>
         <Fragment>
           <Navbar />
-          <Container varient="dark">
-            <Alert />
-            <Switch>
+          <Alerts />
+            <Container varient="dark">
+          <Switch>
               <PrivateRoute
                 exact
                 path="/appointments/:id"
@@ -51,10 +56,16 @@ function App() {
                 path="/appointments"
                 component={Appointments}
               />
+              <Route exact path="/reset-password/:token" component={ResetPassword} />
+              <Route exact path="/reset-password" component={FindUSerEmail} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/health-tips" component={HealthTipsPage} />
-              <PrivateRoute exact path="/create-profile" component={CreateProfile} />
+              <PrivateRoute
+                exact
+                path="/create-profile"
+                component={CreateProfile}
+              />
               <PrivateRoute exact path="/messages" component={Messages} />
               <PrivateRoute exact path="/chat" component={Chat} />
               <PrivateRoute exact path="/profile" component={Profile} />
@@ -72,12 +83,11 @@ function App() {
               />
               <PrivateRoute exact path="/message/:_id" component={Message} />
               <PrivateRoute exact path="/chat" component={Chat} />
-
-              <Route exact path="/" component={Landing} />
-            </Switch>
-            {/* <ToastContainer /> */}
-          </Container>
+          </Switch>
+            </Container>
+            <Route exact path="/" component={Landing} />
           <Footer />
+          <ToastContainer />
         </Fragment>
       </Router>
     </Provider>

@@ -63,5 +63,6 @@ export const init_convo = 'init_convo'
 export const clear_messages = 'clear_messages'
 export const init_convo_error = 'init_convo_error'
 export const get_conversations = 'get_conversations'
+export const delete_conversation = 'delete_conversation'
 export const get_conversations_error = 'get_conversations_error'
 

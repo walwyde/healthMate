@@ -11,9 +11,11 @@ const Login = ({ login, history, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    loginAttempt: 0,
+    showPassword: false,
   });
 
-  const { email, password } = formData;
+  const { email, password, showPassword, loginAttempt } = formData;
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,13 +24,14 @@ const Login = ({ login, history, isAuthenticated }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     login(formData, history);
+    setFormData({ loginAttempt: loginAttempt +1 });
   };
 
   return isAuthenticated ? (
     <Redirect to={"/profile"} />
   ) : (
     <Fragment>
-      <div className="jumbotron">
+      <div className="jumbotron text-center text-primary">
         <h1>Login</h1>
       </div>
 
@@ -51,7 +54,7 @@ const Login = ({ login, history, isAuthenticated }) => {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             name="password"
             onChange={(e) => onChange(e)}
@@ -59,16 +62,44 @@ const Login = ({ login, history, isAuthenticated }) => {
             required
           />
         </Form.Group>
+
+        <div class="form-check form-switch">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckChecked"
+            checked={showPassword}
+            onChange={() => {
+              setFormData({ showPassword: !showPassword });
+            }}
+          />
+          <label class="form-check-label mb-3" for="flexSwitchCheckChecked">
+            Show password
+          </label>
+        </div>
+
         <Button variant="primary" type="submit">
           Submit
         </Button>
 
-        <Form.Group className="m-3">
+        <Form.Group className="m-3 text-center">
           <span className="text-muted">Don't have an account?</span>
-          <Link to="/register" className="text-decoration-none p-3 text-primary">
+          <Link
+            to="/register"
+            className="text-decoration-none p-3 text-primary"
+          >
             Register
           </Link>
         </Form.Group>
+
+        {loginAttempt > 3 && (
+          <div className="text-center mt-3">
+            <Link className="text-danger " to="/reset-password">
+              Forgot password?
+            </Link>
+          </div>
+        )}
       </Form>
     </Fragment>
   );

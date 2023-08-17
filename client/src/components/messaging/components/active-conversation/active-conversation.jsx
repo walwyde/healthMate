@@ -1,15 +1,16 @@
 import React, { Fragment, useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 import Loading from "../../../layouts/Loading";
 import { connect } from "react-redux";
 import {
   initConversation,
   saveMessage,
   getConvoMessages,
+  deleteMessage,
 } from "../../../../Actions/messaging";
 import Moment from "react-moment";
 import { Link } from "react-router-dom";
-import { setAlert } from "../../../../utils/setAlert";
 
 //owns message array state, assembles subcomponents:
 const api = ({
@@ -17,13 +18,18 @@ const api = ({
   initConversation,
   getConvoMessages,
   saveMessage,
-  message: { messages, conversation, loading },
-  auth: { user },
+  deleteMessage,
+  message: { loading, messages, conversation },
+  auth: { user, loading: authloading },
 }) => {
+  useEffect(() => {
+    initConversation(match.params._id);
+  }, [loading, authloading, initConversation, match.params._id, authloading]);
+
   const [message, setMessage] = useState({
-    sender: conversation && conversation.user,
-    conversation: conversation && conversation._id,
-    timeSent: Date.now(),
+    sender: !authloading && user && user._id,
+    conversation: !loading && conversation && conversation._id,
+    timeStamp: Date.now(),
     content: "",
   });
 
@@ -33,10 +39,11 @@ const api = ({
     // const newMessages = [...messages, message];
 
     saveMessage(message, conversation._id);
+
     setMessage({
-      sender: conversation && conversation.user,
-      conversation: conversation && conversation._id,
-      timeSent: Date.now(),
+      sender: !authloading && user._id,
+      conversation: !loading && conversation._id,
+      timeStamp: "",
       content: "",
     });
   };
@@ -44,19 +51,83 @@ const api = ({
     e.preventDefault();
     setMessage({ ...message, [e.target.name]: e.target.value });
   };
+
+  const handleMessageDelete = (conversationId, messageId) => {
+    deleteMessage(conversationId, messageId);
+    console.log(conversationId, messageId);
+  };
+
   const listenForEnterKey = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      setAlert('Click "send" To send message', "warning");
+      handleSubmit(e);
+      toast.info('Click "send" To send message');
     }
   };
 
-  useEffect(() => {
-    match.params && initConversation(match.params._id);
-    conversation && getConvoMessages(conversation._id);
-  }, [match.params._id, conversation._id, loading]);
+  const mapMessages = (messages) =>
+    messages.map((message) => (
+      <div className="card mb-3 px-3" key={!loading && message._id}>
+        <div className="card-header">
+          <h4 className="card-title">
+            {message.sender === user._id ? (
+              <span className="badge badge-pill badge-success">me</span>
+            ) : (
+              <span className="badge badge-pill badge-primary">
+                {conversation.participants[1]._id !== user._id
+                  ? conversation.participants[1].name
+                  : conversation.participants[0].name}
+              </span>
+            )}
+          </h4>
+        </div>
 
-  if (!loading && !conversation)
+        <div className="card-content p-2 bg-dark text-white rounded">
+          <p className="card-text ">{message.content}</p>
+          <span className=" cart-text text-muted m-2">
+            <Moment format="DD-MM-YYYY">{message.timeStamp}</Moment>
+          </span>
+
+          {message.sender === user._id && (
+            <button
+              onClick={() => handleMessageDelete(conversation._id, message._id)}
+              className="card-action float-right btn-danger btn-sm"
+            >
+              Delete
+            </button>
+          )}
+        </div>
+      </div>
+    ));
+
+  const renderMessageInput = () => (
+    <div>
+      <Link className="btn btn-primary m-2 float-left d-md-none" to="/messages">
+        Close Chat
+      </Link>
+      <form onSubmit={handleSubmit} className="container-fluid">
+        <div className="form-group mb-3">
+          <input
+            placeholder="Your Message"
+            type="textarea"
+            name="content"
+            value={message.content}
+            onChange={handleTextChange}
+            onKeyDown={(e) => listenForEnterKey(e)}
+            className="p-3"
+          />
+          <input
+            className="btn btn-primary p-3"
+            type="submit"
+            value="Send"
+            disabled={message.content === "" && "disabled"}
+          />
+        </div>
+      </form>
+    </div>
+  );
+
+  if (!loading && !conversation) {
     return (
       <Fragment>
         <p className="lead text-center mt-5 text-muted display-4">
@@ -67,98 +138,63 @@ const api = ({
         </Link>
       </Fragment>
     );
+  }
 
   return (
-    <Fragment>
-      <div className="row">
-        {conversation && conversation.correspondent && (
+    <div className="row">
+      {!loading && conversation.participants && (
+        <Fragment>
+          <div className="col-md-4 d-sm-none d-md-block">
+            <div className="card">
+              <div className="card-image m-auto">
+                <img
+                  src={
+                    !authloading &&
+                    !loading &&
+                    conversation.participants[0]._id !== user._id
+                      ? conversation.participants[0].avatar
+                      : conversation.participants[1].avatar
+                  }
+                  alt="avatar"
+                />
+              </div>
+
+              <div className="card-content">
+                <p className="card-text text-center lead">
+                  {!authloading &&
+                  !loading &&
+                  conversation &&
+                  conversation.participants[0]._id !== user._id
+                    ? conversation.participants[0].name
+                    : conversation.participants[1].name}
+                </p>
+              </div>
+              <Link className="card-link btn btn-primary m-2" to="/messages">
+                Close Chat
+              </Link>
+            </div>
+          </div>
+        </Fragment>
+      )}
+
+      <div className="col-md-7">
+        <div>{renderMessageInput()}</div>
+
+        {authloading && loading ? (
           <Fragment>
-            <div className="col-md-4 d-block d-sm-none d-md-block">
-              <div className="card">
-                <div className="card-image m-auto">
-                  <img src="https://picsum.photos/200" alt="" />
-                </div>
-
-                <div className="card-content">
-                  <p className="card-text text-center lead">
-                    {conversation.correspondent &&
-                      conversation.correspondent.name}{" "}
-                  </p>
-                </div>
-                <Link className="card-link btn btn-primary m-2" to="/messages">
-                  Close Chat
-                </Link>
-              </div>
-            </div>
-
-            <div className="col-md-8 ">
-              <div>
-                {loading ? (
-                  <Fragment>
-                    <Loading />
-                  </Fragment>
-                ) : !loading && messages.length > 0 ? (
-                  messages.map((message) => (
-                    <Fragment>
-                      <div className="card mb-3 px-3" key={message._id}>
-                        <div className="card-header">
-                          <h4 className="card-title">
-                            {message.sender === "clinician" ? (
-                              <span className="badge badge-pill badge-success">
-                                Clinician
-                              </span>
-                            ) : (
-                              <span className="badge badge-pill badge-primary">
-                                Me
-                              </span>
-                            )}
-                          </h4>
-                        </div>
-                        <div className="card-content p-2 bg-dark text-white rounded">
-                          <p className="card-text ">{message.content}</p>
-                        </div>
-
-                        <div className="card-text">
-                          <small className="text-muted m-2">
-                            <Moment fromNow>{message.timeSent}</Moment>
-                          </small>
-                        </div>
-                      </div>
-                    </Fragment>
-                  ))
-                ) : (
-                  <p className="lead text-center mt-5 text-muted display-4">
-                    No messages yet
-                  </p>
-                )}
-              </div>
-            </div>
+            <Loading />
+          </Fragment>
+        ) : !authloading && !loading && messages.length > 0 ? (
+          <Fragment>
+            <div>{mapMessages(conversation.messages)}</div>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <h3 className="text-center m-auto">No messages Yet</h3>
           </Fragment>
         )}
-        <div className="col-md-4"></div>
-        <div className="col-md-8 mx-auto">
-          <form className="container-fluid mx-5" onSubmit={handleSubmit}>
-            <div className="form-group mb-3 fluid">
-              <input
-                placeholder="Your Message"
-                type="textarea"
-                name="content"
-                value={message.content}
-                onChange={handleTextChange}
-                onKeyDown={(e) => listenForEnterKey(e)}
-                className="p-3"
-              />
-              <input
-                className="btn btn-primary p-3"
-                type="submit"
-                value="Send"
-                disabled={message.content === "" && "disabled"}
-              />
-            </div>
-          </form>
-        </div>
       </div>
-    </Fragment>
+    </div>
   );
 };
 
@@ -179,5 +215,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   initConversation,
   saveMessage,
+  deleteMessage,
   getConvoMessages,
 })(api);

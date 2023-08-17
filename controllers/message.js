@@ -3,10 +3,19 @@ const User = require("../models/User");
 
 // Controller to store a new message
 exports.createMessage = async (req, res) => {
-  console.log(req.body)
   try {
+    const { sender, conversation, timeStamp, content } = req.body;
 
-    const newMessage = new Message(req.body);
+    let message = {};
+
+    if (sender) message.sender = sender;
+    if (conversation) message.conversation = conversation;
+    if (!conversation) message.conversation = req.params.conversationId;
+    if (timeStamp) message.timeStamp = timeStamp;
+    if (!timeStamp) message.timeStamp = Date.now();
+    if (content) message.content = content;
+
+    const newMessage = new Message(message);
 
     // Save the message
 
@@ -16,8 +25,17 @@ exports.createMessage = async (req, res) => {
 
     user.messages.push(savedMessage._id);
 
+    const convo = await Conversation.findOne({
+      _id: savedMessage.conversation,
+    });
+
+    convo.messages.push(savedMessage._id);
+    convo.unReadMessages = true;
+
+    await convo.save();
+
     // Send the message to the client
-    
+
     res.status(201).json(savedMessage);
   } catch (err) {
     console.error(err.message);
@@ -27,13 +45,12 @@ exports.createMessage = async (req, res) => {
 
 // Controller to retrieve all messages
 exports.getAllMessages = async (req, res) => {
-  console.log(req.params)
   try {
     const { conversationId } = req.params;
     const messages = await Message.find({ conversation: conversationId });
     res.json(messages);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch messages" });
+    res.status(500).json({ errors: [{ msg: "Failed to fetch messages" }] });
   }
 };
 
@@ -44,7 +61,9 @@ exports.getConversationById = async (req, res) => {
     const { sender, content } = req.body;
 
     // Check if the conversation exists
-    const conversation = await Conversation.findById(conversationId);
+    const conversation = await Conversation.findById(conversationId).populate(
+      "messages"
+    );
     if (!conversation) {
       return res.status(404).json({ error: "Conversation not found" });
     }
@@ -66,35 +85,94 @@ exports.getConversationById = async (req, res) => {
 };
 
 exports.newConversation = async (req, res) => {
-  const participants = { correspondent: req.body._id, user: req.user.id };
   try {
-    // Create a new conversation
+    const participants = [req.user.id, req.body._id];
+    const existing = await Conversation.findOne({
+      participants: { $all: participants },
+    });
+    if (existing) {
+      const convo = await Conversation.findOne({
+        participants: { $all: participants },
+      })
+        .populate("messages")
+        .populate("participants");
 
-    const existing = await Conversation.findOne(participants).populate("correspondent", ["name", "messages"]);
+      convo.unReadMessages = false;
 
-    if(existing) return res.status(200).json(existing);
+      const read = await convo.save();
 
+      return res.status(200).json(read);
+    }
 
-    const conversation = await new Conversation(participants)
-    // Save the conversation
-    await conversation.save();
+    const newConversation = new Conversation({
+      participants,
+    });
 
-    const populatedConversation = await Conversation.findOne(participants).populate("correspondent", ["name", "messages"]);
+    await newConversation.save();
+    const populatedConversation = await Conversation.findOne({
+      participants: { $all: participants },
+    })
+      .populate("messages")
+      .populate("participants");
 
-
-    res.status(201).json(populatedConversation);
+    res.status(200).json(populatedConversation);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Failed to create conversation" });
   }
 };
 
 exports.getConversations = async (req, res) => {
   try {
-    const conversations = await Conversation.find({
+    const userConversations = await Conversation.find({
       user: req.user.id,
-    }).populate("correspondent", ["name", "messages"]);
-    res.json(conversations);
+    })
+      .populate("messages")
+      .populate("participants");
+
+    if (userConversations.length > 0) return res.json(userConversations);
+
+    const correspondentConvos = await Conversation.find({
+      correspondent: req.user.id,
+    })
+      .populate("messages")
+      .populate("participants");
+
+    res.status(200).json(correspondentConvos);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch conversations" });
   }
-}
+};
+
+exports.deleteMessage = async (req, res) => {
+  try {
+    const { conversationId, messageId } = req.body;
+    const conversation = await Conversation.findOne({
+      messages: { $in: messageId },
+    });
+    convoMessages = [...conversation.messages];
+    conversation.messages = convoMessages.filter(
+      (m) => m.toString() !== messageId
+    );
+
+    await conversation.save();
+    await Message.findOneAndDelete({ _id: messageId });
+
+    console.log(conversation.messages.length);
+    res.status(200).json({ msg: "message deleted" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ errors: [{ msg: "Server error" }] });
+  }
+};
+
+exports.deleteConversation = async (req, res) => {
+  try {
+    const deleted = await Conversation.findByIdAndRemove(req.body.convoId);
+
+    if (deleted) return res.status(200).json({ msg: "conversation deleted" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ errors: [{ msg: "Server error" }] });
+  }
+};

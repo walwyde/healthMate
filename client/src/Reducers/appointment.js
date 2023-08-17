@@ -17,6 +17,7 @@ import {
 } from "../Actions/types";
 
 const initialState = {
+  user: null,
   appointments: [],
   doctors: [],
   appointment: null,
@@ -28,9 +29,21 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (action.type) {
     case get_appointments:
+      const { user, appointments } = payload;
+      const client = user.condition.diabetic || user.condition.hypertensive;
+      const staff = !user.condition.diabetic && !user.condition.hypertensive;
+      let filteredApps = [];
+      if (client) {
+        filteredApps = appointments.filter((app) => app.user._id === user.id);
+      } else {
+        filteredApps = appointments.filter(
+          (app) => app.doctor.user === user.id
+        );
+      }
       return {
         ...state,
-        appointments: action.payload,
+        user: payload.user,
+        appointments: filteredApps,
         loading: false,
       };
     case get_appointment:

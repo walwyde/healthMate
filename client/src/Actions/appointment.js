@@ -199,15 +199,18 @@ export const getBookedAppointments = () => async (dispatch) => {
   try {
     const res = await axios.get("http://localhost:5005/api/appointment");
 
+    console.log(res)
+
     dispatch({
       type: get_appointments,
       payload: res.data,
     });
   } catch (err) {
-    dispatch({
-      type: appointment_error,
-      payload: { msg: err.response.data, status: err.response.status },
-    });
+    console.log(err)
+    // dispatch({
+    //   type: appointment_error,
+    //   payload: { msg: err.response.data, status: err.response.status },
+    // });
   }
 };
 

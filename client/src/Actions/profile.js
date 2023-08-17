@@ -15,22 +15,16 @@ import { setAlert } from "../utils/setAlert";
 import { loadUser } from "./register";
 
 export const loadCurrentProfile = () => async (dispatch) => {
-  dispatch({
-    type: clear_profile,
-  });
   try {
+    dispatch({
+      type: clear_profile,
+    });
     const res = await axios.get("http://localhost:5005/api/profile/me");
-
-    if (res) {
-      dispatch({
-        type: clear_profile,
-      });
-
+    if (res)
       dispatch({
         type: load_profile,
         payload: res.data,
       });
-    }
   } catch (err) {
     console.log(err);
     dispatch({
@@ -209,16 +203,15 @@ export const editProfile =
 
 export const getProfileById = (userId) => async (dispatch) => {
   try {
+    dispatch({
+      type: clear_profile,
+    });
+
     const response = await axios.get(
       `http://localhost:5005/api/profile/${userId}`
     );
 
     if (response) {
-      dispatch({
-        type: clear_profile,
-        payload: response.data,
-      });
-
       dispatch({
         type: load_profile,
         payload: response.data,

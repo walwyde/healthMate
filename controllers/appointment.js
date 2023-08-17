@@ -10,11 +10,20 @@ const User = require("../models/User");
 
 exports.getAppointments = async (req, res) => {
   try {
+    let filtered = [];
     const appointments = await Appointment.find()
       .populate("user")
       .populate("doctor");
 
-    res.json(appointments);
+    appointments.map(async (a) => {
+      if (a.doctor === null || a.user === null) {
+        await a.remove();
+        return;
+      }
+      filtered.push(a);
+    });
+
+    res.status(200).json({ appointments: filtered, user: req.user });
   } catch (err) {
     console.error(err.message);
 
@@ -105,7 +114,7 @@ exports.createAppointment = async (req, res) => {
 
 exports.deleteAppointment = async (req, res) => {
   try {
-    const appointment = await Appointment.findById(req.params.id);
+    const appointment = await Appointment.findById(req.params.id).populate("doctor", ["user"]);
 
     if (!appointment) {
       return res.status(404).json({ msg: "Appointment not found" });
@@ -113,7 +122,7 @@ exports.deleteAppointment = async (req, res) => {
 
     // Check user
 
-    if (appointment.user.toString() !== req.user.id) {
+    if (appointment.doctor.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
@@ -178,10 +187,9 @@ exports.updateAppointment = async (req, res) => {
 exports.approveAppointment = async (req, res) => {
   try {
     const newStatus = {
-      status : "approved"
+      status: "approved",
     };
     const app = await Appointment.findById(req.body._id);
-
 
     if (!app)
       return res
@@ -190,12 +198,11 @@ exports.approveAppointment = async (req, res) => {
 
     const approved = await Appointment.findOneAndUpdate(
       { _id: req.body._id },
-      { $set: { status: 'approved' } },
+      { $set: { status: "approved" } },
       { new: true }
     );
 
     console.log(approved);
-
 
     await approved.save();
 
