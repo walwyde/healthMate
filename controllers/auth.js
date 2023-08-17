@@ -92,7 +92,64 @@ exports.generateToken = async (req, res) => {
         from: "noreply@healthmate.com",
         to: email,
         subject: "Reset Password Verification Link",
-        html: `<div><h3>Reset Password</h3><p>You requested to reset your password, if this was you follow this link to reset your password, else just ignore</p><a hrf=http://localhost:3000/reset-password/${passwordToken}>Reset Password</a></div>`,
+        html: `<!DOCTYPE html>
+        <html lang="en">
+          <body>
+            <style>
+              div {
+                padding: 20px;
+                color: #333;
+              }
+              .jumbotron {
+                background: #ddd;
+                padding: 20px;
+                border-radius: 5px;
+              }
+              h1 {
+                text-align: center;
+              }
+              p {
+                text-align: center;
+                font-size: 18px;
+              }
+              a {
+                display: block;
+                text-align: center;
+                padding: 10px;
+                background: #333;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 0 auto;
+                transition: all 0.5s;
+        
+              }
+              a:hover {
+                background: #555;
+                color: #fff;
+                font-size: 12px;
+                width: 70%;
+              }
+            </style>
+            <div>
+              <div class="jumbotron">
+                <h1>HealthMate</h1>
+                <p>Reset Password</p>
+              </div>
+              <p>
+                You requested to reset your password, if this was you follow this link
+                to reset your password, else just ignore.
+              </p>
+              <a
+                target="_blank"
+                href="http://localhost:3000/reset-password/${passwordToken}"
+                >Click to Reset Password</a
+              >
+            </div>
+          </body>
+        </html>
+        `,
       },
       (err, data) => {
         if (err) console.log(err);
