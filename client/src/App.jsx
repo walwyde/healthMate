@@ -29,6 +29,7 @@ import Appointment from "./components/appointment/Appointment";
 import ProfileView from "./components/ProfileView";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import EditAvatar from "./components/profile/EditAvatar";
 
 if (localStorage.token) {
   setHeader(localStorage.getItem("token"));
@@ -46,6 +47,7 @@ function App() {
           <Alerts />
             <Container varient="dark">
           <Switch>
+            <PrivateRoute exact path='/avatar/:id' component={EditAvatar} />
               <PrivateRoute
                 exact
                 path="/appointments/:id"

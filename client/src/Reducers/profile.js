@@ -37,8 +37,8 @@ export default function profile(state = initialState, action) {
       return {
         ...state,
         profile: null,
-        loading: false,
         errors: payload,
+        loading: false,
       };
     case clear_profile:
       return {
@@ -49,14 +49,15 @@ export default function profile(state = initialState, action) {
     case delete_profile_error:
       return {
         ...state,
-        loading: false,
         errors: payload,
+        loading: false,
       };
 
     case load_availability:
       return {
         ...state,
         profile: { ...state.profile, availability: payload },
+        loading: false,
       };
     default:
       return state;

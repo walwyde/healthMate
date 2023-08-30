@@ -24,7 +24,9 @@ const Login = ({ login, history, isAuthenticated }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     login(formData, history);
-    setFormData({ loginAttempt: loginAttempt +1 });
+    setFormData({ ...formData, loginAttempt: Number(loginAttempt) + 1 });
+    console.log(loginAttempt);
+    console.log(formData);
   };
 
   return isAuthenticated ? (
@@ -34,6 +36,13 @@ const Login = ({ login, history, isAuthenticated }) => {
       <div className="jumbotron text-center text-primary">
         <h1>Login</h1>
       </div>
+      {loginAttempt > 3 && (
+        <div className="text-center mt-3">
+          <Link className="text-danger " to="/reset-password">
+            Forgot password?
+          </Link>
+        </div>
+      )}
 
       <Form onSubmit={(e) => onSubmit(e)}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -83,7 +92,7 @@ const Login = ({ login, history, isAuthenticated }) => {
           Submit
         </Button>
 
-        <Form.Group className="m-3 text-center">
+        <Form.Group className="mb-5 text-center">
           <span className="text-muted">Don't have an account?</span>
           <Link
             to="/register"
@@ -92,14 +101,6 @@ const Login = ({ login, history, isAuthenticated }) => {
             Register
           </Link>
         </Form.Group>
-
-        {loginAttempt > 3 && (
-          <div className="text-center mt-3">
-            <Link className="text-danger " to="/reset-password">
-              Forgot password?
-            </Link>
-          </div>
-        )}
       </Form>
     </Fragment>
   );

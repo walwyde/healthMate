@@ -12,7 +12,6 @@ import {
 import { setAlert } from "../utils/setAlert";
 import { loadUser } from "../Actions/register";
 import axios from "axios";
-import ResetPassword from "../components/auth/ResetPassword";
 
 export const login = (formData, history) => async (dispatch) => {
   const options = {
@@ -119,15 +118,31 @@ export const logout = () => (dispatch) => {
   });
 };
 
-export const resetPassword = (email) => async (dispatch) => {
+export const generateToken = (email) => async (dispatch) => {
   try {
-    const res = await axios.post("http://localhost:5005/api/auth/reset-password-token", {
-      email,
-    });
-
-    if(res.data) return {success: res.data}
+    return await axios.post(
+      "http://localhost:5005/api/auth/reset-password-token",
+      {
+        email,
+      }
+    );
   } catch (err) {
+    const res = err.response;
     console.log(err.response);
-    return {error: err.response.data};
+    return res;
+  }
+};
+
+export const resetPassword = (data) => async (dispatch) => {
+  try {
+    delete data.showPassword
+    delete data.error
+    return await axios.post("http://localhost:5005/api/auth/reset-password", {
+      data,
+    });
+  } catch (err) {
+    const res = err.response;
+    console.log(err.response);
+    return res;
   }
 };

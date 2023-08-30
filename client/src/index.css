@@ -18,15 +18,15 @@
   min-height: 50vw;
   /* width: 100%; */
 }
-html body {
+/* html body {
   height: 400vh;
-}
+} */
 .centered {
   text-align: center;
   margin: auto;
 }
 .buttom-fixed {
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
   text-align: center;
   width: 100%;
   position: fixed;

@@ -10,6 +10,7 @@ import {
   delete_profile_error,
   availability_error,
   add_availability,
+  profile_image_update,
 } from "./types";
 import { setAlert } from "../utils/setAlert";
 import { loadUser } from "./register";
@@ -268,5 +269,31 @@ export const addAvailability = (formData) => async (dispatch) => {
       type: availability_error,
       payload: err.response.data,
     });
+  }
+};
+
+export const updateProfileImage = (formData) => async (dispatch) => {
+  try {
+    const res = await axios.post(
+      "http://localhost:5005/api/profile/avatar",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+
+    if (res.status >= 200 && res.status < 400) {
+      dispatch(setAlert("Profile image updated", "success"));
+
+      dispatch({
+        type: profile_image_update,
+        payload: res.data
+      })
+    }
+
+  } catch (error) {
+    dispatch(setAlert("Profile image update failed", "danger"));
+
+    console.error("Error uploading image", error);
   }
 };

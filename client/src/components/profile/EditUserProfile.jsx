@@ -17,11 +17,11 @@ const EditUserProfile = ({
   loadCurrentProfile,
   addAvailability,
   clearAvailability,
-  auth: { user },
+  auth: { user, loading: authloading },
 }) => {
   // init user state
-  const diabetic = user && user.condition.diabetic;
-  const hypertensive = user && user.condition.hypertensive;
+  const diabetic = !authloading && user.condition.diabetic;
+  const hypertensive = !authloading && user.condition.hypertensive;
 
   // hypertensive form state
   const [formData, setFormData] = useState({
@@ -65,13 +65,6 @@ const EditUserProfile = ({
     time: "",
   });
 
-  // Handle Image Upload
-  const [selectedFile, setSelectedFile] = useState("");
-
-  const handleFileUpload = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
   // hpyertensive form constants
   const {
     day,
@@ -103,39 +96,33 @@ const EditUserProfile = ({
   useEffect(() => {
     loadCurrentProfile();
     setFormData({
-      name: loading || !profile.name ? "" : profile.name,
-      age: loading || !profile.age ? "" : profile.age,
-      gender: loading || !profile.gender ? "" : profile.gender,
-      address: loading || !profile.address ? "" : profile.address,
-      phone: loading || !profile.phone ? "" : profile.phone,
-      systolic: loading || !profile.systolic ? "" : profile.systolic,
-      diastolic: loading || !profile.diastolic ? "" : profile.diastolic,
-      medName: loading || !profile.medName ? "" : profile.medName,
-      medDose: loading || !profile.medDose ? "" : profile.medDose,
-      frequency: loading || !profile.frequency ? "" : profile.frequency,
+      name: loading || !profile ? "" : profile.name,
+      age: loading || !profile ? "" : profile.age,
+      gender: loading || !profile ? "" : profile.gender,
+      address: loading || !profile ? "" : profile.address,
+      phone: loading || !profile ? "" : profile.phone,
+      systolic: loading || !profile ? "" : profile.systolic,
+      diastolic: loading || !profile ? "" : profile.diastolic,
+      medName: loading || !profile ? "" : profile.medName,
+      medDose: loading || !profile ? "" : profile.medDose,
+      frequency: loading || !profile ? "" : profile.frequency,
       otherHealthConditions:
-        loading || !profile.otherHealthConditions
-          ? ""
-          : profile.otherHealthConditions,
-      allergies: loading || !profile.allergies ? "" : profile.allergies,
-      emergencyContact:
-        loading || !profile.emergencyContact ? "" : profile.emergencyContact,
-      familyHistory:
-        loading || !profile.profileHistory ? "" : profile.profileHistory,
+        loading || !profile ? "" : profile.otherHealthConditions,
+      allergies: loading || !profile ? "" : profile.allergies,
+      emergencyContact: loading || !profile ? "" : profile.emergencyContact,
+      familyHistory: loading || !profile ? "" : profile.profileHistory,
 
       // staff from state
 
-      title: loading || !profile.title ? "" : profile.title,
+      title: loading || !profile ? "" : profile.title,
       professionalDesignation:
-        loading || !profile.professionalDesignation
-          ? ""
-          : profile.professionalDesignation,
-      licenceType: loading || !profile.licenceType ? "" : profile.licenceType,
-      licenceNum: loading || !profile.licenceNum ? "" : profile.licenceNum,
-      expiryDate: loading || !profile.expiryDate ? "" : profile.expiryDate,
-      nin: loading || !profile.nin ? "" : profile.nin,
+        loading || !profile ? "" : profile.professionalDesignation,
+      licenceType: loading || !profile ? "" : profile.licenceType,
+      licenceNum: loading || !profile ? "" : profile.licenceNum,
+      expiryDate: loading || !profile ? "" : profile.expiryDate,
+      nin: loading || !profile ? "" : profile.nin,
     });
-  }, [loadCurrentProfile]);
+  }, [loadCurrentProfile, loading, authloading]);
 
   // Helper functions
 
@@ -182,7 +169,7 @@ const EditUserProfile = ({
     <Fragment>
       <Spinner />
     </Fragment>
-  ) : !loading && hypertensive ? (
+  ) : !authloading && hypertensive && !loading ? (
     <Fragment>
       <Link to="/profile" className="btn btn-primary m-2">
         Back to Profile
@@ -369,17 +356,6 @@ const EditUserProfile = ({
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Profile Image</Form.Label>
-          <Form.Control
-            type="file"
-            value={selectedFile}
-            name="avatar"
-            onChange={(e) => onChange(e)}
-            placeholder="Enter Profile Image"
-          />
-        </Form.Group>
-
         {/* Doctor */}
         <Form.Group controlId="doctor" className="mb-3">
           <Form.Label>Doctor</Form.Label>
@@ -406,14 +382,14 @@ const EditUserProfile = ({
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button className="mb-4" variant="primary" type="submit">
           Submit
         </Button>
       </Form>
     </Fragment>
   ) : // Render the form for diabetic patients
 
-  !loading && profile && diabetic ? (
+  !authloading && diabetic && !loading ? (
     <Fragment>
       <Link to="/profile" className="btn btn-primary m-2">
         Back to Profile
@@ -430,7 +406,7 @@ const EditUserProfile = ({
             type="text"
             name="name"
             value={name}
-            placeholder="Enter Contact Phone"
+            placeholder="Enter full name"
             onChange={(e) => onChange(e)}
             required
           />
@@ -443,7 +419,7 @@ const EditUserProfile = ({
             type="text"
             name="age"
             value={age}
-            placeholder="Enter Contact Phone"
+            placeholder="Enter your age"
             onChange={(e) => onChange(e)}
             required
           />
@@ -456,7 +432,7 @@ const EditUserProfile = ({
             type="text"
             name="address"
             value={address}
-            placeholder="Enter Contact Phone"
+            placeholder="Enter Contact Address"
             onChange={(e) => onChange(e)}
             required
           />
@@ -628,24 +604,12 @@ const EditUserProfile = ({
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Profile Image</Form.Label>
-          <Form.Control
-            className="mb-3"
-            type="file"
-            value={selectedFile}
-            name="avatar"
-            onChange={(e) => onChange(e)}
-            placeholder="Enter Profile Image"
-          />
-        </Form.Group>
-
-        <Button variant="primary" type="submit">
+        <Button className="mb-4" variant="primary" type="submit">
           Submit
         </Button>
       </Form>
     </Fragment>
-  ) : !loading && user && user.isStaff ? (
+  ) : !authloading && user.isStaff && !loading ? (
     <Fragment>
       <Link to="/profile" className="btn btn-primary m-2">
         Back to Profile
@@ -848,18 +812,9 @@ const EditUserProfile = ({
           </Button>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Profile Image</Form.Label>
-          <Form.Control
-            type="file"
-            value={selectedFile}
-            name="avatar"
-            onChange={(e) => onChange(e)}
-            placeholder="Enter your profile image"
-          />
-        </Form.Group>
-
-        <Button type="submit">Submit</Button>
+        <Button className="btn btn-primary mb-4" type="submit">
+          Submit
+        </Button>
       </Form>
     </Fragment>
   ) : (

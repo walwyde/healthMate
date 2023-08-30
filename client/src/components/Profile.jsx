@@ -40,13 +40,16 @@ const Profile = ({
         <MDBContainer className="m-1">
           {!authloading && user && !loading && profile === null ? (
             <MDBCard>
-              <MDBCardImage
-                fluid
-                style={{ width: "400px", margin: "auto" }}
-                src={!authloading && user && user.avatar}
-                position="top"
-                alt="..."
-              />
+              <Link to={`/avatar/${user && user._id}`}>
+                {" "}
+                <MDBCardImage
+                  fluid
+                  style={{ width: "400px", margin: "auto" }}
+                  src={user && `http://localhost:5005/${user && user.avatar}`}
+                  position="top"
+                  alt="..."
+                />
+              </Link>
               <MDBCardBody style={{ textAlign: "center" }}>
                 <MDBCardTitle>
                   Hello {!authloading && user.name.split(" ")[0]}
@@ -65,9 +68,8 @@ const Profile = ({
               </MDBCardBody>
             </MDBCard>
           ) : (
-            !loading &&
-            profile &&
-            !authloading && user && (
+            !authloading &&
+            user && !loading && profile && (
               <MDBRow className="justify-content-center align-items-center h-100">
                 <MDBCol lg="9" xl="7">
                   <MDBCard>
@@ -77,17 +79,20 @@ const Profile = ({
                     >
                       <div
                         className="ms-4 mt-5 d-flex flex-column"
-                        style={{ width: "150px" }}
+                        style={{}}
                       >
-                        <MDBCardImage
-                          src={user.avatar}
-                          alt="Generic placeholder image"
-                          className="mt-4 mb-2 img-thumbnail"
-                          fluid
-                          style={{ width: "150px", zIndex: "1" }}
-                        />
+                        <Link to={`/avatar/${user && user._id}`}>
+                          {" "}
+                          <MDBCardImage
+                            fluid
+                            style={{ width: "10rem", height: "10rem", margin: "auto" }}
+                            src={user && `http://localhost:5005/${user && user.avatar}`}
+                            position="top"
+                            alt="..."
+                          />
+                        </Link>
                       </div>
-                      <div className="ms-3" style={{ marginTop: "130px" }}>
+                      <div className="p-3 ms-3" style={{ marginTop: "130px" }}>
                         <MDBCardText tag="h5">
                           {profile.name && profile.name}
                         </MDBCardText>

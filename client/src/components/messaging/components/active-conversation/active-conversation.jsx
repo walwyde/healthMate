@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+import lodash from "lodash";
 import Loading from "../../../layouts/Loading";
 import { connect } from "react-redux";
 import {
@@ -24,7 +25,7 @@ const api = ({
 }) => {
   useEffect(() => {
     initConversation(match.params._id);
-  }, [loading, authloading, initConversation, match.params._id, authloading]);
+  }, [loading, authloading, initConversation, match.params._id]);
 
   const [message, setMessage] = useState({
     sender: !authloading && user && user._id,
@@ -64,6 +65,9 @@ const api = ({
       toast.info('Click "send" To send message');
     }
   };
+
+  const orderedMessages =
+    !loading && lodash.orderBy(conversation.messages, ["timeStamp"], "desc");
 
   const mapMessages = (messages) =>
     messages.map((message) => (
@@ -145,17 +149,25 @@ const api = ({
       {!loading && conversation.participants && (
         <Fragment>
           <div className="col-md-4 d-sm-none d-md-block">
-            <div className="card">
-              <div className="card-image m-auto">
+            <div style={{height: "10rem"}} className="card">
+              <div style={{height: "100%", width: "100%"}} className="card-image m-auto">
                 <img
                   src={
                     !authloading &&
                     !loading &&
                     conversation.participants[0]._id !== user._id
-                      ? conversation.participants[0].avatar
-                      : conversation.participants[1].avatar
+                      ? `http://localhost:5005/${
+                          conversation.participants[0] &&
+                          conversation.participants[0].avatar
+                        }`
+                      : `http://localhost:5005/${
+                          conversation.participants[1] &&
+                          conversation.participants[1].avatar
+                        }`
                   }
                   alt="avatar"
+                  className= "img-fluid"
+                  style={{width: "100%", height: "100%"}}
                 />
               </div>
 
@@ -184,9 +196,13 @@ const api = ({
           <Fragment>
             <Loading />
           </Fragment>
-        ) : !authloading && !loading && messages.length > 0 ? (
+        ) : !authloading &&
+          !loading &&
+          conversation &&
+          conversation.messages &&
+          conversation.messages.length > 0 ? (
           <Fragment>
-            <div>{mapMessages(conversation.messages)}</div>
+            <div>{mapMessages(orderedMessages)}</div>
           </Fragment>
         ) : (
           <Fragment>

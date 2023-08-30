@@ -7,6 +7,7 @@ import {
   login_fail,
   log_out,
   delete_account,
+  profile_image_update
 } from "../Actions/types";
 
 const initialState = {
@@ -20,6 +21,12 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
+    case profile_image_update:
+      return {
+        ...state,
+        user: payload,
+        loading: false,
+      };
     case login_success:
       localStorage.setItem("token", payload.token);
       return {
@@ -32,8 +39,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isAuthenticated: true,
-        loading: false,
         user: payload,
+        loading: false,
       };
     case register_success:
       localStorage.setItem("token", payload.token);
@@ -53,8 +60,8 @@ export default function (state = initialState, action) {
         ...state,
         token: null,
         isAuthenticated: false,
+        user: null,
         loading: false,
-        user: null
       };
     default:
       return state;

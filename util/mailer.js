@@ -5,7 +5,7 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: config.get("email_username"),
-    password: config.get("email_password"),
+    pass: config.get("email_password"),
   },
 });
 
@@ -18,3 +18,5 @@ exports.sendMail = (options, callback) => {
     }
   });
 };
+
+

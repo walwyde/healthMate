@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const { check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const config = require("config");
@@ -69,15 +69,16 @@ exports.login = async (req, res) => {
 
 exports.generateToken = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const { email } = req.body;
+    const user = await User.findOne({ email: email });
 
     if (!user)
       return res.status(404).json({ error: { msg: "user not found" } });
 
-    const bytes = crypto.randomBytes(32);
+    const bytes = await crypto.randomBytes(32);
 
     const passwordToken = bytes.toString("hex");
-    const tokenExpiration = Date.now() + 3600;
+    const tokenExpiration = Date.now() + 3600000;
 
     user.resetToken = passwordToken;
     user.tokenExpiration = tokenExpiration;
@@ -85,13 +86,13 @@ exports.generateToken = async (req, res) => {
     const tokenedUser = await user.save();
 
     if (!tokenedUser)
-      return res.status(500).json({ error: { msg: "server error" } });
+      return res.status(500).json({ data: { error: { msg: "server error" } } });
 
     mailer.sendMail(
       {
         from: "noreply@healthmate.com",
         to: email,
-        subject: "Reset Password Verification Link",
+        subject: "HealthMate Password Reset",
         html: `<!DOCTYPE html>
         <html lang="en">
           <body>
@@ -143,7 +144,7 @@ exports.generateToken = async (req, res) => {
               </p>
               <a
                 target="_blank"
-                href="http://localhost:3000/reset-password/${passwordToken}"
+                href="http://localhost:5173/reset-password/${passwordToken}"
                 >Click to Reset Password</a
               >
             </div>
@@ -151,18 +152,69 @@ exports.generateToken = async (req, res) => {
         </html>
         `,
       },
-      (err, data) => {
-        if (err) console.log(err);
+      (data, err) => {
+        if (err) {
+          console.log("error" + err);
+          return res.status(500).json({
+            error: { msg: `${err.message} => Please check your network` },
+          });
+        }
+        console.log(data);
+        if (data.errno)
+          return res
+            .status(500)
+            .json({ error: { msg: "please check your network!" } });
         res.status(200).json({
           success: {
-            msg: "Token created and a password reset link has been sent to your email",
-            status: data,
+            msg: "A password reset link has been sent to your email, please check your mailbox",
+            data: data,
           },
         });
       }
     );
   } catch (err) {
-    res.status(500).json({ error: { msg: "Server error", data: err } });
-    console.log(er);
+    res.status(500).json({ error: { msg: err.message, data: err } });
+    console.log(err);
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(422).json({ errors: errors.array() });
+
+    const { token, newPassword } = req.body.data;
+
+    console.log(typeof token);
+
+    const user = await User.findOne({
+      resetToken: token,
+      tokenExpiration: { $gt: Date.now() },
+    });
+
+    if (!user)
+      return res.status(404).json({
+        errors: [
+          {
+            msg: "Please begin process from begining, reset token expired or user not found!",
+          },
+        ],
+      });
+
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(newPassword, salt);
+
+    user.password = password;
+
+    user.resetToken = null;
+    user.tokenExpiration = null;
+    await user.save();
+    console.log(user);
+
+    res.status(200).json({ success: { msg: "Password changed Successfully" } });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: [{ msg: err.message }] });
   }
 };

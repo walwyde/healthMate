@@ -649,3 +649,25 @@ exports.clearAvailability = async (req, res) => {
     res.status(500).json({ msg: err.message });
   }
 };
+
+exports.editAvatar = async (req, res) => {
+  const { userId } = req.body;
+  const image = req.file;
+
+  if(!image) return res.status(422).json({msg: "Invalid file type"})
+
+  const avatar = image.path;
+
+  const updatedUser = await User.findOneAndUpdate(
+    { _id: userId },
+    { $set: { avatar: avatar } }
+  );
+
+  if (!updatedUser) return res.status(400).json("user not found");
+
+  const user = await User.findById(userId).select("-password");
+
+  if (!user) return res.status(400).json("user not found");
+
+  res.status(200).json(user);
+};
