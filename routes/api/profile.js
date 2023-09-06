@@ -4,13 +4,16 @@ const router = express.Router();
 const controller = require("../../controllers/profile");
 const mdlwre = require("../../middleware/index");
 const multerHelper = require("../../util/fileUploadHelper");
-const multer = require("multer")
+const multer = require("multer");
 
 // router.get('/users', controller.getAllProfiles)
 router.post(
   "/avatar",
   mdlwre.auth,
-  multer({storage: multerHelper.storage, fileFilter: multerHelper.fileFilter}).single("avatar"),
+  multer({
+    storage: multerHelper.storage,
+    fileFilter: multerHelper.fileFilter,
+  }).single("avatar"),
   controller.editAvatar
 );
 

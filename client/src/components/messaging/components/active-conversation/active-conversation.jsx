@@ -9,6 +9,7 @@ import {
   saveMessage,
   getConvoMessages,
   deleteMessage,
+  setViewed
 } from "../../../../Actions/messaging";
 import Moment from "react-moment";
 import { Link } from "react-router-dom";
@@ -25,6 +26,10 @@ const api = ({
 }) => {
   useEffect(() => {
     initConversation(match.params._id);
+    setViewed(
+      !loading && conversation && conversation._id,
+      !authloading && user && user._id
+    );
   }, [loading, authloading, initConversation, match.params._id]);
 
   const [message, setMessage] = useState({
@@ -218,6 +223,7 @@ api.propTypes = {
   match: PropTypes.object.isRequired,
   initConversation: PropTypes.func.isRequired,
   getConvoMessages: PropTypes.func.isRequired,
+  setViewed: PropTypes.func.isRequired,
   saveMessage: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   message: PropTypes.object.isRequired,
@@ -233,4 +239,5 @@ export default connect(mapStateToProps, {
   saveMessage,
   deleteMessage,
   getConvoMessages,
+  setViewed
 })(api);

@@ -10,6 +10,8 @@ import {
   delete_conversation,
   get_conversations_error,
   delete_message_error,
+  load_messages_error,
+  load_new_messages
 } from "./types";
 import axios from "axios";
 import { setAlert } from "../utils/setAlert";
@@ -59,48 +61,6 @@ export const deleteMessage =
       });
     }
   };
-export const initiateSocket = () => {
-  const socket = socketIOClient(ENDPOINT);
-  socket.on("connect", () => {
-    console.log("connected");
-  });
-  socket.on("disconnect", () => {
-    console.log("disconnected");
-  });
-  socket.on("message", (data) => {
-    console.log(data);
-  });
-  socket.on("newMessage", (data) => {
-    console.log(data);
-  });
-  socket.on("typing", (data) => {
-    console.log(data);
-  });
-  socket.on("stopTyping", (data) => {
-    console.log(data);
-  });
-  socket.on("error", (data) => {
-    console.log(data);
-  });
-  socket.on("connect_error", (data) => {
-    console.log(data);
-  });
-  socket.on("connect_timeout", (data) => {
-    console.log(data);
-  });
-  socket.on("reconnect", (data) => {
-    console.log(data);
-  });
-  socket.on("reconnect_attempt", (data) => {
-    console.log(data);
-  });
-  socket.on("reconnecting", (data) => {
-    console.log(data);
-  });
-  socket.on("reconnect_error", (data) => {
-    console.log(data);
-  });
-};
 
 export const initConversation = (id) => async (dispatch) => {
   try {
@@ -190,5 +150,43 @@ export const getConversations = () => async (dispatch) => {
         status: error.response.status,
       },
     });
+  }
+};
+
+export const loadNewMessages = (userId) => async (dispatch) => {
+  try {
+    const res = await axios.get(`http://localhost:5005/api/conversations/new-messages`);
+
+    if (res.data && res.data.length > 0) {
+      const payload = { messages: res.data, userId };
+      dispatch(setAlert(`new message(s) alert`, "info"));
+
+      dispatch({
+        type: load_new_messages,
+        payload: payload,
+      });
+    }
+  } catch (error) {
+    console.log(error.response);
+    if (error.response.data.errors) {
+      error.response.data.errors.map((e) =>
+        dispatch(setAlert(e.msg, "danger"))
+      );
+    }
+    dispatch({
+      type: load_messages_error,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+export const setViewed = (convoId, userId) => async (dispatch) => {
+  try {
+    dispatch({ type: viewed_messages, payload: { convoId, userId } });
+  } catch (err) {
+    console.log(err);
   }
 };

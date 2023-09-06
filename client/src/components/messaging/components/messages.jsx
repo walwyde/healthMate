@@ -52,7 +52,7 @@ const MessageInterface = ({
                     {convo.participants[0]._id !== user._id
                       ? convo.participants[0].name
                       : convo.participants[1].name}
-                    {convo.unReadMessages ? " (Read)" : ""}
+                    {convo.messages && convo.messages[convo.messages.length -1].seen.indexOf(user && user._id) === -1 ? " (Read)" : ""}
                   </h4>
                   <hr />
                   <p className="card-title m-2 text-muted">

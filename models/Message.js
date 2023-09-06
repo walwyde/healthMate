@@ -15,6 +15,12 @@ const MessageSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Conversation",
   },
+  seen: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    }
+  ],
   content: {
     type: String,
     required: true,

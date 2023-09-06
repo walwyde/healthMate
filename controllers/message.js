@@ -9,13 +9,16 @@ exports.createMessage = async (req, res) => {
     let message = {};
 
     if (sender) message.sender = sender;
+    if (!sender) message.sender = req.user.id;
     if (conversation) message.conversation = conversation;
     if (!conversation) message.conversation = req.params.conversationId;
     if (timeStamp) message.timeStamp = timeStamp;
-    if (!timeStamp) message.timeStamp = Date.now();
+    if (!timeStamp) message.timestamp = Date.now();
     if (content) message.content = content;
 
     const newMessage = new Message(message);
+
+    newMessage.seen.push(req.user.id);
 
     // Save the message
 
@@ -23,11 +26,17 @@ exports.createMessage = async (req, res) => {
 
     const user = await User.findById(req.user.id).select("-password");
 
-    user.messages.push(savedMessage._id);
+    if (!user)
+      return res.status(404).json({ errors: [{ msg: "User not found" }] });
 
     const convo = await Conversation.findOne({
       _id: savedMessage.conversation,
     });
+
+    if (!convo)
+      return res
+        .status(404)
+        .json({ errors: [{ msg: "Conversation not found" }] });
 
     convo.messages.push(savedMessage._id);
     convo.unReadMessages = true;
@@ -39,7 +48,7 @@ exports.createMessage = async (req, res) => {
     res.status(201).json(savedMessage);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    res.status(500).json({ errors: [{ msg: err.message }] });
   }
 };
 
@@ -55,36 +64,38 @@ exports.getAllMessages = async (req, res) => {
 };
 
 // Controller to get a single message by ID
-exports.getConversationById = async (req, res) => {
-  try {
-    const { conversationId } = req.params;
-    const { sender, content } = req.body;
+// exports.getConversationById = async (req, res) => {
+//   console.log(req.body, "convo")
+//   try {
+//     const { conversationId } = req.params;
+//     const { sender, content } = req.body;
 
-    // Check if the conversation exists
-    const conversation = await Conversation.findById(conversationId).populate(
-      "messages"
-    );
-    if (!conversation) {
-      return res.status(404).json({ error: "Conversation not found" });
-    }
+//     // Check if the conversation exists
+//     const conversation = await Conversation.findById(conversationId).populate(
+//       "messages"
+//     );
+//     if (!conversation) {
+//       return res.status(404).json({ error: "Conversation not found" });
+//     }
 
-    // Create a new message
-    const message = new Message({
-      conversation: conversation._id,
-      sender,
-      content,
-    });
+//     // Create a new message
+//     const message = new Message({
+//       conversation: conversation._id,
+//       sender,
+//       content,
+//     });
 
-    // Save the message
-    await message.save();
+//     // Save the message
+//     await message.save();
 
-    res.json(message);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to send message" });
-  }
-};
+//     res.json(message);
+//   } catch (error) {
+//     res.status(500).json({ error: "Failed to send message" });
+//   }
+// };
 
 exports.newConversation = async (req, res) => {
+  console.log(req.body.id)
   try {
     const participants = [req.user.id, req.body._id];
     const existing = await Conversation.findOne({
@@ -97,7 +108,16 @@ exports.newConversation = async (req, res) => {
         .populate("messages")
         .populate("participants");
 
-      convo.unReadMessages = false;
+      convo.messages.length > 0 &&
+        convo.messages.map(async (msg) => {
+          if (!msg.seen.find((s) => s.toString() === req.user.id)) {
+            msg.seen.push(req.user.id);
+            // const message = await Message.findById(msg._id);
+            // message.seen.push(req.user.id);
+            await msg.save();
+            // msg.seen.push(req.user.id);
+          }
+        });
 
       const read = await convo.save();
 
@@ -124,23 +144,24 @@ exports.newConversation = async (req, res) => {
 
 exports.getConversations = async (req, res) => {
   try {
-    const userConversations = await Conversation.find({
-      user: req.user.id,
-    })
-      .populate("messages")
-      .populate("participants");
+    // const userConversations = await Conversation.find({
+    //   user: req.user.id,
+    // })
+    //   .populate("messages")
+    //   .populate("participants");
 
-    if (userConversations.length > 0) return res.json(userConversations);
+    // if (userConversations.length > 0) return res.json(userConversations);
 
     const correspondentConvos = await Conversation.find({
-      correspondent: req.user.id,
+      participants: req.user.id,
     })
       .populate("messages")
       .populate("participants");
 
     res.status(200).json(correspondentConvos);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch conversations" });
+    console.log(error);
+    res.status(500).json({ errors: [{ msg: error.message }] });
   }
 };
 
@@ -158,7 +179,6 @@ exports.deleteMessage = async (req, res) => {
     await conversation.save();
     await Message.findOneAndDelete({ _id: messageId });
 
-    console.log(conversation.messages.length);
     res.status(200).json({ msg: "message deleted" });
   } catch (err) {
     console.log(err);
@@ -174,5 +194,44 @@ exports.deleteConversation = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });
+  }
+};
+
+exports.getNewMessages = async (req, res) => {
+  try {
+    let messages = [];
+    let unseenMessages = [];
+
+    const userConversations = await Conversation.find({
+      participants: req.user.id,
+    })
+      .populate("messages")
+      .populate("participants");
+
+    if (!userConversations)
+      return res
+        .status(404)
+        .json({ errors: [{ msg: "Conversation not found" }] });
+
+    for (let i = 0; i < userConversations.length; i++) {
+      messages = [...messages, ...userConversations[i].messages];
+    }
+
+    if (messages.length > 0) {
+      messages.map((msg) => {
+        // console.log(msg)
+        if (!msg.seen.find((s) => s.toString() === req.user.id)) {
+          console.log("unseen")
+          unseenMessages = [...unseenMessages, msg];
+        }
+      });
+    }
+
+    console.log(unseenMessages)
+
+    res.status(200).json(unseenMessages);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ errors: [{ msg: error.message }] });
   }
 };

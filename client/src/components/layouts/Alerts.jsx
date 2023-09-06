@@ -8,8 +8,11 @@ const Alerts = ({ alerts }) =>
   alerts.length > 0 &&
   alerts.map((alert) => {
     const { msg, alertType } = alert;
-
-    alertType === "success" ? toast.success(msg) : toast.error(msg);
+    alertType === "success"
+      ? toast.success(msg)
+      : alertType === "info"
+      ? toast.info(msg)
+      : toast.error(msg);
   });
 
 Alerts.propTypes = {

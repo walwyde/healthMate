@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import PropTypes from "prop-types";
 import { loadCurrentProfile, deleteAccount } from "../Actions/profile";
+import { loadNewMessages } from "../Actions/messaging";
 import {
   MDBIcon,
   MDBCol,
@@ -25,9 +26,11 @@ const Profile = ({
   profile: { profile, loading },
   loadCurrentProfile,
   deleteAccount,
+  loadNewMessages
 }) => {
   useEffect(() => {
     loadCurrentProfile();
+    loadNewMessages()
   }, [loading, authloading, loadCurrentProfile]);
 
   return loading && !profile ? (
@@ -559,6 +562,7 @@ Profile.propTypes = {
   profile: PropTypes.object.isRequired,
   loadCurrentProfile: PropTypes.func.isRequired,
   deleteAccount: PropTypes.func.isRequired,
+  loadNewMessages: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
@@ -566,6 +570,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { loadCurrentProfile, deleteAccount })(
+export default connect(mapStateToProps, { loadCurrentProfile, deleteAccount, loadNewMessages })(
   Profile
 );
